@@ -1,0 +1,8 @@
+# Optional: Hamilton–Jacobi KOZ BRT (simulation.hj_koz_brt) + vendored hj_reachability.
+# Install from repo root:
+#   pip install -r requirements-brt.txt
+#   pip install -e hj_reachability
+jax>=0.4.25
+flax>=0.6.6
+tqdm>=4.66
+scikit-image>=0.22
