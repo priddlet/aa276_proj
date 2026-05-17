@@ -14,6 +14,7 @@ queries (e.g. animation + marching-cubes shells).
 
 from __future__ import annotations
 
+import os
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -30,6 +31,9 @@ if _HJ_ROOT.is_dir():
 
 try:
     import jax
+
+    # HJ on a KOZ scale needs float64; default JAX float32 leaves the terminal set all positive on the grid.
+    jax.config.update("jax_enable_x64", True)
     import jax.numpy as jnp
     import hj_reachability as hj
 
@@ -42,6 +46,119 @@ except ImportError:  # pragma: no cover
     hj = None  # type: ignore[assignment]
     CwFull6DHJDynamics = None  # type: ignore[assignment]
     HJ_AVAILABLE = False
+
+# Position nodes ~300 m in y on the default domain; ~4× cells vs legacy 9×25×9×7³.
+HJ_BRT_GRID_PRESETS: dict[str, tuple[int, int, int, int, int, int]] = {
+    "coarse": (9, 25, 9, 7, 7, 7),
+    "standard": (11, 35, 11, 8, 8, 8),
+    "fine": (13, 40, 13, 9, 9, 9),
+}
+
+
+def hj_progress_bar_enabled() -> bool:
+    """Honor ``HJ_BRT_PROGRESS`` only when ``tqdm`` is installed (hj_reachability requirement)."""
+    want = os.environ.get("HJ_BRT_PROGRESS", "1").lower() in ("1", "true", "yes")
+    if not want:
+        return False
+    try:
+        import tqdm  # noqa: F401
+    except ImportError:
+        return False
+    return True
+
+
+def resolve_hj_grid_shape() -> tuple[int, int, int, int, int, int]:
+    """Grid shape from ``HJ_BRT_GRID_6D`` or ``HJ_BRT_GRID_PRESET`` (default ``standard``)."""
+    raw = os.environ.get("HJ_BRT_GRID_6D", "").strip()
+    if raw:
+        parts = tuple(int(x) for x in raw.split(","))
+        if len(parts) != 6:
+            raise ValueError("HJ_BRT_GRID_6D must have six comma-separated integers")
+        return parts
+    preset = os.environ.get("HJ_BRT_GRID_PRESET", "standard").strip().lower()
+    if preset not in HJ_BRT_GRID_PRESETS:
+        raise ValueError(f"HJ_BRT_GRID_PRESET must be one of {list(HJ_BRT_GRID_PRESETS)}")
+    return HJ_BRT_GRID_PRESETS[preset]
+
+
+def npz_request_matches(
+    path: str,
+    *,
+    grid_shape: tuple[int, int, int, int, int, int],
+    horizon_s: float,
+    u_max_m_s2: float,
+    rtol: float = 1e-6,
+) -> bool:
+    """True if an on-disk NPZ matches the requested solve parameters."""
+    if not os.path.isfile(path):
+        return False
+    try:
+        z = np.load(path)
+        shape = tuple(int(x) for x in z["grid_shape"])
+        times = np.asarray(z["times_s"], dtype=np.float64).reshape(-1)
+        u_npz = float(z["u_max_m_s2"]) if "u_max_m_s2" in z else float("nan")
+        z.close()
+    except Exception:
+        return False
+    if shape != tuple(int(x) for x in grid_shape):
+        return False
+    if times.size == 0:
+        return False
+    if abs(abs(float(times[-1])) - abs(float(horizon_s))) > max(1.0, rtol * abs(horizon_s)):
+        return False
+    if np.isfinite(u_npz) and abs(u_npz - float(u_max_m_s2)) > 1e-9:
+        return False
+    return True
+
+
+def load_or_solve_koz_brt_6d(
+    npz_path: str,
+    n_rad_s: float,
+    *,
+    inner_metric_E: np.ndarray,
+    inner_center_m: np.ndarray,
+    u_max_m_s2: float = 0.2,
+    d_max_m_s2: float = 0.0,
+    horizon_s: float = 900.0,
+    n_time_nodes: int = 10,
+    domain_lo: np.ndarray | None = None,
+    domain_hi: np.ndarray | None = None,
+    grid_shape: tuple[int, int, int, int, int, int] | None = None,
+    accuracy: str = "medium",
+    progress_bar: bool | None = None,
+    force_solve: bool = False,
+    reuse_npz: bool = True,
+) -> tuple["KozBRTResult6D", bool]:
+    """Load ``npz_path`` when compatible, else solve. Returns ``(result, loaded_from_disk)``."""
+    gs = grid_shape if grid_shape is not None else resolve_hj_grid_shape()
+    if progress_bar is None:
+        progress_bar = hj_progress_bar_enabled()
+    if (
+        not force_solve
+        and reuse_npz
+        and npz_request_matches(
+            npz_path,
+            grid_shape=gs,
+            horizon_s=float(horizon_s),
+            u_max_m_s2=float(u_max_m_s2),
+        )
+    ):
+        return load_koz_brt_6d_npz(npz_path), True
+    result = solve_koz_collision_brt_6d(
+        n_rad_s,
+        inner_metric_E=inner_metric_E,
+        inner_center_m=inner_center_m,
+        u_max_m_s2=u_max_m_s2,
+        d_max_m_s2=d_max_m_s2,
+        horizon_s=horizon_s,
+        n_time_nodes=n_time_nodes,
+        domain_lo=domain_lo,
+        domain_hi=domain_hi,
+        grid_shape=gs,
+        accuracy=accuracy,
+        progress_bar=progress_bar,
+    )
+    return result, False
 
 
 @dataclass
@@ -86,8 +203,12 @@ class KozHJTable6D:
         self._shape = tuple(int(x) for x in result.grid_shape)
         idx = -1 if use_final_time else 0
         vals = np.asarray(result.values[idx], dtype=np.float64)
-        axes = [np.linspace(self._lo[d], self._hi[d], self._shape[d], dtype=np.float64) for d in range(6)]
-        self._interp = RegularGridInterpolator(axes, vals, bounds_error=False, fill_value=np.nan)
+        self._values_final = vals
+        self._axes = [
+            np.linspace(self._lo[d], self._hi[d], self._shape[d], endpoint=True, dtype=np.float64)
+            for d in range(6)
+        ]
+        self._interp = RegularGridInterpolator(self._axes, vals, bounds_error=False, fill_value=np.nan)
 
     @property
     def domain_lo(self) -> np.ndarray:
@@ -129,7 +250,7 @@ def solve_koz_collision_brt_6d(
     domain_lo: np.ndarray | None = None,
     domain_hi: np.ndarray | None = None,
     grid_shape: tuple[int, int, int, int, int, int] | None = None,
-    accuracy: str = "low",
+    accuracy: str = "medium",
     progress_bar: bool = False,
 ) -> KozBRTResult6D:
     """Backward HJ collision BRT on full 6D CW state (Option 1)."""
@@ -139,11 +260,12 @@ def solve_koz_collision_brt_6d(
             "(install requirements-brt.txt and `pip install -e hj_reachability`)."
         )
     if domain_lo is None:
-        domain_lo = np.array([-2200.0, -6000.0, -900.0, -3.0, -3.0, -3.0], dtype=np.float64)
+        # y grid must include 0 (chief) and ~3200 m approach: step 300 with 25 nodes gives ..., 0, 300, ...
+        domain_lo = np.array([-1200.0, -600.0, -600.0, -3.0, -3.0, -3.0], dtype=np.float64)
     if domain_hi is None:
-        domain_hi = np.array([2200.0, 7000.0, 900.0, 3.0, 3.0, 3.0], dtype=np.float64)
+        domain_hi = np.array([1200.0, 6600.0, 600.0, 3.0, 3.0, 3.0], dtype=np.float64)
     if grid_shape is None:
-        grid_shape = (7, 7, 5, 5, 5, 5)
+        grid_shape = resolve_hj_grid_shape()
 
     dynamics = CwFull6DHJDynamics(
         float(n_rad_s),
@@ -169,13 +291,22 @@ def solve_koz_collision_brt_6d(
         accuracy,
         hamiltonian_postprocessor=hj.solver.backwards_reachable_tube,
     )
+    use_bar = bool(progress_bar) and hj_progress_bar_enabled()
+    if progress_bar and not use_bar:
+        import sys
+
+        print(
+            "Note: HJ_BRT_PROGRESS set but tqdm is not installed — solving without a progress bar. "
+            "Run: pip install tqdm",
+            file=sys.stderr,
+        )
     all_v = hj.solve(
         settings,
         dynamics,
         grid,
         jnp.array(times),
         initial,
-        progress_bar=progress_bar,
+        progress_bar=use_bar,
     )
     all_np = np.asarray(jax.device_get(all_v), dtype=np.float64)
     return KozBRTResult6D(

@@ -9,6 +9,7 @@ from typing import Any, Callable
 import numpy as np
 
 from simulation.cw_dynamics import R_EARTH_KM
+from simulation.brt_isosurface import extract_brt_v0_near_center
 from simulation.keepout import EllipsoidKeepOut
 from simulation.spacecraft_wire import bus_and_panel_edges, edges_to_nan_polyline, scale_edges
 
@@ -65,34 +66,24 @@ def brt_position_isosurface_lvlh_m(
     level: float = 0.0,
 ) -> tuple[np.ndarray, np.ndarray] | None:
     """Return ``(verts_lvlh_m, faces)`` for ``V=level`` in position at fixed velocity, or ``None``."""
-    xs = np.linspace(x_lo, x_hi, nx, dtype=np.float64)
-    ys = np.linspace(y_lo, y_hi, ny, dtype=np.float64)
-    zs = np.linspace(z_lo, z_hi, nz, dtype=np.float64)
-    dx = float(xs[1] - xs[0]) if nx > 1 else 1.0
-    dy = float(ys[1] - ys[0]) if ny > 1 else 1.0
-    dz = float(zs[1] - zs[0]) if nz > 1 else 1.0
-    X, Y, Z = np.meshgrid(xs, ys, zs, indexing="ij")
-    pts = np.stack(
-        [
-            X.ravel(),
-            Y.ravel(),
-            Z.ravel(),
-            np.full(X.size, vx),
-            np.full(X.size, vy),
-            np.full(X.size, vz),
-        ],
-        axis=-1,
-    )
-    vol = np.asarray(value_on_grid(pts), dtype=np.float64).reshape(nx, ny, nz)
-    try:
-        from skimage.measure import marching_cubes
+    from simulation.brt_isosurface import marching_cubes_v0_lvlh
 
-        verts, faces, _, _ = marching_cubes(vol, level=level, spacing=(dx, dy, dz))
-    except Exception:
-        return None
-    origin = np.array([x_lo, y_lo, z_lo], dtype=np.float64)
-    verts_phys = verts + origin
-    return verts_phys, faces
+    return marching_cubes_v0_lvlh(
+        value_on_grid,
+        vx,
+        vy,
+        vz,
+        x_lo,
+        x_hi,
+        y_lo,
+        y_hi,
+        z_lo,
+        z_hi,
+        nx,
+        ny,
+        nz,
+        level=level,
+    )
 
 
 def _earth_wireframe_km(
@@ -414,51 +405,80 @@ def render_orbit_eci_animation(
             x6 = np.asarray(states_lvlh[ri], dtype=np.float64).reshape(6)
             lo6 = np.asarray(getattr(brt_option1, "domain_lo"), dtype=np.float64).reshape(6)
             hi6 = np.asarray(getattr(brt_option1, "domain_hi"), dtype=np.float64).reshape(6)
-            r = x6[:3]
+            r_dep = x6[:3]
             mrg = np.asarray(formation_brt_margin_m, dtype=np.float64).reshape(3)
-            xlo = max(lo6[0], min(hi6[0] - 1e-6, r[0] - mrg[0]))
-            xhi = min(hi6[0], max(lo6[0] + 1e-6, r[0] + mrg[0]))
-            ylo = max(lo6[1], min(hi6[1] - 1e-6, r[1] - mrg[1]))
-            yhi = min(hi6[1], max(lo6[1] + 1e-6, r[1] + mrg[1]))
-            zlo = max(lo6[2], min(hi6[2] - 1e-6, r[2] - mrg[2]))
-            zhi = min(hi6[2], max(lo6[2] + 1e-6, r[2] + mrg[2]))
+            # BRT around chief (KOZ target); expand search until V brackets 0, clip to formation view.
+            o_chief = np.zeros(3, dtype=np.float64)
+            search_half = float(max(np.max(mrg), 2.5 * float(np.linalg.norm(r_dep)), 2200.0))
+            display_r = float(max(np.linalg.norm(r_dep) + np.max(mrg), 800.0))
             nx, ny, nz = formation_brt_iso_resolution
-            if xhi <= xlo or yhi <= ylo or zhi <= zlo:
-                return
             try:
-                iso = brt_position_isosurface_lvlh_m(
+                surf = extract_brt_v0_near_center(
                     brt_option1.value_batch,
+                    o_chief,
                     float(x6[3]),
                     float(x6[4]),
                     float(x6[5]),
-                    float(xlo),
-                    float(xhi),
-                    float(ylo),
-                    float(yhi),
-                    float(zlo),
-                    float(zhi),
-                    int(nx),
-                    int(ny),
-                    int(nz),
-                    level=0.0,
+                    domain_lo=lo6,
+                    domain_hi=hi6,
+                    initial_half_m=max(
+                        2200.0,
+                        max(2.5 * float(np.max(inner_koz_formation.semi_axes)), 80.0)
+                        if inner_koz_formation is not None
+                        else 120.0,
+                    ),
+                    max_half_m=search_half,
+                    iso_resolution=(int(nx), int(ny), int(nz)),
+                    display_radius_m=display_r,
+                    contour_half_m=display_r,
+                    contour_n2d=48,
                 )
             except Exception:
-                iso = None
-            if iso is None:
-                return
-            verts_m, faces = iso
-            if faces.size == 0:
-                return
-            v_eci = lvlh_points_m_to_eci_km(rci, Ri, verts_m)
-            polys = [v_eci[fk] for fk in faces]
-            coll = Poly3DCollection(
-                polys,
-                facecolors=(0.55, 0.15, 0.75, 0.08),
-                edgecolors=(0.45, 0.08, 0.6, 0.25),
-                linewidths=0.12,
-            )
-            ax_f.add_collection3d(coll)
-            formation_overlays.append(coll)
+                surf = {
+                    "mesh_verts": None,
+                    "mesh_faces": None,
+                    "footprint_polys": [],
+                    "contour_lines": [],
+                }
+            for poly in surf.get("footprint_polys") or []:
+                p3 = np.asarray(poly, dtype=np.float64)
+                if p3.shape[0] < 3:
+                    continue
+                eci_fp = lvlh_points_m_to_eci_km(rci, Ri, p3)
+                coll_fp = Poly3DCollection(
+                    [eci_fp],
+                    facecolors=(0.55, 0.15, 0.75, 0.14),
+                    edgecolors=(0.4, 0.05, 0.55, 0.4),
+                    linewidths=0.2,
+                )
+                ax_f.add_collection3d(coll_fp)
+                formation_overlays.append(coll_fp)
+            vm, fm = surf.get("mesh_verts"), surf.get("mesh_faces")
+            if vm is not None and fm is not None and np.asarray(fm).size > 0:
+                v_eci = lvlh_points_m_to_eci_km(rci, Ri, np.asarray(vm, dtype=np.float64))
+                polys = [v_eci[fk] for fk in np.asarray(fm, dtype=np.int64)]
+                coll = Poly3DCollection(
+                    polys,
+                    facecolors=(0.55, 0.15, 0.75, 0.18),
+                    edgecolors=(0.38, 0.05, 0.52, 0.28),
+                    linewidths=0.12,
+                )
+                ax_f.add_collection3d(coll)
+                formation_overlays.append(coll)
+            for line in surf.get("contour_lines") or []:
+                ln = np.asarray(line, dtype=np.float64)
+                if ln.shape[0] < 2:
+                    continue
+                eci_ln = lvlh_points_m_to_eci_km(rci, Ri, ln)
+                pl = ax_f.plot(
+                    eci_ln[:, 0],
+                    eci_ln[:, 1],
+                    eci_ln[:, 2],
+                    color="mediumpurple",
+                    linewidth=1.1,
+                    alpha=0.85,
+                )[0]
+                formation_overlays.append(pl)
 
     def _set_arrows(lines: list, origin: np.ndarray, R: np.ndarray) -> None:
         o = np.asarray(origin, dtype=np.float64).reshape(3)

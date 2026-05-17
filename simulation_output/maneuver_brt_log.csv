@@ -1,5 +1,0 @@
-model,step_index,time_s,unsafe,brt_value,passive_safe,burn_kind,x_m,y_m,z_m
-geometry_placeholder,0,0.0,0,-1.0,1,,0.0,3200.0,0.0
-geometry_placeholder,1,45.0,0,-1.0,1,approach,-0.949571159177026,3194.643687761453,0.0
-geometry_placeholder,2,90.0,0,-1.0,1,approach,-3.079454457654208,3185.8410778563066,0.0
-geometry_placeholder,3,150.0,0,-1.0,1,coast,-7.330806038338778,3174.5295782746643,0.0

@@ -1,16 +1,21 @@
-"""Static PNG / GIF of Option-1 BRT boundary (V≈0) in chief LVLH — zoomed on the target (chief)."""
+"""Static PNG / GIF of Option-1 BRT unsafe set (V≤0) in chief LVLH — zoomed on the target (chief)."""
 
 from __future__ import annotations
 
 import os
+import time as time_mod
 import warnings
 from typing import Any
 
 import numpy as np
 
+from simulation.brt_isosurface import extract_brt_from_hj_native, extract_brt_v0_near_center
 from simulation.keepout import EllipsoidKeepOut
-from simulation.orbit_movie import brt_position_isosurface_lvlh_m
 from simulation.spacecraft_wire import bus_and_panel_edges, edges_to_nan_polyline, scale_edges
+
+
+def _log(msg: str) -> None:
+    print(msg, flush=True)
 
 
 def _axis_cube_3d(ax, center: np.ndarray, half: float) -> None:
@@ -26,6 +31,103 @@ def _axis_cube_3d(ax, center: np.ndarray, half: float) -> None:
         pass
 
 
+def _axis_fit_geometry(
+    ax,
+    center: np.ndarray,
+    *,
+    mesh_lo: np.ndarray | None,
+    mesh_hi: np.ndarray | None,
+    fallback_half: float,
+    koz_pad_m: float,
+) -> None:
+    """Frame axes to the BRT mesh (avoids clipping an elongated tube in a centered cube)."""
+    c = np.asarray(center, dtype=np.float64).reshape(3)
+    pad_min = float(max(koz_pad_m, 40.0))
+    if mesh_lo is not None and mesh_hi is not None:
+        lo = np.asarray(mesh_lo, dtype=np.float64).reshape(3)
+        hi = np.asarray(mesh_hi, dtype=np.float64).reshape(3)
+        span = np.maximum(hi - lo, pad_min)
+        pad = np.maximum(0.12 * span, pad_min)
+        ax.set_xlim(lo[0] - pad[0], hi[0] + pad[0])
+        ax.set_ylim(lo[1] - pad[1], hi[1] + pad[1])
+        ax.set_zlim(lo[2] - pad[2], hi[2] + pad[2])
+        try:
+            ax.set_box_aspect(tuple(float(h - l) for l, h in zip(lo - pad, hi + pad)))
+        except Exception:
+            pass
+        return
+    _axis_cube_3d(ax, c, fallback_half)
+
+
+def _extract_snapshot_surface(hj_tab: Any, o0: np.ndarray, x6: np.ndarray) -> dict[str, Any]:
+    lo6 = np.asarray(getattr(hj_tab, "domain_lo"), dtype=np.float64).reshape(6)
+    hi6 = np.asarray(getattr(hj_tab, "domain_hi"), dtype=np.float64).reshape(6)
+    koz_max = 45.0
+    display_r = max(1.35 * koz_max, 45.0)
+    chief_half = float(os.environ.get("BRT_SNAPSHOT_CHIEF_HALF_M", "1200"))
+    max_search = float(os.environ.get("BRT_SNAPSHOT_MAX_HALF_M", "6000"))
+    iso_snap = os.environ.get("BRT_SNAPSHOT_ISO", "28,28,22").strip()
+    parts = [int(x) for x in iso_snap.split(",")]
+    if len(parts) != 3:
+        raise ValueError("BRT_SNAPSHOT_ISO must be three comma-separated integers")
+
+    t0 = time_mod.perf_counter()
+    if hasattr(hj_tab, "_values_final") and hasattr(hj_tab, "grid_shape"):
+        _log("  Extracting BRT shell from HJ grid nodes (fast path)…")
+        surf = extract_brt_from_hj_native(
+            lo6,
+            hi6,
+            tuple(int(x) for x in hj_tab.grid_shape),
+            hj_tab._values_final,
+            o0,
+            float(x6[3]),
+            float(x6[4]),
+            float(x6[5]),
+            display_radius_m=display_r,
+            max_draw_faces=int(os.environ.get("BRT_SNAPSHOT_MAX_FACES", "8000")),
+        )
+    elif hasattr(hj_tab, "value_batch"):
+        _log(
+            f"  Extracting BRT shell via interpolation (iso {parts[0]}×{parts[1]}×{parts[2]}, "
+            f"box half up to {max_search:.0f} m)…"
+        )
+        surf = extract_brt_v0_near_center(
+            hj_tab.value_batch,
+            o0,
+            float(x6[3]),
+            float(x6[4]),
+            float(x6[5]),
+            domain_lo=lo6,
+            domain_hi=hi6,
+            initial_half_m=max(chief_half, 2.5 * koz_max),
+            max_half_m=max_search,
+            iso_resolution=(parts[0], parts[1], parts[2]),
+            display_radius_m=display_r,
+            contour_half_m=display_r,
+            contour_n2d=int(os.environ.get("BRT_SNAPSHOT_CONTOUR_N", "36")),
+        )
+    else:
+        warnings.warn("hj_tab has no value_batch; BRT surface skipped.", UserWarning)
+        surf = {
+            "mesh_verts": None,
+            "mesh_faces": None,
+            "footprint_polys": [],
+            "contour_lines": [],
+        }
+    nf = 0
+    if surf.get("mesh_faces") is not None:
+        nf = int(np.asarray(surf["mesh_faces"]).shape[0])
+    n_loops = len(surf.get("slice_loops_3d") or [])
+    backend = str(surf.get("mesh_backend", "?"))
+    _log(
+        f"  Surface ready in {time_mod.perf_counter() - t0:.1f} s "
+        f"(3D backend={backend}, mesh faces={nf}, z-slice loops={n_loops})."
+    )
+    if backend == "stacked_slices":
+        _log("  (Install scikit-image for a solid 3D shell: pip install scikit-image)")
+    return surf
+
+
 def render_brt_lvlh_snapshot(
     hj_tab: Any,
     inner_koz: EllipsoidKeepOut,
@@ -33,20 +135,19 @@ def render_brt_lvlh_snapshot(
     *,
     output_path_png: str,
     output_path_gif: str | None = None,
-    chief_box_half_m: float = 380.0,
-    iso_resolution: tuple[int, int, int] = (44, 44, 32),
-    dpi: int = 150,
-    gif_frames: int = 40,
-    gif_fps: float = 10.0,
+    chief_box_half_m: float = 1200.0,
+    max_search_half_m: float = 6000.0,
+    iso_resolution: tuple[int, int, int] = (28, 28, 22),
+    dpi: int = 120,
+    gif_frames: int = 16,
+    gif_fps: float = 8.0,
 ) -> tuple[str | None, str | None]:
-    """LVLH plot (meters): inner KOZ + V=0 BRT shell at deputy velocity, **chief (target) only** in frame.
+    """LVLH plot (meters): inner KOZ (terminal) + **physical BRT** ``{V ≤ 0}`` near the chief.
 
-    Marching cubes samples ``[-chief_box_half_m, +chief_box_half_m]^3`` in position (intersected with the
-    HJ grid), centered on the chief at LVLH origin. Axis limits are tight around the origin from KOZ size
-    and BRT vertices near the target (deputy mesh / markers omitted so the view stays zoomed on the KOZ).
+    Uses stored HJ grid values when available (seconds). Dense interpolation + 48-frame GIFs
+    can take many minutes and are no longer the default.
 
-    Returns ``(png_path_or_none, gif_path_or_none)``. GIF omitted if ``output_path_gif`` is ``None`` or
-    ``gif_frames < 2``. Requires ``scikit-image`` for marching cubes.
+    Returns ``(png_path_or_none, gif_path_or_none)``.
     """
     import matplotlib
 
@@ -58,82 +159,107 @@ def render_brt_lvlh_snapshot(
     from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
     x6 = np.asarray(x_deputy_lvlh_m, dtype=np.float64).reshape(6)
-    v_d = x6[3:6].copy()
-    lo6 = np.asarray(getattr(hj_tab, "domain_lo"), dtype=np.float64).reshape(6)
-    hi6 = np.asarray(getattr(hj_tab, "domain_hi"), dtype=np.float64).reshape(6)
-    half_box = float(max(50.0, chief_box_half_m))
-
     o0 = np.zeros(3, dtype=np.float64)
-    x_lo = max(lo6[0], float(o0[0] - half_box))
-    x_hi = min(hi6[0], float(o0[0] + half_box))
-    y_lo = max(lo6[1], float(o0[1] - half_box))
-    y_hi = min(hi6[1], float(o0[1] + half_box))
-    z_lo = max(lo6[2], float(o0[2] - half_box))
-    z_hi = min(hi6[2], float(o0[2] + half_box))
-    if x_hi <= x_lo or y_hi <= y_lo or z_hi <= z_lo:
-        warnings.warn("BRT snapshot chief box vs HJ domain collapsed; using inner KOZ extent only.", UserWarning)
-        smax = float(np.max(inner_koz.semi_axes))
-        x_lo, x_hi = -2.5 * smax, 2.5 * smax
-        y_lo, y_hi = -2.5 * smax, 2.5 * smax
-        z_lo, z_hi = -2.5 * smax, 2.5 * smax
+    koz_max = float(np.max(inner_koz.semi_axes))
+    display_r = max(1.35 * koz_max, 45.0)
 
-    nx, ny, nz = (max(10, int(iso_resolution[i])) for i in range(3))
-    iso = None
-    if hasattr(hj_tab, "value_batch"):
-        try:
-            iso = brt_position_isosurface_lvlh_m(
-                hj_tab.value_batch,
-                float(x6[3]),
-                float(x6[4]),
-                float(x6[5]),
-                float(x_lo),
-                float(x_hi),
-                float(y_lo),
-                float(y_hi),
-                float(z_lo),
-                float(z_hi),
-                int(nx),
-                int(ny),
-                int(nz),
-                level=0.0,
-            )
-        except Exception as exc:
-            warnings.warn(f"BRT isosurface extraction failed: {exc}", UserWarning)
+    surf: dict[str, Any] = {
+        "mesh_verts": None,
+        "mesh_faces": None,
+        "footprint_polys": [],
+        "contour_lines": [],
+    }
+    if hasattr(hj_tab, "value_batch") or hasattr(hj_tab, "_values_final"):
+        os.environ.setdefault("BRT_SNAPSHOT_CHIEF_HALF_M", str(chief_box_half_m))
+        os.environ.setdefault(
+            "BRT_SNAPSHOT_ISO",
+            f"{iso_resolution[0]},{iso_resolution[1]},{iso_resolution[2]}",
+        )
+        surf = _extract_snapshot_surface(hj_tab, o0, x6)
+    else:
+        warnings.warn("hj_tab has no value_batch; BRT surface skipped.", UserWarning)
 
     chief_edges = scale_edges(bus_and_panel_edges((10.0, 4.0, 4.0), panel_length=22.0, panel_half_width=2.5), 1.0)
-    koz_max = float(np.max(inner_koz.semi_axes))
-    # Tight zoom on chief: KOZ + nearby BRT shell only (ignore deputy range).
-    pad = 1.12
-    half_view = max(1.35 * koz_max, 45.0)
-    if iso is not None and iso[1].size > 0:
-        vm = np.asarray(iso[0], dtype=np.float64)
-        d0 = np.linalg.norm(vm, axis=1)
-        near = d0 <= (1.35 * half_box + 1e-9)
-        if np.any(near):
-            vm_n = vm[near]
-            extent = float(np.max(np.abs(vm_n)))
-            half_view = max(half_view, pad * extent)
-        else:
-            extent = float(np.max(np.linalg.norm(vm, axis=1)))
-            half_view = min(half_box, max(half_view, pad * 0.35 * extent))
-    half_view = float(min(half_view, half_box * 1.02))
+    half_view = float(surf.get("view_half_m", display_r * 1.08))
+    view_cap = float(os.environ.get("BRT_SNAPSHOT_VIEW_HALF_M", "2800"))
+    half_view = min(half_view, view_cap)
+    vm = surf.get("mesh_verts")
+    if vm is not None and np.asarray(vm).size > 0:
+        half_view = min(
+            view_cap,
+            max(half_view, float(np.max(np.linalg.norm(np.asarray(vm) - o0, axis=1))) * 1.05),
+        )
 
-    def _draw_frame(ax, title_suffix: str = "") -> Poly3DCollection | None:
-        ax.clear()
-        Xm, Ym, Zm = inner_koz.surface_mesh(nu=48, nv=26)
-        ax.plot_wireframe(Xm, Ym, Zm, color="crimson", linewidth=0.65, alpha=0.96, rstride=1, cstride=1)
-        brt_coll = None
-        if iso is not None:
-            verts_m, faces = iso
+    brt_label_added = False
+
+    def _draw_brt(ax) -> None:
+        nonlocal brt_label_added
+        for poly in surf.get("footprint_polys") or []:
+            p3 = np.asarray(poly, dtype=np.float64)
+            if p3.shape[0] >= 3:
+                coll_fp = Poly3DCollection(
+                    [p3],
+                    facecolors=(0.55, 0.15, 0.75, 0.22),
+                    edgecolors=(0.4, 0.05, 0.55, 0.55),
+                    linewidths=0.35,
+                )
+                ax.add_collection3d(coll_fp)
+                if not brt_label_added:
+                    coll_fp.set_label("BRT (V≤0), x–y footprint")
+                    brt_label_added = True
+        if surf.get("mesh_verts") is not None and surf.get("mesh_faces") is not None:
+            verts_m = np.asarray(surf["mesh_verts"], dtype=np.float64)
+            faces = np.asarray(surf["mesh_faces"], dtype=np.int64)
             if faces.size > 0:
                 polys = [verts_m[fk] for fk in faces]
-                brt_coll = Poly3DCollection(
+                coll = Poly3DCollection(
                     polys,
-                    facecolors=(0.55, 0.15, 0.75, 0.14),
-                    edgecolors=(0.45, 0.08, 0.6, 0.4),
-                    linewidths=0.18,
+                    facecolors=(0.55, 0.15, 0.75, 0.32),
+                    edgecolors=(0.32, 0.04, 0.48, 0.42),
+                    linewidths=0.22,
                 )
-                ax.add_collection3d(brt_coll)
+                if not brt_label_added:
+                    coll.set_label("BRT (V≤0)")
+                    brt_label_added = True
+                try:
+                    coll.set_zsort("average")
+                except Exception:
+                    pass
+                ax.add_collection3d(coll)
+        # With a closed mesh, skip the extra z=0 contour and filled footprints (they look like a cutting plane).
+        if surf.get("mesh_verts") is not None:
+            loop_lines = list(surf.get("slice_loops_3d") or [])
+        else:
+            loop_lines = list(surf.get("slice_loops_3d") or []) + list(surf.get("contour_lines") or [])
+        for j, line in enumerate(loop_lines):
+            ln = np.asarray(line, dtype=np.float64)
+            if ln.shape[0] >= 2:
+                ax.plot(
+                    ln[:, 0],
+                    ln[:, 1],
+                    ln[:, 2],
+                    color="blueviolet",
+                    linewidth=0.85 if surf.get("mesh_verts") is None else 0.55,
+                    alpha=0.75 if surf.get("mesh_verts") is None else 0.45,
+                    linestyle="-",
+                    label="BRT slice stack (3D)" if j == 0 and surf.get("mesh_verts") is None else None,
+                )
+
+    def _draw_frame(ax, title_suffix: str = "") -> None:
+        ax.clear()
+        Xm, Ym, Zm = inner_koz.surface_mesh(nu=32, nv=18)
+        ax.plot_wireframe(
+            Xm,
+            Ym,
+            Zm,
+            color="crimson",
+            linewidth=0.65,
+            alpha=0.96,
+            rstride=1,
+            cstride=1,
+            label="Inner KOZ (terminal)",
+        )
+        _draw_brt(ax)
         I = np.eye(3, dtype=np.float64)
         xs, ys, zs = edges_to_nan_polyline(o0, I, chief_edges)
         ax.plot(xs, ys, zs, color="0.2", linewidth=1.0, label="Chief (target)")
@@ -141,13 +267,32 @@ def render_brt_lvlh_snapshot(
         ax.set_xlabel("x LVLH (m)")
         ax.set_ylabel("y LVLH (m)")
         ax.set_zlabel("z LVLH (m)")
-        ttl = "Option 1 BRT (V=0) + inner KOZ — zoom on chief (LVLH origin)"
-        if iso is None or (iso is not None and iso[1].size == 0):
-            ttl += " — BRT mesh missing (scikit-image / res / box half)"
+        has_mesh = surf.get("mesh_faces") is not None and np.asarray(surf["mesh_faces"]).size > 0
+        has_fp = bool(surf.get("footprint_polys"))
+        has_cont = bool(surf.get("contour_lines"))
+        ttl = "Option 1 BRT + inner KOZ — chief LVLH"
+        lvl_name = str(surf.get("contour_level_name", surf.get("contour_level_tag", "")))
+        has_loops = bool(surf.get("slice_loops_3d"))
+        if has_mesh:
+            ttl += " (V≤0 shell, gap-filled on HJ voxels)"
+        elif has_loops:
+            ttl += " (BRT contours on each z grid plane; pip install scikit-image for solid shell)"
+        elif has_fp and lvl_name.startswith("hj_native_min"):
+            ttl += " (low-V envelope on z=0)"
+        elif has_fp or has_cont:
+            ttl += " (BRT slice contour at chief z)"
+        else:
+            ttl += " — no BRT on grid (use HJ_BRT_HORIZON_S=900, HJ_U_MAX_M_S2=0.2)"
         ax.set_title(ttl + title_suffix, fontsize=10)
         ax.legend(loc="upper right", fontsize=7)
-        _axis_cube_3d(ax, o0, half_view)
-        return brt_coll
+        _axis_fit_geometry(
+            ax,
+            o0,
+            mesh_lo=surf.get("mesh_bounds_lo"),
+            mesh_hi=surf.get("mesh_bounds_hi"),
+            fallback_half=half_view,
+            koz_pad_m=2.5 * koz_max,
+        )
 
     fig = plt.figure(figsize=(9.0, 8.4))
     ax = fig.add_subplot(111, projection="3d")
@@ -155,7 +300,10 @@ def render_brt_lvlh_snapshot(
     fig.tight_layout()
     outp = os.path.abspath(output_path_png)
     os.makedirs(os.path.dirname(outp) or ".", exist_ok=True)
+    _log("  Writing PNG…")
+    t_png = time_mod.perf_counter()
     fig.savefig(outp, dpi=int(dpi))
+    _log(f"  PNG done in {time_mod.perf_counter() - t_png:.1f} s.")
     png_written = outp
 
     gif_written: str | None = None
@@ -163,6 +311,8 @@ def render_brt_lvlh_snapshot(
         outg = os.path.abspath(output_path_gif)
         os.makedirs(os.path.dirname(outg) or ".", exist_ok=True)
         _draw_frame(ax, "")
+        _log(f"  Writing GIF ({int(gif_frames)} frames @ {gif_fps} fps)…")
+        t_gif = time_mod.perf_counter()
 
         def step(i: int) -> tuple:
             ax.view_init(elev=24.0, azim=float(i) * 360.0 / float(gif_frames))
@@ -178,6 +328,7 @@ def render_brt_lvlh_snapshot(
         try:
             anim.save(outg, writer="pillow", fps=float(gif_fps), dpi=int(dpi))
             gif_written = outg
+            _log(f"  GIF done in {time_mod.perf_counter() - t_gif:.1f} s.")
         except Exception as exc:
             warnings.warn(f"BRT snapshot GIF failed: {exc}", UserWarning)
 

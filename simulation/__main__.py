@@ -120,9 +120,12 @@ def main() -> None:
 
     from simulation.hj_koz_brt import (
         HJ_AVAILABLE,
+        HJ_BRT_GRID_PRESETS,
         KozHJTable6D,
+        hj_progress_bar_enabled,
+        load_or_solve_koz_brt_6d,
+        resolve_hj_grid_shape,
         save_koz_brt_6d_npz,
-        solve_koz_collision_brt_6d,
     )
 
     if not HJ_AVAILABLE:
@@ -132,41 +135,119 @@ def main() -> None:
             file=sys.stderr,
         )
         sys.exit(1)
+    try:
+        import skimage  # noqa: F401
+    except ImportError:
+        print(
+            "Note: scikit-image not installed — 3D BRT shells use slice contours only. "
+            "Run: pip install scikit-image",
+            flush=True,
+        )
 
     # Inner KOZ is in deputy-relative LVLH with origin at the chief (target). Unsafe: deputy inside
     # the ellipsoid centered at inner_koz.center (default 0) — i.e. keep-out volume surrounding the chief.
+    npz_path = os.path.join(str(out_dir), "brt_koz_collision_6d.npz")
+    gs = resolve_hj_grid_shape()
+    n_cells = int(np.prod(gs))
+    preset = os.environ.get("HJ_BRT_GRID_PRESET", "standard")
     print(
-        "Computing Option 1 BRT (6D HJ, backward discriminating tube) for the inner KOZ "
-        f"(chief-centered LVLH; semi-axes m = {inner_axes.tolist()}, center m = {inner_koz.center.tolist()})…"
+        "Option 1 BRT (6D HJ, backward discriminating tube) for the inner KOZ "
+        f"(chief-centered LVLH; semi-axes m = {inner_axes.tolist()}).\n"
+        f"  Grid: {gs} ({n_cells:,} nodes/slice; preset={preset!r}, "
+        f"available: {list(HJ_BRT_GRID_PRESETS)}). Expect several minutes on a laptop."
     )
     t0 = time_mod.perf_counter()
     dmax = float(os.environ.get("HJ_DISTURBANCE_MAX_M_S2", "0"))
-    gs = tuple(int(x) for x in os.environ.get("HJ_BRT_GRID_6D", "7,7,5,5,5,5").split(","))
-    if len(gs) != 6:
-        raise ValueError("HJ_BRT_GRID_6D must have six comma-separated integers")
     dlo_e = os.environ.get("HJ_BRT_DOMAIN_LO", "").strip()
     dhi_e = os.environ.get("HJ_BRT_DOMAIN_HI", "").strip()
     domain_lo = np.array([float(x) for x in dlo_e.split(",")], dtype=np.float64) if dlo_e else None
     domain_hi = np.array([float(x) for x in dhi_e.split(",")], dtype=np.float64) if dhi_e else None
-    hj_res6 = solve_koz_collision_brt_6d(
+    horizon_s = float(os.environ.get("HJ_BRT_HORIZON_S", "900"))
+    u_max = float(os.environ.get("HJ_U_MAX_M_S2", "0.2"))
+    accuracy = os.environ.get("HJ_BRT_ACCURACY", "medium")
+    progress = hj_progress_bar_enabled()
+    force_solve = os.environ.get("HJ_BRT_FORCE_SOLVE", "0").lower() in ("1", "true", "yes")
+    reuse_npz = os.environ.get("HJ_BRT_REUSE_NPZ", "1").lower() not in ("0", "false", "no")
+    hj_res6, loaded_npz = load_or_solve_koz_brt_6d(
+        npz_path,
         leo.n_rad_s,
         inner_metric_E=inner_koz.metric(),
         inner_center_m=inner_koz.center,
-        u_max_m_s2=float(os.environ.get("HJ_U_MAX_M_S2", "0.05")),
+        u_max_m_s2=u_max,
         d_max_m_s2=dmax,
-        horizon_s=float(os.environ.get("HJ_BRT_HORIZON_S", "90")),
-        n_time_nodes=int(os.environ.get("HJ_BRT_TIME_NODES", "4")),
+        horizon_s=horizon_s,
+        n_time_nodes=int(os.environ.get("HJ_BRT_TIME_NODES", "12")),
         domain_lo=domain_lo,
         domain_hi=domain_hi,
         grid_shape=gs,
-        accuracy=os.environ.get("HJ_BRT_ACCURACY", "low"),
-        progress_bar=os.environ.get("HJ_BRT_PROGRESS", "").lower() in ("1", "true"),
+        accuracy=accuracy,
+        progress_bar=progress,
+        force_solve=force_solve,
+        reuse_npz=reuse_npz,
     )
     elapsed = time_mod.perf_counter() - t0
-    npz_path = os.path.join(str(out_dir), "brt_koz_collision_6d.npz")
-    save_koz_brt_6d_npz(npz_path, hj_res6)
+    v_fin = np.asarray(hj_res6.values[-1], dtype=np.float64)
+    frac_unsafe = float(np.mean(v_fin <= 0.0))
+    print(
+        f"  HJ grid at τ=-{abs(float(hj_res6.times_s[-1])):.0f} s: "
+        f"{frac_unsafe * 100:.2f}% nodes with V≤0 (need ≫1 cell beyond KOZ for a 3D shell)."
+    )
+    if frac_unsafe < 0.002:
+        print(
+            "  Warning: BRT barely grew on this grid — try HJ_BRT_HORIZON_S=900 and HJ_U_MAX_M_S2=0.2 "
+            "(90 s + 0.05 m/s² leaves only the terminal KOZ cell unsafe)."
+        )
+    from simulation.hj_brt_validation import print_brt_validation_report, validate_brt_backward_evolution
+
+    val = validate_brt_backward_evolution(
+        hj_res6,
+        slice_z_m=float(os.environ.get("BRT_SLICE_Z_M", "0")),
+        slice_vx_m_s=float(os.environ.get("BRT_SLICE_VX_M_S", "0")),
+        slice_vy_m_s=float(os.environ.get("BRT_SLICE_VY_M_S", "0")),
+        slice_vz_m_s=float(os.environ.get("BRT_SLICE_VZ_M_S", "0")),
+        deputy_pos_m=x0[:3],
+    )
+    print_brt_validation_report(val)
+    if not loaded_npz:
+        save_koz_brt_6d_npz(npz_path, hj_res6)
     hj_tab = KozHJTable6D(hj_res6)
-    print(f"BRT computation finished in {elapsed:.2f} s. Saved {npz_path}")
+    if loaded_npz:
+        print(f"BRT loaded from {npz_path} ({elapsed:.2f} s). Set HJ_BRT_FORCE_SOLVE=1 to recompute.")
+    else:
+        print(f"BRT solve finished in {elapsed:.2f} s. Saved {npz_path}")
+
+    if os.environ.get("BRT_VALUE_EVOLUTION_GIF", "1").lower() not in ("0", "false", "no"):
+        from simulation.brt_slice_evolution_viz import render_brt_xy_value_evolution_gif
+
+        evo_path = os.path.join(str(out_dir), "brt_value_xy_slice_evolution.gif")
+        z_sl = float(os.environ.get("BRT_SLICE_Z_M", "0"))
+        vxs = float(os.environ.get("BRT_SLICE_VX_M_S", "0"))
+        vys = float(os.environ.get("BRT_SLICE_VY_M_S", "0"))
+        vzs = float(os.environ.get("BRT_SLICE_VZ_M_S", "0"))
+        evo_fps = float(os.environ.get("BRT_VALUE_EVOLUTION_FPS", "2"))
+        evo_dpi = int(os.environ.get("BRT_VALUE_EVOLUTION_DPI", "140"))
+        vmax_e = os.environ.get("BRT_VALUE_EVOLUTION_VMAX", "").strip()
+        vmax_opt = float(vmax_e) if vmax_e else None
+        hold_last = int(os.environ.get("BRT_VALUE_EVOLUTION_HOLD_FRAMES", "8"))
+        print(
+            "Rendering BRT value evolution (x–y heatmap, fixed z, v=0 slice; one frame per HJ time node)…"
+        )
+        evo_out = render_brt_xy_value_evolution_gif(
+            hj_res6,
+            output_path=evo_path,
+            inner_koz=inner_koz,
+            deputy_pos_m=x0[:3],
+            slice_z_m=z_sl,
+            slice_vx_m_s=vxs,
+            slice_vy_m_s=vys,
+            slice_vz_m_s=vzs,
+            fps=evo_fps,
+            dpi=evo_dpi,
+            vmax_abs=vmax_opt,
+            hold_last_frames=hold_last,
+        )
+        if evo_out:
+            print(f"  Wrote {evo_out}")
 
     print("Evaluating BRT (HJ value V; unsafe if V ≤ 0) at maneuver segment boundaries…")
     _, _, boundary_steps = simulate_plan_with_brt(
@@ -255,15 +336,16 @@ def main() -> None:
         if os.environ.get("BRT_SNAPSHOT_GIF", "1").lower() not in ("0", "false", "no"):
             snap_gif = os.path.join(str(out_dir), "brt_formation_lvlh.gif")
         # Half-width of LVLH position cube centered on chief (m). Smaller = tighter zoom on target.
-        chief_half = float(os.environ.get("BRT_SNAPSHOT_CHIEF_HALF_M", "320"))
-        iso_snap = os.environ.get("BRT_SNAPSHOT_ISO", "52,52,40").strip()
+        chief_half = float(os.environ.get("BRT_SNAPSHOT_CHIEF_HALF_M", "1200"))
+        max_search = float(os.environ.get("BRT_SNAPSHOT_MAX_HALF_M", "6000"))
+        iso_snap = os.environ.get("BRT_SNAPSHOT_ISO", "32,32,26").strip()
         parts = [int(x) for x in iso_snap.split(",")]
         if len(parts) != 3:
             raise ValueError("BRT_SNAPSHOT_ISO must be three comma-separated integers")
         rx, ry, rz = parts
-        gif_n = int(os.environ.get("BRT_SNAPSHOT_GIF_FRAMES", "48"))
-        gif_f = float(os.environ.get("BRT_SNAPSHOT_GIF_FPS", "10"))
-        dpi_snap = int(os.environ.get("BRT_SNAPSHOT_DPI", "150"))
+        gif_n = int(os.environ.get("BRT_SNAPSHOT_GIF_FRAMES", "16"))
+        gif_f = float(os.environ.get("BRT_SNAPSHOT_GIF_FPS", "8"))
+        dpi_snap = int(os.environ.get("BRT_SNAPSHOT_DPI", "120"))
         print("Rendering BRT + KOZ snapshot (LVLH, zoomed on chief / target)…")
         p_out, g_out = render_brt_lvlh_snapshot(
             hj_tab,
@@ -272,6 +354,7 @@ def main() -> None:
             output_path_png=snap_png,
             output_path_gif=snap_gif,
             chief_box_half_m=chief_half,
+            max_search_half_m=max_search,
             iso_resolution=(rx, ry, rz),
             dpi=dpi_snap,
             gif_frames=gif_n,
