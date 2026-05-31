@@ -18,7 +18,7 @@ TRAIN_DOMAIN_HI = np.array([800.0, 4000.0, 400.0, 2.0, 2.0, 2.0], dtype=np.float
 # Backward reachability horizon in physical seconds. Nondim time τ_max = n * horizon_s (~2 for LEO).
 BRT_HORIZON_S = 1800.0
 
-# Length scale L (m) for nondim positions x̃ = x/L; velocities ṽ = v/(nL).
+# Length scale L (m) for nondim positions x_tilde = x/L; velocities v_tilde = v/(nL).
 BRT_LENGTH_SCALE_M = 1000.0
 
 U_MAX_M_S2 = 0.2

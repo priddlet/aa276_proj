@@ -1,4 +1,4 @@
-"""DeepReach neural BRT for 6D CW KOZ collision (replaces hj_reachability grid)."""
+"""DeepReach neural BRT for 6D CW KOZ collision."""
 
 from __future__ import annotations
 
@@ -147,10 +147,10 @@ def log_control_authority(dynamics: Any) -> None:
     u = float(dynamics.u_tilde_max)
     tau = float(dynamics.tau_max)
     reach = 0.5 * u * tau * tau
-    print(f"  KOZ max semi-axis (nondim): ã={a_max:.4f}")
-    print(f"  ũ_max={u:.4f}, τ_max={tau:.3f} → ½ũ_max·τ_max²≈{reach:.4f}")
+    print(f"  KOZ max semi-axis (nondim): a_max={a_max:.4f}")
+    print(f"  u_tilde_max={u:.4f}, tau_max={tau:.3f} → 0.5*u_tilde_max*tau_max^2~{reach:.4f}")
     if u > 1e-8:
-        print(f"  Displacement/ã≈{reach / max(a_max, 1e-9):.1f} (≲1 ⇒ maneuverable deputy, avoid-BRT≈KOZ)")
+        print(f"  Displacement/a_max~{reach / max(a_max, 1e-9):.1f} (<=1 to be maneuverable deputy, avoid-BRT~KOZ)")
     else:
         print("  Passive drift (u_max=0): expect BRT to grow along CW natural motion.")
 

@@ -6,12 +6,7 @@ State in LVLH frame fixed to the target (chief), x = [x, y, z, vx, vy, vz]^T:
   y: along-track (positive in the direction of chief velocity)
   z: cross-track (positive along chief angular momentum h = r × v)
 
-Dynamics (no control):
-  ẍ - 2n ẏ - 3n² x = 0
-  ÿ + 2n ẋ = 0
-  z̈ + n² z = 0
-
-Impulsive Δv is applied to velocity components only.
+Impulsive delta-v is applied to velocity components only.
 """
 
 from __future__ import annotations
@@ -114,7 +109,7 @@ def simulate_impulsive_segments(
     segments: list[tuple[float, np.ndarray | None]],
 ) -> tuple[np.ndarray, np.ndarray]:
     """
-    Roll out a maneuver plan as piecewise-CW segments with impulsive Δv at each
+    Roll out a maneuver plan as piecewise-CW segments with impulsive delta-v at each
     segment boundary (applied at the start of that segment).
 
     segments: list of (dt, dv) where dv may be None for coast arcs.
