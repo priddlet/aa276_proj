@@ -167,6 +167,21 @@ def build_model(dynamics: Any, train: DeepReachTrainConfig) -> Any:
     )
 
 
+def _resolve_num_target_samples(dynamics: Any, requested: int) -> int:
+    """Use KOZ-focused sampling when implemented; fall back to uniform-only training."""
+    if requested <= 0:
+        return 0
+    try:
+        dynamics.sample_target_state(1)
+    except NotImplementedError:
+        print(
+            f"WARNING: {type(dynamics).__name__}.sample_target_state not implemented "
+            f"(sync deepreach/dynamics/dynamics.py). Disabling num_target_samples={requested}."
+        )
+        return 0
+    return requested
+
+
 def train_koz_deepreach(
     config: KozBRTConfig,
     checkpoint_dir: Path,
@@ -238,6 +253,7 @@ def train_koz_deepreach(
     dynamics = build_dynamics(config)
     train_cfg = config.train
     device = _resolve_device(train_cfg.device)
+    num_target_samples = _resolve_num_target_samples(dynamics, train_cfg.num_target_samples)
 
     dataset = dataio.ReachabilityDataset(
         dynamics=dynamics,
@@ -249,7 +265,7 @@ def train_koz_deepreach(
         counter_start=0,
         counter_end=train_cfg.counter_end,
         num_src_samples=train_cfg.num_src_samples,
-        num_target_samples=train_cfg.num_target_samples,
+        num_target_samples=num_target_samples,
     )
 
     model = build_model(dynamics, train_cfg)
@@ -274,7 +290,7 @@ def train_koz_deepreach(
         print(
             f"Training DeepReach KOZ BRT: horizon={config.horizon_s:.0f} s, "
             f"model={train_cfg.deepreach_model}, CSL={train_cfg.use_csl}, "
-            f"target_samples={train_cfg.num_target_samples}, "
+            f"target_samples={num_target_samples}, "
             f"domain pos x∈[{config.domain_lo[0]:.0f},{config.domain_hi[0]:.0f}] m, "
             f"y∈[{config.domain_lo[1]:.0f},{config.domain_hi[1]:.0f}] m, "
             f"epochs={train_cfg.num_epochs}, device={device}"
