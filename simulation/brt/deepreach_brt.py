@@ -139,6 +139,22 @@ def load_brt_config(checkpoint_dir: Path) -> KozBRTConfig:
     return KozBRTConfig.from_dict(json.loads(p.read_text(encoding="utf-8")))
 
 
+def log_control_authority(dynamics: Any) -> None:
+    """Print nondim thrust vs KOZ size (avoid-BRT grows only when control is weak)."""
+    if not hasattr(dynamics, "tau_max"):
+        return
+    a_max = max(dynamics._semi_axes)
+    u = float(dynamics.u_tilde_max)
+    tau = float(dynamics.tau_max)
+    reach = 0.5 * u * tau * tau
+    print(f"  KOZ max semi-axis (nondim): ã={a_max:.4f}")
+    print(f"  ũ_max={u:.4f}, τ_max={tau:.3f} → ½ũ_max·τ_max²≈{reach:.4f}")
+    if u > 1e-8:
+        print(f"  Displacement/ã≈{reach / max(a_max, 1e-9):.1f} (≲1 ⇒ maneuverable deputy, avoid-BRT≈KOZ)")
+    else:
+        print("  Passive drift (u_max=0): expect BRT to grow along CW natural motion.")
+
+
 def build_dynamics(config: KozBRTConfig) -> Any:
     if not DEEPREACH_AVAILABLE or dr_dynamics is None:
         raise RuntimeError("DeepReach requires torch and the vendored deepreach/ package.")
@@ -300,10 +316,12 @@ def train_koz_deepreach(
             f"τ_max={tau_max:.3f} (n={config.n_rad_s:.4e}, L={config.length_scale_m:.0f} m), "
             f"model={train_cfg.deepreach_model}, CSL={train_cfg.use_csl}, "
             f"target_samples={num_target_samples}, "
+            f"curriculum counter_end={train_cfg.counter_end} (match num_epochs unless sweeping), "
             f"domain pos x∈[{config.domain_lo[0]:.0f},{config.domain_hi[0]:.0f}] m, "
             f"y∈[{config.domain_lo[1]:.0f},{config.domain_hi[1]:.0f}] m, "
             f"epochs={train_cfg.num_epochs}, device={device}"
         )
+        log_control_authority(dynamics)
     t0 = time.perf_counter()
     experiment.train(
         device=device,

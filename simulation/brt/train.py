@@ -7,7 +7,7 @@ import os
 import sys
 from pathlib import Path
 
-from simulation.brt.config import BRT_HORIZON_S, DeepReachTrainConfig, KozBRTConfig
+from simulation.brt.config import BRT_HORIZON_S, U_MAX_M_S2, DeepReachTrainConfig, KozBRTConfig
 from simulation.brt.deepreach_brt import (
     DEEPREACH_AVAILABLE,
     DEEPREACH_IMPORT_ERROR,
@@ -60,6 +60,18 @@ def main() -> None:
     )
     p.add_argument("--semi-axes", type=str, default=os.environ.get("KOZ_INNER_SEMIAXES_M", "28,45,18"))
     p.add_argument(
+        "--u-max",
+        type=float,
+        default=None,
+        help="Max thrust acceleration (m/s²). Use 0 for passive drift BRT.",
+    )
+    p.add_argument(
+        "--counter-end",
+        type=int,
+        default=None,
+        help="Curriculum length in epochs (default: same as --epochs).",
+    )
+    p.add_argument(
         "--resume-from-v2-epoch2000",
         action="store_true",
         help="Legacy: resume v2 epoch-2000 weights into v3 dir (superseded by v4 scratch train).",
@@ -94,15 +106,23 @@ def main() -> None:
     axes = tuple(float(x) for x in args.semi_axes.split(","))
 
     device = os.environ.get("DEEPREACH_DEVICE", args.device)
+    counter_end = args.counter_end
+    if counter_end is None:
+        counter_end = int(os.environ.get("DEEPREACH_COUNTER_END", str(args.epochs)))
+    u_max = args.u_max
+    if u_max is None:
+        u_max = float(os.environ.get("BRT_U_MAX_M_S2", str(U_MAX_M_S2)))
+
     train_cfg = DeepReachTrainConfig(
         device=device,
         num_epochs=args.epochs,
-        counter_end=args.epochs,
+        counter_end=counter_end,
     )
     config = KozBRTConfig(
         n_rad_s=leo.n_rad_s,
         semi_axes_m=axes,
         horizon_s=float(os.environ.get("BRT_HORIZON_S", str(BRT_HORIZON_S))),
+        u_max_m_s2=u_max,
         train=train_cfg,
     )
     train_koz_deepreach(
