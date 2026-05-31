@@ -11,7 +11,7 @@ import numpy as np
 DOMAIN_LO = np.array([-1200.0, -600.0, -600.0, -3.0, -3.0, -3.0], dtype=np.float64)
 DOMAIN_HI = np.array([1200.0, 6600.0, 600.0, 3.0, 3.0, 3.0], dtype=np.float64)
 
-# Backward reachability horizon (s). Shorter horizon for first converged diff+CSL model.
+# Backward reachability horizon (s). Shorter horizon for stable 6D diff-model convergence.
 BRT_HORIZON_S = 200.0
 
 U_MAX_M_S2 = 0.2
@@ -46,7 +46,8 @@ class DeepReachTrainConfig:
     epochs_til_checkpoint: int = 2000
     clip_grad: float = 1.0
     device: str = "cpu"
-    use_csl: bool = True
+    # CSL caused unstable loss spikes on GPU; PDE-only retrain from epoch-2000 weights.
+    use_csl: bool = False
     epochs_til_csl: int = 500
     num_csl_samples: int = 50000
     max_csl_epochs: int = 50

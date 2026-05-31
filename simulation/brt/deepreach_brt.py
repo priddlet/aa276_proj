@@ -45,7 +45,7 @@ def default_checkpoint_dir(project_root: str | Path | None = None) -> Path:
     env = os.environ.get("DEEPREACH_CHECKPOINT_DIR", "").strip()
     if env:
         return Path(env).expanduser().resolve()
-    return (root / "simulation_output" / "deepreach_koz_v2").resolve()
+    return (root / "simulation_output" / "deepreach_koz_v3").resolve()
 
 
 def _resolve_device(requested: str) -> str:
@@ -230,7 +230,7 @@ def train_koz_deepreach(
         shutil.rmtree(checkpoint_dir)
 
     checkpoint_dir.mkdir(parents=True, exist_ok=True)
-    if not resume:
+    if not resume or not _config_path(checkpoint_dir).is_file():
         save_brt_config(checkpoint_dir, config)
 
     dynamics = build_dynamics(config)

@@ -51,13 +51,36 @@ def main() -> None:
         help="Override resume epoch when using model_current.pth (no epoch in filename).",
     )
     p.add_argument("--semi-axes", type=str, default=os.environ.get("KOZ_INNER_SEMIAXES_M", "28,45,18"))
+    p.add_argument(
+        "--resume-from-v2-epoch2000",
+        action="store_true",
+        help="Resume PDE training from v2 model_epoch_2000.pth into the default v3 checkpoint dir (no CSL).",
+    )
     args = p.parse_args()
 
+    resume_from = args.resume_from.strip() or None
+    start_epoch = args.start_epoch
+    resume = args.resume
+    if args.resume_from_v2_epoch2000:
+        root = Path(__file__).resolve().parents[2]
+        v2_ckpt = root / "simulation_output" / "deepreach_koz_v2" / "training" / "checkpoints" / "model_epoch_2000.pth"
+        if not v2_ckpt.is_file():
+            print(f"v2 checkpoint not found: {v2_ckpt}", file=sys.stderr)
+            sys.exit(1)
+        resume_from = str(v2_ckpt)
+        start_epoch = 2000 if start_epoch is None else start_epoch
+        resume = True
+        if args.checkpoint_dir == str(default_checkpoint_dir()):
+            print(f"Retrain (no CSL) → {default_checkpoint_dir()} from {v2_ckpt.name}")
+
     ck_dir = args.checkpoint_dir
-    if args.resume:
-        path, ep = _latest_epoch_checkpoint(Path(ck_dir))
-        if path is not None:
-            print(f"Will resume from {path.name} (epoch {ep or args.start_epoch or '?'})")
+    if resume:
+        if resume_from:
+            print(f"Will resume from {Path(resume_from).name} (epoch {start_epoch or '?'})")
+        else:
+            path, ep = _latest_epoch_checkpoint(Path(ck_dir))
+            if path is not None:
+                print(f"Will resume from {path.name} (epoch {ep or start_epoch or '?'})")
 
     leo = leo_circular_orbit(args.altitude_km)
     axes = tuple(float(x) for x in args.semi_axes.split(","))
@@ -78,9 +101,9 @@ def main() -> None:
         config,
         ck_dir,
         force=args.force,
-        resume=args.resume,
-        resume_from=args.resume_from.strip() or None,
-        start_epoch=args.start_epoch,
+        resume=resume,
+        resume_from=resume_from,
+        start_epoch=start_epoch,
     )
     print(f"Done. Checkpoint dir: {ck_dir}")
 
