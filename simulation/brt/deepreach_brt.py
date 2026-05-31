@@ -142,14 +142,18 @@ def load_brt_config(checkpoint_dir: Path) -> KozBRTConfig:
 def build_dynamics(config: KozBRTConfig) -> Any:
     if not DEEPREACH_AVAILABLE or dr_dynamics is None:
         raise RuntimeError("DeepReach requires torch and the vendored deepreach/ package.")
+    ax = config.semi_axes_m
+    cen = config.center_m
     dyn = dr_dynamics.Cw6DKoz(
         n_rad_s=config.n_rad_s,
         u_max_m_s2=config.u_max_m_s2,
-        semi_axes_m=config.semi_axes_m,
-        center_m=config.center_m,
+        semi_axis_x_m=ax[0],
+        semi_axis_y_m=ax[1],
+        semi_axis_z_m=ax[2],
+        center_x_m=cen[0],
+        center_y_m=cen[1],
+        center_z_m=cen[2],
         d_max_m_s2=config.d_max_m_s2,
-        domain_lo=tuple(float(x) for x in config.domain_lo),
-        domain_hi=tuple(float(x) for x in config.domain_hi),
     )
     dyn.deepreach_model = config.train.deepreach_model
     return dyn

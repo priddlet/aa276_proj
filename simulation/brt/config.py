@@ -15,8 +15,8 @@ DOMAIN_HI = np.array([1200.0, 6600.0, 600.0, 3.0, 3.0, 3.0], dtype=np.float64)
 TRAIN_DOMAIN_LO = np.array([-800.0, -200.0, -400.0, -2.0, -2.0, -2.0], dtype=np.float64)
 TRAIN_DOMAIN_HI = np.array([800.0, 4000.0, 400.0, 2.0, 2.0, 2.0], dtype=np.float64)
 
-# Backward reachability horizon (s). Short horizon first until BRS tube appears in validation.
-BRT_HORIZON_S = 100.0
+# Backward reachability horizon (s). LEO CW period ~2π/n ≈ 5700 s; use O(orbit) horizons.
+BRT_HORIZON_S = 1800.0
 
 U_MAX_M_S2 = 0.2
 D_MAX_M_S2 = 0.0
