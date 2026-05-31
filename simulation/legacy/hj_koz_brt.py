@@ -22,7 +22,7 @@ from typing import Any
 
 import numpy as np
 
-_ROOT = Path(__file__).resolve().parents[1]
+_ROOT = Path(__file__).resolve().parents[2]
 _HJ_ROOT = _ROOT / "hj_reachability"
 if _HJ_ROOT.is_dir():
     _p = str(_HJ_ROOT)
@@ -37,7 +37,7 @@ try:
     import jax.numpy as jnp
     import hj_reachability as hj
 
-    from simulation.hj_cw_6d_dynamics import CwFull6DHJDynamics
+    from simulation.legacy.hj_cw_6d_dynamics import CwFull6DHJDynamics
 
     HJ_AVAILABLE = True
 except ImportError:  # pragma: no cover

@@ -9,7 +9,7 @@ from typing import Any, Callable
 import numpy as np
 
 from simulation.cw_dynamics import R_EARTH_KM
-from simulation.brt_isosurface import extract_brt_v0_near_center
+from simulation.brt.isosurface import extract_brt_v0_near_center
 from simulation.keepout import EllipsoidKeepOut
 from simulation.spacecraft_wire import bus_and_panel_edges, edges_to_nan_polyline, scale_edges
 
@@ -66,7 +66,7 @@ def brt_position_isosurface_lvlh_m(
     level: float = 0.0,
 ) -> tuple[np.ndarray, np.ndarray] | None:
     """Return ``(verts_lvlh_m, faces)`` for ``V=level`` in position at fixed velocity, or ``None``."""
-    from simulation.brt_isosurface import marching_cubes_v0_lvlh
+    from simulation.brt.isosurface import marching_cubes_v0_lvlh
 
     return marching_cubes_v0_lvlh(
         value_on_grid,
@@ -154,7 +154,7 @@ def render_orbit_eci_animation(
     ``||r|| < R_Earth + h``. Wireframe at that radius in global view. Override with
     ``earth_koz_min_altitude_km`` or env ``EARTH_KOZ_MIN_ALT_KM`` (default 150).
 
-    If ``brt_option1`` is set (e.g. :class:`~simulation.hj_koz_brt.KozHJTable6D`) and ``ephem`` contains
+    If ``brt_option1`` is set (e.g. :class:`~simulation.brt.KozDeepReachBRT`) and ``ephem`` contains
     ``states_lvlh_m``, each frame's suptitle includes HJ BRT status (unsafe iff ``value <= 0``).
 
     If ``inner_koz_formation`` is set and the layout includes the formation axis, the inner
@@ -278,7 +278,7 @@ def render_orbit_eci_animation(
         ax_g.set_xlabel("x (km)")
         ax_g.set_ylabel("y (km)")
         ax_g.set_zlabel("z (km)")
-        ax_g.set_title("Global — Earth + orbits + min-altitude shell")
+        ax_g.set_title("ECI")
         try:
             ax_g.set_box_aspect((1, 1, 0.45))
         except Exception:
@@ -289,7 +289,7 @@ def render_orbit_eci_animation(
         ax_f.set_xlabel("x (km)")
         ax_f.set_ylabel("y (km)")
         ax_f.set_zlabel("z (km)")
-        ax_f.set_title("Formation — follows chief / deputy")
+        ax_f.set_title("Formation")
         try:
             ax_f.set_box_aspect((1, 1, 1))
         except Exception:
@@ -324,7 +324,6 @@ def render_orbit_eci_animation(
                 markevery=[1],
                 markeredgecolor="white",
                 markeredgewidth=0.65,
-                label="v chief",
             )[0]
             vel_d = ax.plot(
                 [],
@@ -338,7 +337,6 @@ def render_orbit_eci_animation(
                 markevery=[1],
                 markeredgecolor="white",
                 markeredgewidth=0.65,
-                label="v deputy",
             )[0]
         else:
             vel_c = vel_d = None
@@ -354,14 +352,12 @@ def render_orbit_eci_animation(
         pack_f = _make_pack(ax_f, 9, draw_axes=True, draw_craft=True, draw_velocity=True, L_vel_km=L_vel_form_km)
 
     legend_elems = [
-        Line2D([0], [0], color="0.45", lw=1.4, label="Chief trail"),
-        Line2D([0], [0], color="tab:orange", lw=1.4, label="Deputy trail"),
-        Line2D([0], [0], color="#0277bd", lw=1.75, marker="o", markersize=4.5, label="Chief v"),
-        Line2D([0], [0], color="#6a1b9a", lw=1.75, marker="o", markersize=4.5, label="Deputy v"),
+        Line2D([0], [0], color="0.45", lw=1.4, label="Chief"),
+        Line2D([0], [0], color="tab:orange", lw=1.4, label="Deputy"),
         Line2D([0], [0], color="C0", lw=1.0, alpha=0.55, label="Earth"),
-        Line2D([0], [0], color="tab:red", lw=1.0, alpha=0.45, label=f"Earth KOZ r<R+h ({h_koz:g} km alt)"),
+        Line2D([0], [0], color="tab:red", lw=1.0, alpha=0.45, label="Altitude KOZ"),
     ]
-    fig.legend(handles=legend_elems, loc="upper center", ncol=6, fontsize=6.8, bbox_to_anchor=(0.5, 1.02))
+    fig.legend(handles=legend_elems, loc="upper center", ncol=4, fontsize=8, bbox_to_anchor=(0.5, 1.02))
     fig.subplots_adjust(left=0.02, right=0.98, top=0.86, bottom=0.02, wspace=0.18)
 
     formation_overlays: list = []
@@ -559,30 +555,18 @@ def render_orbit_eci_animation(
         warn = "  EARTH KOZ!" if (ev_c or ev_d) else ""
         brt_note = ""
         if brt_option1 is not None and states_lvlh is not None:
-            x6 = np.asarray(states_lvlh[i], dtype=np.float64).reshape(6)
             try:
-                u_brt = bool(brt_option1.is_unsafe(x6))
-                v_brt = float(brt_option1.value(x6))
-                brt_note = f" | HJ BRT: {'UNSAFE' if u_brt else 'safe'} (V={v_brt:.3f})"
+                u_brt = bool(brt_option1.is_unsafe(np.asarray(states_lvlh[i], dtype=np.float64).reshape(6)))
+                brt_note = " | BRT unsafe" if u_brt else " | BRT safe"
             except Exception:
-                brt_note = " | HJ BRT: (eval error)"
+                pass
         fig.suptitle(
-            f"t = {t/60:.1f} min ({t/T:.2f} orbits) | sep = {sep:.3f} km{warn}{brt_note}",
+            f"t = {t/60:.1f} min | sep = {sep:.1f} km{warn}{brt_note}",
             fontsize=10,
             y=0.98,
         )
         if ax_f is not None:
-            ftitle = f"Formation — sep {sep:.3f} km"
-            if states_lvlh is not None and inner_koz_formation is not None:
-                rr = states_lvlh[i, :3]
-                ftitle += f" | KOZ s={inner_koz_formation.shape_value(rr):.3f} in={int(inner_koz_formation.is_inside(rr))}"
-            if brt_option1 is not None and states_lvlh is not None:
-                try:
-                    vb = float(brt_option1.value(np.asarray(states_lvlh[i], dtype=np.float64).reshape(6)))
-                    ftitle += f" | BRT V={vb:.3f}"
-                except Exception:
-                    ftitle += " | BRT V=?"
-            ax_f.set_title(ftitle, fontsize=9)
+            ax_f.set_title("Formation", fontsize=9)
 
         if frame_log_rows is not None:
             x6l = (

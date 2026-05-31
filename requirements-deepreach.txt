@@ -1,0 +1,7 @@
+# DeepReach BRT (PyTorch). Install torch separately for your platform, then:
+#   pip install -r requirements-deepreach.txt
+torch>=2.2
+tqdm>=4.66
+ConfigArgParse>=1.7
+tensorboard>=2.16
+scikit-learn>=1.4

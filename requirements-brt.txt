@@ -1,8 +1,10 @@
-# Optional: Hamilton–Jacobi KOZ BRT (simulation.hj_koz_brt) + vendored hj_reachability.
-# Install from repo root:
-#   pip install -r requirements-brt.txt
-#   pip install -e hj_reachability
-jax>=0.4.25
-flax>=0.6.6
+# DeepReach BRT (replaces hj_reachability grid solve).
+#   pip install -r requirements.txt
+#   pip install -r requirements-deepreach.txt
+#   pip install torch  # platform-specific wheel from pytorch.org
+
+torch>=2.2
 tqdm>=4.66
-scikit-image>=0.22
+ConfigArgParse>=1.7
+tensorboard>=2.16
+scikit-learn>=1.4

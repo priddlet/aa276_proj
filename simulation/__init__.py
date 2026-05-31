@@ -12,7 +12,7 @@ from simulation.cw_dynamics import (
 from simulation.brt_safety import BRTStepResult, KOZBRTPlaceholder, simulate_plan_with_brt
 from simulation.keepout import EllipsoidKeepOut, EllipsoidMaxSeparation, RendezvousSafetyZones
 from simulation.maneuver_plan import ParsedBurn, burns_to_segments, parse_llm_maneuver_json
-from simulation.passive_safety import is_passively_safe_natural_coast, natural_coast_hits_inner_koz
+from simulation.sampling import filter_impulsive_burn, filter_maneuver_plan, is_passively_safe_natural_coast, natural_coast_hits_inner_koz
 
 __all__ = [
     "BRTStepResult",
@@ -31,6 +31,8 @@ __all__ = [
     "simulate_impulsive_segments_dense",
     "simulate_plan_with_brt",
     "propagate_coast_samples",
+    "filter_impulsive_burn",
+    "filter_maneuver_plan",
     "is_passively_safe_natural_coast",
     "natural_coast_hits_inner_koz",
 ]

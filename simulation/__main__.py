@@ -1,4 +1,4 @@
-"""Demo: CW trajectory, Option 1 (6D HJ) BRT for chief-centered inner KOZ, ECI animation."""
+"""Demo: CW trajectory, DeepReach 6D BRT, sampling safety filter, ECI animation."""
 
 from __future__ import annotations
 
@@ -118,22 +118,18 @@ def main() -> None:
     passive_h = float(os.environ.get("PASSIVE_CHECK_HORIZON_S", "7200"))
     log_interval_s = float(os.environ.get("BRT_LOG_INTERVAL_S", "50"))
 
-    from simulation.hj_koz_brt import (
-        HJ_AVAILABLE,
-        HJ_BRT_GRID_PRESETS,
-        KozHJTable6D,
-        hj_progress_bar_enabled,
-        load_or_solve_koz_brt_6d,
-        resolve_hj_grid_shape,
-        save_koz_brt_6d_npz,
-    )
+    from simulation.brt.deepreach_brt import DEEPREACH_AVAILABLE, DEEPREACH_IMPORT_ERROR, default_checkpoint_dir, load_or_train_koz_brt
+    from simulation.brt.config import BRT_HORIZON_S
+    from simulation.sampling.safety_filter import filter_maneuver_plan
 
-    if not HJ_AVAILABLE:
+    if not DEEPREACH_AVAILABLE:
         print(
-            "Option 1 BRT requires jax, hj_reachability, and scipy. "
-            "Install requirements-brt.txt and `pip install -e hj_reachability` from the repo root.",
+            "Option 1 BRT requires DeepReach (torch + deepreach/). "
+            "Install: pip install -r requirements-deepreach.txt",
             file=sys.stderr,
         )
+        if DEEPREACH_IMPORT_ERROR:
+            print(f"  Import error: {DEEPREACH_IMPORT_ERROR}", file=sys.stderr)
         sys.exit(1)
     try:
         import skimage  # noqa: F401
@@ -144,80 +140,55 @@ def main() -> None:
             flush=True,
         )
 
-    # Inner KOZ is in deputy-relative LVLH with origin at the chief (target). Unsafe: deputy inside
-    # the ellipsoid centered at inner_koz.center (default 0) — i.e. keep-out volume surrounding the chief.
-    npz_path = os.path.join(str(out_dir), "brt_koz_collision_6d.npz")
-    gs = resolve_hj_grid_shape()
-    n_cells = int(np.prod(gs))
-    preset = os.environ.get("HJ_BRT_GRID_PRESET", "standard")
+    ck_dir = os.environ.get("DEEPREACH_CHECKPOINT_DIR", "").strip() or str(default_checkpoint_dir(root))
     print(
-        "Option 1 BRT (6D HJ, backward discriminating tube) for the inner KOZ "
+        "Option 1 BRT (DeepReach 6D, backward discriminating tube) for the inner KOZ "
         f"(chief-centered LVLH; semi-axes m = {inner_axes.tolist()}).\n"
-        f"  Grid: {gs} ({n_cells:,} nodes/slice; preset={preset!r}, "
-        f"available: {list(HJ_BRT_GRID_PRESETS)}). Expect several minutes on a laptop."
+        f"  Locked horizon: {float(os.environ.get('BRT_HORIZON_S', str(BRT_HORIZON_S))):.0f} s (config may differ after load). "
+        f"Checkpoint: {ck_dir}"
     )
     t0 = time_mod.perf_counter()
-    dmax = float(os.environ.get("HJ_DISTURBANCE_MAX_M_S2", "0"))
-    dlo_e = os.environ.get("HJ_BRT_DOMAIN_LO", "").strip()
-    dhi_e = os.environ.get("HJ_BRT_DOMAIN_HI", "").strip()
-    domain_lo = np.array([float(x) for x in dlo_e.split(",")], dtype=np.float64) if dlo_e else None
-    domain_hi = np.array([float(x) for x in dhi_e.split(",")], dtype=np.float64) if dhi_e else None
-    horizon_s = float(os.environ.get("HJ_BRT_HORIZON_S", "900"))
-    u_max = float(os.environ.get("HJ_U_MAX_M_S2", "0.2"))
-    accuracy = os.environ.get("HJ_BRT_ACCURACY", "medium")
-    progress = hj_progress_bar_enabled()
-    force_solve = os.environ.get("HJ_BRT_FORCE_SOLVE", "0").lower() in ("1", "true", "yes")
-    reuse_npz = os.environ.get("HJ_BRT_REUSE_NPZ", "1").lower() not in ("0", "false", "no")
-    hj_res6, loaded_npz = load_or_solve_koz_brt_6d(
-        npz_path,
+    brt, loaded_brt = load_or_train_koz_brt(
         leo.n_rad_s,
-        inner_metric_E=inner_koz.metric(),
-        inner_center_m=inner_koz.center,
-        u_max_m_s2=u_max,
-        d_max_m_s2=dmax,
-        horizon_s=horizon_s,
-        n_time_nodes=int(os.environ.get("HJ_BRT_TIME_NODES", "12")),
-        domain_lo=domain_lo,
-        domain_hi=domain_hi,
-        grid_shape=gs,
-        accuracy=accuracy,
-        progress_bar=progress,
-        force_solve=force_solve,
-        reuse_npz=reuse_npz,
+        semi_axes_m=inner_axes,
+        center_m=inner_koz.center,
+        checkpoint_dir=ck_dir,
     )
     elapsed = time_mod.perf_counter() - t0
-    v_fin = np.asarray(hj_res6.values[-1], dtype=np.float64)
-    frac_unsafe = float(np.mean(v_fin <= 0.0))
-    print(
-        f"  HJ grid at τ=-{abs(float(hj_res6.times_s[-1])):.0f} s: "
-        f"{frac_unsafe * 100:.2f}% nodes with V≤0 (need ≫1 cell beyond KOZ for a 3D shell)."
-    )
-    if frac_unsafe < 0.002:
-        print(
-            "  Warning: BRT barely grew on this grid — try HJ_BRT_HORIZON_S=900 and HJ_U_MAX_M_S2=0.2 "
-            "(90 s + 0.05 m/s² leaves only the terminal KOZ cell unsafe)."
-        )
-    from simulation.hj_brt_validation import print_brt_validation_report, validate_brt_backward_evolution
-
-    val = validate_brt_backward_evolution(
-        hj_res6,
-        slice_z_m=float(os.environ.get("BRT_SLICE_Z_M", "0")),
-        slice_vx_m_s=float(os.environ.get("BRT_SLICE_VX_M_S", "0")),
-        slice_vy_m_s=float(os.environ.get("BRT_SLICE_VY_M_S", "0")),
-        slice_vz_m_s=float(os.environ.get("BRT_SLICE_VZ_M_S", "0")),
-        deputy_pos_m=x0[:3],
-    )
-    print_brt_validation_report(val)
-    if not loaded_npz:
-        save_koz_brt_6d_npz(npz_path, hj_res6)
-    hj_tab = KozHJTable6D(hj_res6)
-    if loaded_npz:
-        print(f"BRT loaded from {npz_path} ({elapsed:.2f} s). Set HJ_BRT_FORCE_SOLVE=1 to recompute.")
+    if loaded_brt:
+        print(f"  DeepReach BRT loaded ({elapsed:.2f} s). Set DEEPREACH_FORCE_TRAIN=1 to retrain.")
     else:
-        print(f"BRT solve finished in {elapsed:.2f} s. Saved {npz_path}")
+        print(f"  DeepReach training finished ({elapsed / 60:.1f} min).")
+
+    if os.environ.get("SAFETY_FILTER", "1").lower() not in ("0", "false", "no"):
+        max_pert = float(os.environ.get("FILTER_MAX_PERTURB_M_S", "0.08"))
+        n_sph = int(os.environ.get("FILTER_N_SPHERE", "48"))
+        margin = float(os.environ.get("FILTER_BRT_MARGIN", "0.0"))
+        print(
+            f"Sampling-based safety filter (max Δv perturb {max_pert} m/s, {n_sph} sphere samples)…"
+        )
+        segs_filt, filt_results = filter_maneuver_plan(
+            plant,
+            x0,
+            segs,
+            brt,
+            max_perturb_m_s=max_pert,
+            n_sphere_samples=n_sph,
+            brt_margin=margin,
+            passive_inner_koz=inner_koz,
+            passive_horizon_s=passive_h,
+        )
+        n_ok = sum(1 for fr in filt_results if fr.accepted)
+        print(f"  Filter: {len(filt_results)} burns, {n_ok} accepted safe perturbations.")
+        for i, fr in enumerate(filt_results):
+            print(
+                f"    burn {i}: accepted={fr.accepted} |Δv|_res={fr.residual_norm:.4f} m/s "
+                f"V={fr.brt_value:.3f}"
+            )
+        segs = segs_filt
 
     if os.environ.get("BRT_VALUE_EVOLUTION_GIF", "1").lower() not in ("0", "false", "no"):
-        from simulation.brt_slice_evolution_viz import render_brt_xy_value_evolution_gif
+        from simulation.brt.slice_viz import render_brt_xy_value_evolution_gif
 
         evo_path = os.path.join(str(out_dir), "brt_value_xy_slice_evolution.gif")
         z_sl = float(os.environ.get("BRT_SLICE_Z_M", "0"))
@@ -229,11 +200,9 @@ def main() -> None:
         vmax_e = os.environ.get("BRT_VALUE_EVOLUTION_VMAX", "").strip()
         vmax_opt = float(vmax_e) if vmax_e else None
         hold_last = int(os.environ.get("BRT_VALUE_EVOLUTION_HOLD_FRAMES", "8"))
-        print(
-            "Rendering BRT value evolution (x–y heatmap, fixed z, v=0 slice; one frame per HJ time node)…"
-        )
+        print("Rendering BRT value evolution (DeepReach x–y slice)…")
         evo_out = render_brt_xy_value_evolution_gif(
-            hj_res6,
+            brt,
             output_path=evo_path,
             inner_koz=inner_koz,
             deputy_pos_m=x0[:3],
@@ -249,12 +218,12 @@ def main() -> None:
         if evo_out:
             print(f"  Wrote {evo_out}")
 
-    print("Evaluating BRT (HJ value V; unsafe if V ≤ 0) at maneuver segment boundaries…")
+    print("Evaluating BRT (DeepReach V; unsafe if V ≤ 0) at maneuver segment boundaries…")
     _, _, boundary_steps = simulate_plan_with_brt(
         plant,
         x0,
         segs,
-        hj_tab,
+        brt,
         burn_kinds=kinds,
         passive_inner_koz=inner_koz,
         passive_horizon_s=passive_h,
@@ -281,8 +250,8 @@ def main() -> None:
         ps = is_passively_safe_natural_coast(
             plant, xq, inner_koz, passive_h, n_samples=passive_samples
         )
-        v_hj = float(hj_tab.value(xq))
-        u_hj = bool(hj_tab.is_unsafe(xq))
+        v_brt = float(brt.value(xq))
+        u_brt = bool(brt.is_unsafe(xq))
         r = xq[:3]
         on_bdry = bool(np.any(np.abs(boundary_times - tqf) <= tol))
         csv_rows.append(
@@ -296,8 +265,8 @@ def main() -> None:
                 "vx_m_s": float(xq[3]),
                 "vy_m_s": float(xq[4]),
                 "vz_m_s": float(xq[5]),
-                "hj_brt_value": v_hj,
-                "hj_brt_unsafe": int(u_hj),
+                "brt_value": v_brt,
+                "brt_unsafe": int(u_brt),
                 "passive_safe": int(ps),
                 "inner_koz_inside": int(inner_koz.is_inside(r)),
                 "outer_corridor_unsafe_far": int(outer_corridor.is_unsafe_far(r)),
@@ -315,8 +284,8 @@ def main() -> None:
         "vx_m_s",
         "vy_m_s",
         "vz_m_s",
-        "hj_brt_value",
-        "hj_brt_unsafe",
+        "brt_value",
+        "brt_unsafe",
         "passive_safe",
         "inner_koz_inside",
         "outer_corridor_unsafe_far",
@@ -329,7 +298,7 @@ def main() -> None:
     )
 
     if os.environ.get("BRT_SNAPSHOT", "1").lower() not in ("0", "false", "no"):
-        from simulation.brt_snapshot_viz import render_brt_lvlh_snapshot
+        from simulation.brt.snapshot_viz import render_brt_lvlh_snapshot
 
         snap_png = os.path.join(str(out_dir), "brt_formation_lvlh.png")
         snap_gif: str | None = None
@@ -348,7 +317,7 @@ def main() -> None:
         dpi_snap = int(os.environ.get("BRT_SNAPSHOT_DPI", "120"))
         print("Rendering BRT + KOZ snapshot (LVLH, zoomed on chief / target)…")
         p_out, g_out = render_brt_lvlh_snapshot(
-            hj_tab,
+            brt,
             inner_koz,
             x0,
             output_path_png=snap_png,
@@ -412,7 +381,7 @@ def main() -> None:
         fps=fps,
         dpi=int(os.environ.get("ORBIT_ANIM_DPI", "100")),
         show=False,
-        brt_option1=hj_tab,
+        brt_option1=brt,
         inner_koz_formation=inner_koz,
         frame_log_rows=frame_log,
         formation_brt_iso_resolution=(nx, ny, nz),

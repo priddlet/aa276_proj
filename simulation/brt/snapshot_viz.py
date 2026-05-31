@@ -9,7 +9,7 @@ from typing import Any
 
 import numpy as np
 
-from simulation.brt_isosurface import extract_brt_from_hj_native, extract_brt_v0_near_center
+from simulation.brt.isosurface import extract_brt_v0_near_center
 from simulation.keepout import EllipsoidKeepOut
 from simulation.spacecraft_wire import bus_and_panel_edges, edges_to_nan_polyline, scale_edges
 
@@ -59,9 +59,9 @@ def _axis_fit_geometry(
     _axis_cube_3d(ax, c, fallback_half)
 
 
-def _extract_snapshot_surface(hj_tab: Any, o0: np.ndarray, x6: np.ndarray) -> dict[str, Any]:
-    lo6 = np.asarray(getattr(hj_tab, "domain_lo"), dtype=np.float64).reshape(6)
-    hi6 = np.asarray(getattr(hj_tab, "domain_hi"), dtype=np.float64).reshape(6)
+def _extract_snapshot_surface(brt: Any, o0: np.ndarray, x6: np.ndarray) -> dict[str, Any]:
+    lo6 = np.asarray(getattr(brt, "domain_lo"), dtype=np.float64).reshape(6)
+    hi6 = np.asarray(getattr(brt, "domain_hi"), dtype=np.float64).reshape(6)
     koz_max = 45.0
     display_r = max(1.35 * koz_max, 45.0)
     chief_half = float(os.environ.get("BRT_SNAPSHOT_CHIEF_HALF_M", "1200"))
@@ -72,27 +72,21 @@ def _extract_snapshot_surface(hj_tab: Any, o0: np.ndarray, x6: np.ndarray) -> di
         raise ValueError("BRT_SNAPSHOT_ISO must be three comma-separated integers")
 
     t0 = time_mod.perf_counter()
-    if hasattr(hj_tab, "_values_final") and hasattr(hj_tab, "grid_shape"):
-        _log("  Extracting BRT shell from HJ grid nodes (fast path)…")
-        surf = extract_brt_from_hj_native(
-            lo6,
-            hi6,
-            tuple(int(x) for x in hj_tab.grid_shape),
-            hj_tab._values_final,
-            o0,
-            float(x6[3]),
-            float(x6[4]),
-            float(x6[5]),
-            display_radius_m=display_r,
-            max_draw_faces=int(os.environ.get("BRT_SNAPSHOT_MAX_FACES", "8000")),
-        )
-    elif hasattr(hj_tab, "value_batch"):
+    if not hasattr(brt, "value_batch"):
+        warnings.warn("brt has no value_batch; BRT surface skipped.", UserWarning)
+        surf = {
+            "mesh_verts": None,
+            "mesh_faces": None,
+            "footprint_polys": [],
+            "contour_lines": [],
+        }
+    else:
         _log(
-            f"  Extracting BRT shell via interpolation (iso {parts[0]}×{parts[1]}×{parts[2]}, "
+            f"  Extracting BRT shell via DeepReach (iso {parts[0]}×{parts[1]}×{parts[2]}, "
             f"box half up to {max_search:.0f} m)…"
         )
         surf = extract_brt_v0_near_center(
-            hj_tab.value_batch,
+            brt.value_batch,
             o0,
             float(x6[3]),
             float(x6[4]),
@@ -106,14 +100,6 @@ def _extract_snapshot_surface(hj_tab: Any, o0: np.ndarray, x6: np.ndarray) -> di
             contour_half_m=display_r,
             contour_n2d=int(os.environ.get("BRT_SNAPSHOT_CONTOUR_N", "36")),
         )
-    else:
-        warnings.warn("hj_tab has no value_batch; BRT surface skipped.", UserWarning)
-        surf = {
-            "mesh_verts": None,
-            "mesh_faces": None,
-            "footprint_polys": [],
-            "contour_lines": [],
-        }
     nf = 0
     if surf.get("mesh_faces") is not None:
         nf = int(np.asarray(surf["mesh_faces"]).shape[0])
@@ -129,7 +115,7 @@ def _extract_snapshot_surface(hj_tab: Any, o0: np.ndarray, x6: np.ndarray) -> di
 
 
 def render_brt_lvlh_snapshot(
-    hj_tab: Any,
+    brt: Any,
     inner_koz: EllipsoidKeepOut,
     x_deputy_lvlh_m: np.ndarray,
     *,
@@ -142,13 +128,7 @@ def render_brt_lvlh_snapshot(
     gif_frames: int = 16,
     gif_fps: float = 8.0,
 ) -> tuple[str | None, str | None]:
-    """LVLH plot (meters): inner KOZ (terminal) + **physical BRT** ``{V ≤ 0}`` near the chief.
-
-    Uses stored HJ grid values when available (seconds). Dense interpolation + 48-frame GIFs
-    can take many minutes and are no longer the default.
-
-    Returns ``(png_path_or_none, gif_path_or_none)``.
-    """
+    """LVLH plot (meters): inner KOZ (terminal) + **physical BRT** ``{V ≤ 0}`` near the chief."""
     import matplotlib
 
     if os.environ.get("MPLBACKEND", "").lower() == "agg" or os.environ.get("CI"):
@@ -169,15 +149,15 @@ def render_brt_lvlh_snapshot(
         "footprint_polys": [],
         "contour_lines": [],
     }
-    if hasattr(hj_tab, "value_batch") or hasattr(hj_tab, "_values_final"):
+    if hasattr(brt, "value_batch"):
         os.environ.setdefault("BRT_SNAPSHOT_CHIEF_HALF_M", str(chief_box_half_m))
         os.environ.setdefault(
             "BRT_SNAPSHOT_ISO",
             f"{iso_resolution[0]},{iso_resolution[1]},{iso_resolution[2]}",
         )
-        surf = _extract_snapshot_surface(hj_tab, o0, x6)
+        surf = _extract_snapshot_surface(brt, o0, x6)
     else:
-        warnings.warn("hj_tab has no value_batch; BRT surface skipped.", UserWarning)
+        warnings.warn("brt has no value_batch; BRT surface skipped.", UserWarning)
 
     chief_edges = scale_edges(bus_and_panel_edges((10.0, 4.0, 4.0), panel_length=22.0, panel_half_width=2.5), 1.0)
     half_view = float(surf.get("view_half_m", display_r * 1.08))
@@ -205,7 +185,7 @@ def render_brt_lvlh_snapshot(
                 )
                 ax.add_collection3d(coll_fp)
                 if not brt_label_added:
-                    coll_fp.set_label("BRT (V≤0), x–y footprint")
+                    coll_fp.set_label("BRT")
                     brt_label_added = True
         if surf.get("mesh_verts") is not None and surf.get("mesh_faces") is not None:
             verts_m = np.asarray(surf["mesh_verts"], dtype=np.float64)
@@ -219,7 +199,7 @@ def render_brt_lvlh_snapshot(
                     linewidths=0.22,
                 )
                 if not brt_label_added:
-                    coll.set_label("BRT (V≤0)")
+                    coll.set_label("BRT")
                     brt_label_added = True
                 try:
                     coll.set_zsort("average")
@@ -234,6 +214,11 @@ def render_brt_lvlh_snapshot(
         for j, line in enumerate(loop_lines):
             ln = np.asarray(line, dtype=np.float64)
             if ln.shape[0] >= 2:
+                lbl = (
+                    "BRT"
+                    if j == 0 and surf.get("mesh_verts") is None and not brt_label_added
+                    else None
+                )
                 ax.plot(
                     ln[:, 0],
                     ln[:, 1],
@@ -242,8 +227,10 @@ def render_brt_lvlh_snapshot(
                     linewidth=0.85 if surf.get("mesh_verts") is None else 0.55,
                     alpha=0.75 if surf.get("mesh_verts") is None else 0.45,
                     linestyle="-",
-                    label="BRT slice stack (3D)" if j == 0 and surf.get("mesh_verts") is None else None,
+                    label=lbl,
                 )
+                if lbl:
+                    brt_label_added = True
 
     def _draw_frame(ax, title_suffix: str = "") -> None:
         ax.clear()
@@ -257,33 +244,17 @@ def render_brt_lvlh_snapshot(
             alpha=0.96,
             rstride=1,
             cstride=1,
-            label="Inner KOZ (terminal)",
+            label="KOZ",
         )
         _draw_brt(ax)
         I = np.eye(3, dtype=np.float64)
         xs, ys, zs = edges_to_nan_polyline(o0, I, chief_edges)
-        ax.plot(xs, ys, zs, color="0.2", linewidth=1.0, label="Chief (target)")
+        ax.plot(xs, ys, zs, color="0.2", linewidth=1.0, label="Chief")
         ax.scatter([0.0], [0.0], [0.0], color="0.15", s=42, depthshade=True, zorder=5)
-        ax.set_xlabel("x LVLH (m)")
-        ax.set_ylabel("y LVLH (m)")
-        ax.set_zlabel("z LVLH (m)")
-        has_mesh = surf.get("mesh_faces") is not None and np.asarray(surf["mesh_faces"]).size > 0
-        has_fp = bool(surf.get("footprint_polys"))
-        has_cont = bool(surf.get("contour_lines"))
-        ttl = "Option 1 BRT + inner KOZ — chief LVLH"
-        lvl_name = str(surf.get("contour_level_name", surf.get("contour_level_tag", "")))
-        has_loops = bool(surf.get("slice_loops_3d"))
-        if has_mesh:
-            ttl += " (V≤0 shell, gap-filled on HJ voxels)"
-        elif has_loops:
-            ttl += " (BRT contours on each z grid plane; pip install scikit-image for solid shell)"
-        elif has_fp and lvl_name.startswith("hj_native_min"):
-            ttl += " (low-V envelope on z=0)"
-        elif has_fp or has_cont:
-            ttl += " (BRT slice contour at chief z)"
-        else:
-            ttl += " — no BRT on grid (use HJ_BRT_HORIZON_S=900, HJ_U_MAX_M_S2=0.2)"
-        ax.set_title(ttl + title_suffix, fontsize=10)
+        ax.set_xlabel("x (m)")
+        ax.set_ylabel("y (m)")
+        ax.set_zlabel("z (m)")
+        ax.set_title("BRT + KOZ" + title_suffix, fontsize=10)
         ax.legend(loc="upper right", fontsize=7)
         _axis_fit_geometry(
             ax,
