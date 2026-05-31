@@ -22,7 +22,9 @@ def main() -> None:
         print("DeepReach requires torch. Install: pip install -r requirements-deepreach.txt", file=sys.stderr)
         sys.exit(1)
 
-    p = argparse.ArgumentParser(description="Train DeepReach 6D CW KOZ BRT")
+    p = argparse.ArgumentParser(
+        description="Train DeepReach 6D CW KOZ BRT (v4: vanilla model, shrunk domain, KOZ sampling)."
+    )
     p.add_argument("--altitude-km", type=float, default=float(os.environ.get("LEO_ALTITUDE_KM", "400")))
     p.add_argument("--checkpoint-dir", type=str, default=str(default_checkpoint_dir()))
     p.add_argument(
@@ -54,7 +56,7 @@ def main() -> None:
     p.add_argument(
         "--resume-from-v2-epoch2000",
         action="store_true",
-        help="Resume PDE training from v2 model_epoch_2000.pth into the default v3 checkpoint dir (no CSL).",
+        help="Legacy: resume v2 epoch-2000 weights into v3 dir (superseded by v4 scratch train).",
     )
     args = p.parse_args()
 

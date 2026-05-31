@@ -7,12 +7,16 @@ from dataclasses import dataclass, field
 import numpy as np
 
 
-# Fixed 6D state box (LVLH SI). y-range covers deputy approach at ~3200 m along-track.
+# Full 6D state box for legacy HJ / wide visualization (LVLH SI).
 DOMAIN_LO = np.array([-1200.0, -600.0, -600.0, -3.0, -3.0, -3.0], dtype=np.float64)
 DOMAIN_HI = np.array([1200.0, 6600.0, 600.0, 3.0, 3.0, 3.0], dtype=np.float64)
 
-# Backward reachability horizon (s). Shorter horizon for stable 6D diff-model convergence.
-BRT_HORIZON_S = 200.0
+# Smaller training domain: KOZ at origin + deputy approach corridor (~3200 m along-track).
+TRAIN_DOMAIN_LO = np.array([-800.0, -200.0, -400.0, -2.0, -2.0, -2.0], dtype=np.float64)
+TRAIN_DOMAIN_HI = np.array([800.0, 4000.0, 400.0, 2.0, 2.0, 2.0], dtype=np.float64)
+
+# Backward reachability horizon (s). Short horizon first until BRS tube appears in validation.
+BRT_HORIZON_S = 100.0
 
 U_MAX_M_S2 = 0.2
 D_MAX_M_S2 = 0.0
@@ -31,22 +35,22 @@ class DeepReachTrainConfig:
     """Training hyperparameters for KOZ DeepReach."""
 
     numpoints: int = 65000
-    pretrain_iters: int = 2000
+    pretrain_iters: int = 3000
     num_epochs: int = 8000
     counter_end: int = 8000
     num_src_samples: int = 1000
+    num_target_samples: int = 8000
     lr: float = 2e-5
     num_hidden_layers: int = 3
     hidden_features: int = 512
     model_type: str = "sine"
-    deepreach_model: str = "diff"
+    deepreach_model: str = "vanilla"
     min_with: str = "target"
     batch_size: int = 1
     steps_til_summary: int = 200
     epochs_til_checkpoint: int = 2000
     clip_grad: float = 1.0
     device: str = "cpu"
-    # CSL caused unstable loss spikes on GPU; PDE-only retrain from epoch-2000 weights.
     use_csl: bool = False
     epochs_til_csl: int = 500
     num_csl_samples: int = 50000
@@ -64,8 +68,8 @@ class KozBRTConfig:
     n_rad_s: float
     semi_axes_m: tuple[float, float, float] = (28.0, 45.0, 18.0)
     center_m: tuple[float, float, float] = (0.0, 0.0, 0.0)
-    domain_lo: np.ndarray = field(default_factory=lambda: DOMAIN_LO.copy())
-    domain_hi: np.ndarray = field(default_factory=lambda: DOMAIN_HI.copy())
+    domain_lo: np.ndarray = field(default_factory=lambda: TRAIN_DOMAIN_LO.copy())
+    domain_hi: np.ndarray = field(default_factory=lambda: TRAIN_DOMAIN_HI.copy())
     horizon_s: float = BRT_HORIZON_S
     u_max_m_s2: float = U_MAX_M_S2
     d_max_m_s2: float = D_MAX_M_S2
@@ -104,8 +108,8 @@ class KozBRTConfig:
             n_rad_s=float(d["n_rad_s"]),
             semi_axes_m=tuple(float(x) for x in d["semi_axes_m"]),
             center_m=tuple(float(x) for x in d["center_m"]),
-            domain_lo=np.asarray(d.get("domain_lo", DOMAIN_LO), dtype=np.float64),
-            domain_hi=np.asarray(d.get("domain_hi", DOMAIN_HI), dtype=np.float64),
+            domain_lo=np.asarray(d.get("domain_lo", TRAIN_DOMAIN_LO), dtype=np.float64),
+            domain_hi=np.asarray(d.get("domain_hi", TRAIN_DOMAIN_HI), dtype=np.float64),
             horizon_s=float(d.get("horizon_s", BRT_HORIZON_S)),
             u_max_m_s2=float(d.get("u_max_m_s2", U_MAX_M_S2)),
             d_max_m_s2=float(d.get("d_max_m_s2", D_MAX_M_S2)),

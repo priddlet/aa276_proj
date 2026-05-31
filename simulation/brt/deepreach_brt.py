@@ -16,6 +16,8 @@ from simulation.brt.config import (
     BRT_HORIZON_S,
     DOMAIN_HI,
     DOMAIN_LO,
+    TRAIN_DOMAIN_HI,
+    TRAIN_DOMAIN_LO,
     KozBRTConfig,
     DeepReachTrainConfig,
 )
@@ -45,7 +47,7 @@ def default_checkpoint_dir(project_root: str | Path | None = None) -> Path:
     env = os.environ.get("DEEPREACH_CHECKPOINT_DIR", "").strip()
     if env:
         return Path(env).expanduser().resolve()
-    return (root / "simulation_output" / "deepreach_koz_v3").resolve()
+    return (root / "simulation_output" / "deepreach_koz_v4").resolve()
 
 
 def _resolve_device(requested: str) -> str:
@@ -247,7 +249,7 @@ def train_koz_deepreach(
         counter_start=0,
         counter_end=train_cfg.counter_end,
         num_src_samples=train_cfg.num_src_samples,
-        num_target_samples=0,
+        num_target_samples=train_cfg.num_target_samples,
     )
 
     model = build_model(dynamics, train_cfg)
@@ -272,6 +274,7 @@ def train_koz_deepreach(
         print(
             f"Training DeepReach KOZ BRT: horizon={config.horizon_s:.0f} s, "
             f"model={train_cfg.deepreach_model}, CSL={train_cfg.use_csl}, "
+            f"target_samples={train_cfg.num_target_samples}, "
             f"domain pos x∈[{config.domain_lo[0]:.0f},{config.domain_hi[0]:.0f}] m, "
             f"y∈[{config.domain_lo[1]:.0f},{config.domain_hi[1]:.0f}] m, "
             f"epochs={train_cfg.num_epochs}, device={device}"
@@ -431,8 +434,8 @@ def load_or_train_koz_brt(
         n_rad_s=float(n_rad_s),
         semi_axes_m=axes,
         center_m=cen,
-        domain_lo=DOMAIN_LO.copy(),
-        domain_hi=DOMAIN_HI.copy(),
+        domain_lo=TRAIN_DOMAIN_LO.copy(),
+        domain_hi=TRAIN_DOMAIN_HI.copy(),
         horizon_s=float(os.environ.get("BRT_HORIZON_S", str(BRT_HORIZON_S))),
         u_max_m_s2=float(os.environ.get("BRT_U_MAX_M_S2", "0.2")),
         d_max_m_s2=float(os.environ.get("BRT_D_MAX_M_S2", "0")),
