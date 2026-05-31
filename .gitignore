@@ -1,3 +1,4 @@
+.DS_Store
 .venv/
 __pycache__/
 *.pyc
@@ -7,7 +8,11 @@ Clohessy-Wiltshire/
 poliastro/
 hj_reachability/
 
-.pdf
-.pptx
+*.pdf
+*.pptx
+
+# Local GPU training checkpoints and validation plots (not for GitHub)
+gpu/
+gpuv*/
 
 simulation_output/
