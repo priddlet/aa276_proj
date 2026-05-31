@@ -15,8 +15,11 @@ DOMAIN_HI = np.array([1200.0, 6600.0, 600.0, 3.0, 3.0, 3.0], dtype=np.float64)
 TRAIN_DOMAIN_LO = np.array([-800.0, -200.0, -400.0, -2.0, -2.0, -2.0], dtype=np.float64)
 TRAIN_DOMAIN_HI = np.array([800.0, 4000.0, 400.0, 2.0, 2.0, 2.0], dtype=np.float64)
 
-# Backward reachability horizon (s). LEO CW period ~2π/n ≈ 5700 s; use O(orbit) horizons.
+# Backward reachability horizon in physical seconds. Nondim time τ_max = n * horizon_s (~2 for LEO).
 BRT_HORIZON_S = 1800.0
+
+# Length scale L (m) for nondim positions x̃ = x/L; velocities ṽ = v/(nL).
+BRT_LENGTH_SCALE_M = 1000.0
 
 U_MAX_M_S2 = 0.2
 D_MAX_M_S2 = 0.0
@@ -44,7 +47,7 @@ class DeepReachTrainConfig:
     num_hidden_layers: int = 3
     hidden_features: int = 512
     model_type: str = "sine"
-    deepreach_model: str = "vanilla"
+    deepreach_model: str = "exact"
     min_with: str = "target"
     batch_size: int = 1
     steps_til_summary: int = 200
@@ -71,9 +74,14 @@ class KozBRTConfig:
     domain_lo: np.ndarray = field(default_factory=lambda: TRAIN_DOMAIN_LO.copy())
     domain_hi: np.ndarray = field(default_factory=lambda: TRAIN_DOMAIN_HI.copy())
     horizon_s: float = BRT_HORIZON_S
+    length_scale_m: float = BRT_LENGTH_SCALE_M
     u_max_m_s2: float = U_MAX_M_S2
     d_max_m_s2: float = D_MAX_M_S2
     train: DeepReachTrainConfig = field(default_factory=DeepReachTrainConfig)
+
+    @property
+    def tau_max(self) -> float:
+        return float(self.n_rad_s * self.horizon_s)
 
     @property
     def state_mean(self) -> np.ndarray:
@@ -91,6 +99,7 @@ class KozBRTConfig:
             "domain_lo": self.domain_lo.tolist(),
             "domain_hi": self.domain_hi.tolist(),
             "horizon_s": self.horizon_s,
+            "length_scale_m": self.length_scale_m,
             "u_max_m_s2": self.u_max_m_s2,
             "d_max_m_s2": self.d_max_m_s2,
             "train": {
@@ -111,6 +120,7 @@ class KozBRTConfig:
             domain_lo=np.asarray(d.get("domain_lo", TRAIN_DOMAIN_LO), dtype=np.float64),
             domain_hi=np.asarray(d.get("domain_hi", TRAIN_DOMAIN_HI), dtype=np.float64),
             horizon_s=float(d.get("horizon_s", BRT_HORIZON_S)),
+            length_scale_m=float(d.get("length_scale_m", BRT_LENGTH_SCALE_M)),
             u_max_m_s2=float(d.get("u_max_m_s2", U_MAX_M_S2)),
             d_max_m_s2=float(d.get("d_max_m_s2", D_MAX_M_S2)),
             train=train,

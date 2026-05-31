@@ -154,6 +154,8 @@ def build_dynamics(config: KozBRTConfig) -> Any:
         center_y_m=cen[1],
         center_z_m=cen[2],
         d_max_m_s2=config.d_max_m_s2,
+        horizon_s=config.horizon_s,
+        length_scale_m=config.length_scale_m,
     )
     dyn.deepreach_model = config.train.deepreach_model
     return dyn
@@ -240,6 +242,7 @@ def train_koz_deepreach(
                 domain_lo=saved.domain_lo,
                 domain_hi=saved.domain_hi,
                 horizon_s=saved.horizon_s,
+                length_scale_m=saved.length_scale_m,
                 u_max_m_s2=saved.u_max_m_s2,
                 d_max_m_s2=saved.d_max_m_s2,
                 train=DeepReachTrainConfig(**tc),
@@ -258,6 +261,7 @@ def train_koz_deepreach(
     train_cfg = config.train
     device = _resolve_device(train_cfg.device)
     num_target_samples = _resolve_num_target_samples(dynamics, train_cfg.num_target_samples)
+    tau_max = float(dynamics.tau_max)
 
     dataset = dataio.ReachabilityDataset(
         dynamics=dynamics,
@@ -265,7 +269,7 @@ def train_koz_deepreach(
         pretrain=True,
         pretrain_iters=train_cfg.pretrain_iters,
         tMin=0.0,
-        tMax=float(config.horizon_s),
+        tMax=tau_max,
         counter_start=0,
         counter_end=train_cfg.counter_end,
         num_src_samples=train_cfg.num_src_samples,
@@ -292,7 +296,8 @@ def train_koz_deepreach(
         )
     else:
         print(
-            f"Training DeepReach KOZ BRT: horizon={config.horizon_s:.0f} s, "
+            f"Training DeepReach KOZ BRT: T={config.horizon_s:.0f} s, "
+            f"τ_max={tau_max:.3f} (n={config.n_rad_s:.4e}, L={config.length_scale_m:.0f} m), "
             f"model={train_cfg.deepreach_model}, CSL={train_cfg.use_csl}, "
             f"target_samples={num_target_samples}, "
             f"domain pos x∈[{config.domain_lo[0]:.0f},{config.domain_hi[0]:.0f}] m, "
@@ -422,6 +427,8 @@ class KozDeepReachBRT:
     def _eval_coords(self, coords: np.ndarray) -> np.ndarray:
         dtype = self._torch_dtype()
         c = torch.tensor(coords, dtype=dtype, device=self._device)
+        if hasattr(self._dynamics, "si_coord_to_nondim"):
+            c = self._dynamics.si_coord_to_nondim(c)
         inp = self._dynamics.coord_to_input(c)
         with torch.no_grad():
             res = self._model({"coords": inp})

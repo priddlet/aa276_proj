@@ -10,6 +10,7 @@ from pathlib import Path
 from simulation.brt.config import BRT_HORIZON_S, DeepReachTrainConfig, KozBRTConfig
 from simulation.brt.deepreach_brt import (
     DEEPREACH_AVAILABLE,
+    DEEPREACH_IMPORT_ERROR,
     _latest_epoch_checkpoint,
     default_checkpoint_dir,
     train_koz_deepreach,
@@ -19,7 +20,12 @@ from simulation.cw_dynamics import leo_circular_orbit
 
 def main() -> None:
     if not DEEPREACH_AVAILABLE:
-        print("DeepReach requires torch. Install: pip install -r requirements-deepreach.txt", file=sys.stderr)
+        print(
+            "DeepReach import failed. Install deps and ensure deepreach/ is present:\n"
+            "  pip install torch -r requirements-deepreach.txt\n"
+            f"  ({DEEPREACH_IMPORT_ERROR})",
+            file=sys.stderr,
+        )
         sys.exit(1)
 
     p = argparse.ArgumentParser(
