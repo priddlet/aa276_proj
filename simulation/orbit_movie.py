@@ -9,7 +9,7 @@ from typing import Any, Callable
 import numpy as np
 
 from simulation.cw_dynamics import R_EARTH_KM
-from simulation.brt.isosurface import extract_brt_v0_near_center
+from simulation.isosurface import extract_brt_v0_near_center
 from simulation.keepout import EllipsoidKeepOut
 from simulation.spacecraft_wire import bus_and_panel_edges, edges_to_nan_polyline, scale_edges
 
@@ -66,7 +66,7 @@ def brt_position_isosurface_lvlh_m(
     level: float = 0.0,
 ) -> tuple[np.ndarray, np.ndarray] | None:
     """Return ``(verts_lvlh_m, faces)`` for ``V=level`` in position at fixed velocity, or ``None``."""
-    from simulation.brt.isosurface import marching_cubes_v0_lvlh
+    from simulation.isosurface import marching_cubes_v0_lvlh
 
     return marching_cubes_v0_lvlh(
         value_on_grid,
@@ -154,7 +154,7 @@ def render_orbit_eci_animation(
     ``||r|| < R_Earth + h``. Wireframe at that radius in global view. Override with
     ``earth_koz_min_altitude_km`` or env ``EARTH_KOZ_MIN_ALT_KM`` (default 150).
 
-    If ``brt_option1`` is set (e.g. :class:`~simulation.brt.KozDeepReachBRT`) and ``ephem`` contains
+    If ``brt_option1`` is set (e.g. :class:`~simulation.legacy.hj_koz_brt.KozHJTable6D`) and ``ephem`` contains
     ``states_lvlh_m``, each frame's suptitle includes HJ BRT status (unsafe iff ``value <= 0``).
 
     If ``inner_koz_formation`` is set and the layout includes the formation axis, the inner

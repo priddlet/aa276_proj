@@ -1,4 +1,4 @@
-"""Demo: CW trajectory, DeepReach 6D BRT, sampling safety filter, ECI animation."""
+"""Demo: CW trajectory, DeepReach-MPC 6D BRT, sampling safety filter, ECI animation."""
 
 from __future__ import annotations
 
@@ -118,18 +118,23 @@ def main() -> None:
     passive_h = float(os.environ.get("PASSIVE_CHECK_HORIZON_S", "7200"))
     log_interval_s = float(os.environ.get("BRT_LOG_INTERVAL_S", "50"))
 
-    from simulation.brt.deepreach_brt import DEEPREACH_AVAILABLE, DEEPREACH_IMPORT_ERROR, default_checkpoint_dir, load_or_train_koz_brt
+    from simulation.brt.deepreach_mpc_brt import (
+        DEEPREACH_MPC_AVAILABLE,
+        DEEPREACH_MPC_IMPORT_ERROR,
+        default_checkpoint_dir,
+        load_or_train_koz_brt,
+    )
     from simulation.brt.config import BRT_HORIZON_S
     from simulation.sampling.safety_filter import filter_maneuver_plan
 
-    if not DEEPREACH_AVAILABLE:
+    if not DEEPREACH_MPC_AVAILABLE:
         print(
-            "Option 1 BRT requires DeepReach (torch + deepreach/). "
+            "Option 1 BRT requires DeepReach-MPC (torch + deepreach_MPC/). "
             "Install: pip install -r requirements-deepreach.txt",
             file=sys.stderr,
         )
-        if DEEPREACH_IMPORT_ERROR:
-            print(f"  Import error: {DEEPREACH_IMPORT_ERROR}", file=sys.stderr)
+        if DEEPREACH_MPC_IMPORT_ERROR:
+            print(f"  ({DEEPREACH_MPC_IMPORT_ERROR})", file=sys.stderr)
         sys.exit(1)
     try:
         import skimage  # noqa: F401
@@ -140,12 +145,13 @@ def main() -> None:
             flush=True,
         )
 
+    brt_horizon_s = float(os.environ.get("BRT_HORIZON_S", str(BRT_HORIZON_S)))
     ck_dir = os.environ.get("DEEPREACH_CHECKPOINT_DIR", "").strip() or str(default_checkpoint_dir(root))
+    force_train = os.environ.get("DEEPREACH_FORCE_TRAIN", "0").lower() in ("1", "true", "yes")
     print(
-        "Option 1 BRT (DeepReach 6D, backward discriminating tube) for the inner KOZ "
+        "Option 1 BRT (DeepReach-MPC, 6D CW avoid) for the inner KOZ "
         f"(chief-centered LVLH; semi-axes m = {inner_axes.tolist()}).\n"
-        f"  Locked horizon: {float(os.environ.get('BRT_HORIZON_S', str(BRT_HORIZON_S))):.0f} s (config may differ after load). "
-        f"Checkpoint: {ck_dir}"
+        f"  Horizon: {brt_horizon_s:.0f} s. Checkpoints: {ck_dir}"
     )
     t0 = time_mod.perf_counter()
     brt, loaded_brt = load_or_train_koz_brt(
@@ -153,12 +159,13 @@ def main() -> None:
         semi_axes_m=inner_axes,
         center_m=inner_koz.center,
         checkpoint_dir=ck_dir,
+        force_train=force_train,
     )
     elapsed = time_mod.perf_counter() - t0
     if loaded_brt:
-        print(f"  DeepReach BRT loaded ({elapsed:.2f} s). Set DEEPREACH_FORCE_TRAIN=1 to retrain.")
+        print(f"  DeepReach-MPC BRT loaded ({elapsed:.2f} s). Set DEEPREACH_FORCE_TRAIN=1 to retrain.")
     else:
-        print(f"  DeepReach training finished ({elapsed / 60:.1f} min).")
+        print(f"  DeepReach-MPC training finished ({elapsed / 60:.1f} min). Checkpoints: {ck_dir}")
 
     if os.environ.get("SAFETY_FILTER", "1").lower() not in ("0", "false", "no"):
         max_pert = float(os.environ.get("FILTER_MAX_PERTURB_M_S", "0.08"))
@@ -187,38 +194,7 @@ def main() -> None:
             )
         segs = segs_filt
 
-    if os.environ.get("BRT_VALUE_EVOLUTION_GIF", "1").lower() not in ("0", "false", "no"):
-        from simulation.brt.slice_viz import render_brt_xy_value_evolution_gif
-
-        evo_path = os.path.join(str(out_dir), "brt_value_xy_slice_evolution.gif")
-        z_sl = float(os.environ.get("BRT_SLICE_Z_M", "0"))
-        vxs = float(os.environ.get("BRT_SLICE_VX_M_S", "0"))
-        vys = float(os.environ.get("BRT_SLICE_VY_M_S", "0"))
-        vzs = float(os.environ.get("BRT_SLICE_VZ_M_S", "0"))
-        evo_fps = float(os.environ.get("BRT_VALUE_EVOLUTION_FPS", "2"))
-        evo_dpi = int(os.environ.get("BRT_VALUE_EVOLUTION_DPI", "140"))
-        vmax_e = os.environ.get("BRT_VALUE_EVOLUTION_VMAX", "").strip()
-        vmax_opt = float(vmax_e) if vmax_e else None
-        hold_last = int(os.environ.get("BRT_VALUE_EVOLUTION_HOLD_FRAMES", "8"))
-        print("Rendering BRT value evolution (DeepReach x–y slice)…")
-        evo_out = render_brt_xy_value_evolution_gif(
-            brt,
-            output_path=evo_path,
-            inner_koz=inner_koz,
-            deputy_pos_m=x0[:3],
-            slice_z_m=z_sl,
-            slice_vx_m_s=vxs,
-            slice_vy_m_s=vys,
-            slice_vz_m_s=vzs,
-            fps=evo_fps,
-            dpi=evo_dpi,
-            vmax_abs=vmax_opt,
-            hold_last_frames=hold_last,
-        )
-        if evo_out:
-            print(f"  Wrote {evo_out}")
-
-    print("Evaluating BRT (DeepReach V; unsafe if V ≤ 0) at maneuver segment boundaries…")
+    print("Evaluating BRT (learned V; unsafe if V ≤ 0) at maneuver segment boundaries…")
     _, _, boundary_steps = simulate_plan_with_brt(
         plant,
         x0,
@@ -298,7 +274,7 @@ def main() -> None:
     )
 
     if os.environ.get("BRT_SNAPSHOT", "1").lower() not in ("0", "false", "no"):
-        from simulation.brt.snapshot_viz import render_brt_lvlh_snapshot
+        from simulation.snapshot_viz import render_brt_lvlh_snapshot
 
         snap_png = os.path.join(str(out_dir), "brt_formation_lvlh.png")
         snap_gif: str | None = None

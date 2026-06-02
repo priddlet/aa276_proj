@@ -9,7 +9,7 @@ from typing import Any
 
 import numpy as np
 
-from simulation.brt.isosurface import extract_brt_v0_near_center
+from simulation.isosurface import extract_brt_v0_near_center
 from simulation.keepout import EllipsoidKeepOut
 from simulation.spacecraft_wire import bus_and_panel_edges, edges_to_nan_polyline, scale_edges
 
@@ -82,7 +82,7 @@ def _extract_snapshot_surface(brt: Any, o0: np.ndarray, x6: np.ndarray) -> dict[
         }
     else:
         _log(
-            f"  Extracting BRT shell via DeepReach (iso {parts[0]}×{parts[1]}×{parts[2]}, "
+            f"  Extracting BRT shell (iso {parts[0]}×{parts[1]}×{parts[2]}, "
             f"box half up to {max_search:.0f} m)…"
         )
         surf = extract_brt_v0_near_center(

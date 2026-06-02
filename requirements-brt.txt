@@ -1,10 +1,8 @@
-# DeepReach BRT (replaces hj_reachability grid solve).
-#   pip install -r requirements.txt
-#   pip install -r requirements-deepreach.txt
-#   pip install torch  # platform-specific wheel from pytorch.org
+# 6D HJ KOZ BRT (jax + hj_reachability). Also install project requirements.txt.
+#   pip install -r requirements.txt -r requirements-brt.txt
+#   pip install -e hj_reachability   # if vendored at repo root
 
-torch>=2.2
+jax>=0.4.28
+jaxlib>=0.4.28
+flax>=0.8
 tqdm>=4.66
-ConfigArgParse>=1.7
-tensorboard>=2.16
-scikit-learn>=1.4

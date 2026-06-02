@@ -1,41 +1,19 @@
-"""DeepReach BRT for CW KOZ collision (Option 1)."""
+"""DeepReach-MPC neural BRT for 6D CW KOZ."""
 
-from simulation.brt.config import (
-    BRT_HORIZON_S,
-    DOMAIN_HI,
-    DOMAIN_LO,
-    TRAIN_DOMAIN_HI,
-    TRAIN_DOMAIN_LO,
-    DeepReachTrainConfig,
-    KozBRTConfig,
-    SLICE_GRID_NX,
-    SLICE_GRID_NY,
-    SLICE_TIME_NODES,
-)
-from simulation.brt.deepreach_brt import (
-    DEEPREACH_AVAILABLE,
-    DEEPREACH_IMPORT_ERROR,
+from simulation.brt.deepreach_mpc_brt import (
+    DEEPREACH_MPC_AVAILABLE,
+    DEEPREACH_MPC_IMPORT_ERROR,
     KozDeepReachBRT,
     default_checkpoint_dir,
     load_or_train_koz_brt,
-    train_koz_deepreach,
+    train_koz_deepreach_mpc,
 )
 
 __all__ = [
-    "BRT_HORIZON_S",
-    "DOMAIN_HI",
-    "DOMAIN_LO",
-    "TRAIN_DOMAIN_HI",
-    "TRAIN_DOMAIN_LO",
-    "DEEPREACH_AVAILABLE",
-    "DEEPREACH_IMPORT_ERROR",
-    "DeepReachTrainConfig",
-    "KozBRTConfig",
+    "DEEPREACH_MPC_AVAILABLE",
+    "DEEPREACH_MPC_IMPORT_ERROR",
     "KozDeepReachBRT",
-    "SLICE_GRID_NX",
-    "SLICE_GRID_NY",
-    "SLICE_TIME_NODES",
     "default_checkpoint_dir",
     "load_or_train_koz_brt",
-    "train_koz_deepreach",
+    "train_koz_deepreach_mpc",
 ]

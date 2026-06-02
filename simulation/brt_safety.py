@@ -7,7 +7,7 @@ package provides:
 - :func:`simulate_plan_with_brt` — impulsive rollout with optional **passive** drift
   check (Option 2) via ``passive_inner_koz`` / ``passive_horizon_s``.
 
-HJ collision BRT (Option 1) lives in :mod:`simulation.brt` (:class:`~simulation.brt.KozDeepReachBRT`);
+HJ collision BRT (Option 1) lives in :mod:`simulation.legacy.hj_koz_brt` (:class:`~simulation.legacy.hj_koz_brt.KozHJTable6D`);
 there ``value(x) <= 0`` means inside the backward reachable tube. :class:`KOZBRTPlaceholder`
 uses the opposite sign convention (positive ``value`` means KOZ/corridor violation).
 """

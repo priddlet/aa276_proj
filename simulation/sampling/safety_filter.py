@@ -61,7 +61,7 @@ def filter_impulsive_burn(
     passive_n_samples: int = 128,
     seed: int | None = None,
 ) -> FilterResult:
-    """Search perturbed Δv around nominal; pick closest safe candidate under DeepReach BRT.
+    """Search perturbed Δv around nominal; pick closest safe candidate under the BRT field.
 
     Safe: ``V(x⁺) > brt_margin`` and optional passive coast stays outside inner KOZ.
     """

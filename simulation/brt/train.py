@@ -1,4 +1,4 @@
-"""Train DeepReach KOZ BRT from CLI: ``python -m simulation.brt.train``."""
+"""Train DeepReach-MPC KOZ BRT: ``python -m simulation.brt.train --force``."""
 
 from __future__ import annotations
 
@@ -8,104 +8,49 @@ import sys
 from pathlib import Path
 
 from simulation.brt.config import BRT_HORIZON_S, U_MAX_M_S2, DeepReachTrainConfig, KozBRTConfig
-from simulation.brt.deepreach_brt import (
-    DEEPREACH_AVAILABLE,
-    DEEPREACH_IMPORT_ERROR,
-    _latest_epoch_checkpoint,
+from simulation.brt.deepreach_mpc_brt import (
+    DEEPREACH_MPC_AVAILABLE,
+    DEEPREACH_MPC_IMPORT_ERROR,
     default_checkpoint_dir,
-    train_koz_deepreach,
+    train_koz_deepreach_mpc,
 )
 from simulation.cw_dynamics import leo_circular_orbit
 
 
 def main() -> None:
-    if not DEEPREACH_AVAILABLE:
+    if not DEEPREACH_MPC_AVAILABLE:
         print(
-            "DeepReach import failed. Install deps and ensure deepreach/ is present:\n"
+            "DeepReach-MPC import failed:\n"
             "  pip install torch -r requirements-deepreach.txt\n"
-            f"  ({DEEPREACH_IMPORT_ERROR})",
+            f"  ({DEEPREACH_MPC_IMPORT_ERROR})",
             file=sys.stderr,
         )
         sys.exit(1)
 
-    p = argparse.ArgumentParser(
-        description="Train DeepReach 6D CW KOZ BRT (v4: vanilla model, shrunk domain, KOZ sampling)."
-    )
+    p = argparse.ArgumentParser(description="Train DeepReach-MPC 6D CW KOZ avoid-BRT.")
     p.add_argument("--altitude-km", type=float, default=float(os.environ.get("LEO_ALTITUDE_KM", "400")))
     p.add_argument("--checkpoint-dir", type=str, default=str(default_checkpoint_dir()))
     p.add_argument(
         "--epochs",
         type=int,
-        default=int(os.environ.get("DEEPREACH_EPOCHS", "8000")),
-        help="Total epoch target (not extra epochs when resuming).",
-    )
-    p.add_argument("--device", type=str, default=os.environ.get("DEEPREACH_DEVICE", "auto"))
-    p.add_argument("--force", action="store_true", help="Delete checkpoint dir and train from scratch.")
-    p.add_argument(
-        "--resume",
-        action="store_true",
-        help="Continue from latest model_epoch_*.pth (or model_current.pth).",
-    )
-    p.add_argument(
-        "--resume-from",
-        type=str,
-        default="",
-        help="Explicit checkpoint .pth (e.g. training/checkpoints/model_epoch_2000.pth).",
-    )
-    p.add_argument(
-        "--start-epoch",
-        type=int,
-        default=None,
-        help="Override resume epoch when using model_current.pth (no epoch in filename).",
-    )
-    p.add_argument("--semi-axes", type=str, default=os.environ.get("KOZ_INNER_SEMIAXES_M", "28,45,18"))
-    p.add_argument(
-        "--u-max",
-        type=float,
-        default=None,
-        help="Max thrust acceleration (m/s²). Use 0 for passive drift BRT.",
+        default=int(os.environ.get("DEEPREACH_EPOCHS", "100000")),
     )
     p.add_argument(
         "--counter-end",
         type=int,
         default=None,
-        help="Curriculum length in epochs (default: same as --epochs).",
+        help="Curriculum end epoch (default: same as --epochs).",
     )
-    p.add_argument(
-        "--resume-from-v2-epoch2000",
-        action="store_true",
-        help="Legacy: resume v2 epoch-2000 weights into v3 dir (superseded by v4 scratch train).",
-    )
+    p.add_argument("--pretrain-iters", type=int, default=1000)
+    p.add_argument("--num-target-samples", type=int, default=8000)
+    p.add_argument("--device", type=str, default=os.environ.get("DEEPREACH_DEVICE", "auto"))
+    p.add_argument("--force", action="store_true")
+    p.add_argument("--semi-axes", type=str, default=os.environ.get("KOZ_INNER_SEMIAXES_M", "28,45,18"))
+    p.add_argument("--u-max", type=float, default=None)
     args = p.parse_args()
-
-    resume_from = args.resume_from.strip() or None
-    start_epoch = args.start_epoch
-    resume = args.resume
-    if args.resume_from_v2_epoch2000:
-        root = Path(__file__).resolve().parents[2]
-        v2_ckpt = root / "simulation_output" / "deepreach_koz_v2" / "training" / "checkpoints" / "model_epoch_2000.pth"
-        if not v2_ckpt.is_file():
-            print(f"v2 checkpoint not found: {v2_ckpt}", file=sys.stderr)
-            sys.exit(1)
-        resume_from = str(v2_ckpt)
-        start_epoch = 2000 if start_epoch is None else start_epoch
-        resume = True
-        if args.checkpoint_dir == str(default_checkpoint_dir()):
-            print(f"Retrain (no CSL) → {default_checkpoint_dir()} from {v2_ckpt.name}")
-
-    ck_dir = args.checkpoint_dir
-    if resume:
-        if resume_from:
-            print(f"Will resume from {Path(resume_from).name} (epoch {start_epoch or '?'})")
-        else:
-            path, ep = _latest_epoch_checkpoint(Path(ck_dir))
-            if path is not None:
-                print(f"Will resume from {path.name} (epoch {ep or start_epoch or '?'})")
 
     leo = leo_circular_orbit(args.altitude_km)
     axes = tuple(float(x) for x in args.semi_axes.split(","))
-
-    device = os.environ.get("DEEPREACH_DEVICE", args.device)
     counter_end = args.counter_end
     if counter_end is None:
         counter_end = int(os.environ.get("DEEPREACH_COUNTER_END", str(args.epochs)))
@@ -114,9 +59,13 @@ def main() -> None:
         u_max = float(os.environ.get("BRT_U_MAX_M_S2", str(U_MAX_M_S2)))
 
     train_cfg = DeepReachTrainConfig(
-        device=device,
+        device=args.device,
         num_epochs=args.epochs,
         counter_end=counter_end,
+        pretrain_iters=args.pretrain_iters,
+        num_target_samples=args.num_target_samples,
+        deepreach_model="exact",
+        hidden_features=512,
     )
     config = KozBRTConfig(
         n_rad_s=leo.n_rad_s,
@@ -125,15 +74,8 @@ def main() -> None:
         u_max_m_s2=u_max,
         train=train_cfg,
     )
-    train_koz_deepreach(
-        config,
-        ck_dir,
-        force=args.force,
-        resume=resume,
-        resume_from=resume_from,
-        start_epoch=start_epoch,
-    )
-    print(f"Done. Checkpoint dir: {ck_dir}")
+    train_koz_deepreach_mpc(config, Path(args.checkpoint_dir), force=args.force)
+    print(f"Done. Checkpoint dir: {args.checkpoint_dir}")
 
 
 if __name__ == "__main__":

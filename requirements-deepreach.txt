@@ -1,7 +1,6 @@
-# DeepReach BRT (PyTorch). Install torch separately for your platform, then:
-#   pip install -r requirements-deepreach.txt
-torch>=2.2
+# DeepReach-MPC KOZ BRT (PyTorch; training expects CUDA)
+torch>=2.0
+tensorboard>=2.14
 tqdm>=4.66
-ConfigArgParse>=1.7
-tensorboard>=2.16
-scikit-learn>=1.4
+scipy>=1.11
+matplotlib>=3.8
