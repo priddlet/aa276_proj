@@ -1,4 +1,3 @@
-import wandb
 import torch
 import os
 import shutil
@@ -189,6 +188,8 @@ class Experiment(ABC):
                         tqdm.write("Epoch %d, Total loss %0.6f, iteration time %0.6f" % (
                             epoch, train_loss, time.time() - start_time))
                         if self.use_wandb:
+                            import wandb
+
                             wandb.log({
                                 'train_loss': train_loss,
                                 'boundary_loss': losses['dirichlet'],
@@ -1042,6 +1043,8 @@ class Experiment(ABC):
             fig= self.plotMultipleFigs(
                 state_test_range, plot_config, x_resolution, y_resolution, z_resolution, times)
         if self.use_wandb:
+            import wandb
+
             wandb.log({
                 'step': epoch,
                 'val_plot': wandb.Image(fig),

@@ -1,4 +1,3 @@
-import wandb
 import configargparse
 import inspect
 import os
@@ -234,8 +233,10 @@ if (mode == 'all') or (mode == 'test'):
 
 opt = p.parse_args()
 
-# start wandb
+# start wandb (optional — omit --use_wandb to skip)
 if use_wandb:
+    import wandb
+
     wandb.init(
         project=opt.wandb_project,
         entity=opt.wandb_entity,
