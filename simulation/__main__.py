@@ -185,10 +185,11 @@ def main() -> None:
             x0,
             segs,
             brt,
+            filter_mode=fmode,
             max_perturb_m_s=max_pert,
             n_sphere_samples=n_sph,
             brt_margin=margin,
-            passive_inner_koz=inner_koz,
+            inner_koz=inner_koz,
             passive_horizon_s=passive_h,
         )
         n_ok = sum(1 for fr in filt_results if fr.accepted)
