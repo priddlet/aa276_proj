@@ -1363,12 +1363,16 @@ class Cw6DKoz(Dynamics):
         dsdt = torch.zeros_like(state)
         x, y, z = state[..., 0], state[..., 1], state[..., 2]
         vx, vy, vz = state[..., 3], state[..., 4], state[..., 5]
+        if disturbance is None:
+            d0 = d1 = d2 = 0.0
+        else:
+            d0, d1, d2 = disturbance[..., 0], disturbance[..., 1], disturbance[..., 2]
         dsdt[..., 0] = vx
         dsdt[..., 1] = vy
         dsdt[..., 2] = vz
-        dsdt[..., 3] = 3.0 * nn * x + 2.0 * n * vy + control[..., 0] + disturbance[..., 0]
-        dsdt[..., 4] = -2.0 * n * vx + control[..., 1] + disturbance[..., 1]
-        dsdt[..., 5] = -nn * z + control[..., 2] + disturbance[..., 2]
+        dsdt[..., 3] = 3.0 * nn * x + 2.0 * n * vy + control[..., 0] + d0
+        dsdt[..., 4] = -2.0 * n * vx + control[..., 1] + d1
+        dsdt[..., 5] = -nn * z + control[..., 2] + d2
         return dsdt
 
     def boundary_fn(self, state):
