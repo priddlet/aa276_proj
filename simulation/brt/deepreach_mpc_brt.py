@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 import json
+import math
 import os
 import sys
 import time
 from contextlib import contextmanager
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from pathlib import Path
 from typing import Any, Iterator
 
@@ -142,7 +143,20 @@ def load_brt_config(checkpoint_dir: Path) -> KozBRTConfig:
     return KozBRTConfig.from_dict(json.loads(p.read_text(encoding="utf-8")))
 
 
-def log_control_authority(dynamics: Any) -> None:
+def _apply_mpc_env_overrides(train_cfg: DeepReachTrainConfig) -> DeepReachTrainConfig:
+    """Optional VM tuning without editing config.py."""
+    kw: dict[str, float | int] = {}
+    if v := os.environ.get("DEEPREACH_MPC_DT", "").strip():
+        kw["MPC_dt"] = float(v)
+    if v := os.environ.get("DEEPREACH_MPC_BATCH_SIZE", "").strip():
+        kw["MPC_batch_size"] = int(v)
+    if v := os.environ.get("DEEPREACH_MPC_PERTURB_SAMPLES", "").strip():
+        kw["num_MPC_perturbation_samples"] = int(v)
+    if v := os.environ.get("DEEPREACH_MPC_NUM_BATCHES", "").strip():
+        kw["num_MPC_batches"] = int(v)
+    return replace(train_cfg, **kw) if kw else train_cfg
+
+
     if not hasattr(dynamics, "u_max"):
         return
     a_max = max(dynamics._semi_axes)
@@ -225,11 +239,23 @@ def train_koz_deepreach_mpc(
     checkpoint_dir.mkdir(parents=True, exist_ok=True)
     save_brt_config(checkpoint_dir, config)
 
-    train_cfg = config.train
+    train_cfg = _apply_mpc_env_overrides(config.train)
+    config = KozBRTConfig(
+        n_rad_s=config.n_rad_s,
+        semi_axes_m=config.semi_axes_m,
+        center_m=config.center_m,
+        domain_lo=config.domain_lo,
+        domain_hi=config.domain_hi,
+        horizon_s=config.horizon_s,
+        u_max_m_s2=config.u_max_m_s2,
+        d_max_m_s2=config.d_max_m_s2,
+        train=train_cfg,
+    )
     t_max = float(config.horizon_s)
     time_hr = train_cfg.time_till_refinement
     if time_hr is None:
         time_hr = t_max / 10.0
+    mpc_steps = int(math.ceil(time_hr / train_cfg.MPC_dt))
 
     prev_cwd = os.getcwd()
     os.chdir(checkpoint_dir)
@@ -295,7 +321,9 @@ def train_koz_deepreach_mpc(
             print(
                 f"Training DeepReach-MPC KOZ BRT: T={config.horizon_s:.0f} s, "
                 f"tMax={t_max:.0f} s, model={train_cfg.deepreach_model}, set_mode=avoid, "
-                f"MPC H_R={time_hr:.3f}, target_samples={num_target}, "
+                f"MPC H_R={time_hr:.0f}s, dt={train_cfg.MPC_dt:g}s ({mpc_steps} steps), "
+                f"batch={train_cfg.MPC_batch_size}, perturb={train_cfg.num_MPC_perturbation_samples}, "
+                f"target_samples={num_target}, "
                 f"curriculum counter_end={train_cfg.counter_end}, epochs={train_cfg.num_epochs}"
             )
             log_control_authority(dynamics)

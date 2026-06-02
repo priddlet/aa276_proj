@@ -44,15 +44,16 @@ class DeepReachTrainConfig:
     time_curr: bool = True
     refine_dataset: bool = True
     time_till_refinement: float | None = None
-    MPC_batch_size: int = 2000
-    num_MPC_batches: int = 20
+    # SI seconds: use ~1 s MPC steps (Quadrotor uses 0.02 s because tMax≈1).
+    MPC_batch_size: int = 512
+    num_MPC_batches: int = 10
     num_MPC_data_samples: int = 5000
     num_iterative_refinement: int = 10
-    MPC_dt: float = 0.02
+    MPC_dt: float = 1.0
     MPC_importance_init: float = 1.0
     MPC_importance_final: float = 1.0
     MPC_finetune_lambda: float = 100.0
-    num_MPC_perturbation_samples: int = 100
+    num_MPC_perturbation_samples: int = 32
     aug_with_MPC_data: int = 0
     dirichlet_loss_divisor: float = 1.0
 
