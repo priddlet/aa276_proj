@@ -16,7 +16,6 @@ from tqdm.autonotebook import tqdm
 from collections import OrderedDict
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from utils.error_evaluators import scenario_optimization, ValueThresholdValidator, MultiValidator, MLPConditionedValidator, target_fraction, MLP, MLPValidator, SliceSampleGenerator
-import seaborn as sns
 
 
 
@@ -479,6 +478,8 @@ class Experiment(ABC):
                         'inf')) if dynamics.set_mode in ['reach','reach_avoid'] else ValueThresholdValidator(v_min=float('-inf'), v_max=0.0),
                     max_scenarios=N, max_samples=1000*min(N, 10000))
 
+                import seaborn as sns
+
                 sns.set_style('whitegrid')
                 costs_ = results['costs'].cpu().numpy()
                 values_ = results['values'].cpu().numpy()
@@ -591,6 +592,8 @@ class Experiment(ABC):
                     print('delta_level:', str(delta_level))
                     print('valid_sample_fraction:', str(
                         results['valid_sample_fraction'].item()))
+                    import seaborn as sns
+
                     sns.set_style('whitegrid')
                     # density_plot=sns.kdeplot(results['costs'].cpu().numpy(), bw=0.5)
                     # density_plot=sns.displot(results['costs'].cpu().numpy(), x="cost function")

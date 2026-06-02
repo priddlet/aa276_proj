@@ -1326,6 +1326,21 @@ class Cw6DKoz(Dynamics):
             deepReach_model="exact",
         )
 
+        u = self.u_max
+        self.state_range_ = torch.tensor(
+            [[lo, hi] for lo, hi in zip(self._domain_lo, self._domain_hi)],
+            dtype=torch.float32,
+        ).cuda()
+        self.control_range_ = torch.tensor(
+            [[-u, u], [-u, u], [-u, u]], dtype=torch.float32
+        ).cuda()
+        self.eps_var = torch.tensor([u, u, u], dtype=torch.float32).cuda()
+        self.control_init = torch.zeros(3, dtype=torch.float32).cuda()
+
+    def clamp_control(self, state, control):
+        u = self.u_max
+        return torch.clamp(control, min=-u, max=u)
+
     def periodic_transform_fn(self, input):
         return input
 
