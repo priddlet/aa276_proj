@@ -46,11 +46,11 @@ def init_brt_hjivi_loss(dynamics, minWith, dirichlet_loss_divisor, MPC_loss_type
 
         if torch.all(dirichlet_mask): # pretraining loss
             diff_constraint_hom = torch.Tensor([0]).cuda()
-            if use_MPC:
-                dirichlet_loss += mpc_loss*0.3
-            elif dynamics.deepReach_model == 'exact':
+            if dynamics.deepReach_model == 'exact':
                 dirichlet = value[dirichlet_mask] - boundary_value[dirichlet_mask]
                 dirichlet_loss = torch.abs(dirichlet).sum() / dirichlet_loss_divisor
+            if use_MPC:
+                dirichlet_loss = dirichlet_loss + mpc_loss * 0.3
         else:
             ham = dynamics.hamiltonian(state, dvds)
             if minWith == 'zero':
@@ -102,11 +102,11 @@ def init_brat_hjivi_loss(dynamics, minWith, dirichlet_loss_divisor, MPC_loss_typ
 
         if torch.all(dirichlet_mask): # pretraining loss
             diff_constraint_hom = torch.Tensor([0]).cuda()
-            if use_MPC:
-                dirichlet_loss += mpc_loss*0.3
-            elif dynamics.deepReach_model == 'exact':
+            if dynamics.deepReach_model == 'exact':
                 dirichlet = value[dirichlet_mask] - boundary_value[dirichlet_mask]
                 dirichlet_loss = torch.abs(dirichlet).sum() / dirichlet_loss_divisor
+            if use_MPC:
+                dirichlet_loss = dirichlet_loss + mpc_loss * 0.3
         else:
             ham = dynamics.hamiltonian(state, dvds)
             if minWith == 'zero':

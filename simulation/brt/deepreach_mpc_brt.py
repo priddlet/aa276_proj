@@ -357,7 +357,7 @@ def train_koz_deepreach_mpc(
 
 
 class KozDeepReachBRT:
-    """Learned 6D BRT V(τ, x). Unsafe iff V ≤ 0 at horizon τ = n·T."""
+    """Learned 6D BRT V(t, x). Unsafe iff V ≤ 0 at horizon t = T (seconds)."""
 
     def __init__(self, model: Any, dynamics: Any, config: KozBRTConfig, *, device: str = "cpu") -> None:
         self._model = model
@@ -457,7 +457,7 @@ def load_or_train_koz_brt(
     ck_dir = Path(checkpoint_dir).resolve() if checkpoint_dir else default_checkpoint_dir()
     axes = tuple(float(x) for x in np.asarray(semi_axes_m, dtype=np.float64).reshape(3))
     cen = tuple(float(x) for x in (center_m if center_m is not None else np.zeros(3)).reshape(3))
-    tc = train_config or DeepReachTrainConfig()
+    tc = _apply_mpc_env_overrides(train_config or DeepReachTrainConfig())
     if os.environ.get("DEEPREACH_DEVICE", "").strip():
         tc = DeepReachTrainConfig(**{**asdict(tc), "device": os.environ["DEEPREACH_DEVICE"].strip()})
     if os.environ.get("DEEPREACH_EPOCHS", "").strip():

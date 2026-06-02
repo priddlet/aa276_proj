@@ -80,6 +80,11 @@ class Experiment(ABC):
         writer = SummaryWriter(summaries_dir)
 
         total_steps = 0
+        checkpoint = {
+            'epoch': 0,
+            'model': self.model.state_dict(),
+            'optimizer': self.optim.state_dict(),
+        }
 
 
         self.last_refine_time=math.floor(min(1.0, self.dataset.counter/self.dataset.counter_end)* \
@@ -1052,8 +1057,9 @@ class Experiment(ABC):
                 'step': epoch,
                 'val_plot': wandb.Image(fig),
             })
-        plt.close()
-        plt.close()
+        if save_path:
+            fig.savefig(save_path, dpi=150, bbox_inches='tight')
+        plt.close(fig)
         if was_training:
             self.model.train()
             self.model.requires_grad_(True)

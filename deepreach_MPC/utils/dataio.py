@@ -92,8 +92,9 @@ class ReachabilityDataset(Dataset):
                     self.MPC_inputs[:, 0])
 
     def use_terminal_MPC(self):
-        # self.MPC_dt can be different
-        self.MPC_dt = 0.005
+        # Quadrotor/Dubins (tMax ~ 1 s): finer terminal rollouts. SI horizons keep coarse MPC_dt.
+        if self.tMax <= 10.0:
+            self.MPC_dt = 0.005
         self.num_iterative_refinement = -1
         # self.MPC_batch_size=50000
 
