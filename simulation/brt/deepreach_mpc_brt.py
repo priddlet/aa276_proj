@@ -157,6 +157,7 @@ def _apply_mpc_env_overrides(train_cfg: DeepReachTrainConfig) -> DeepReachTrainC
     return replace(train_cfg, **kw) if kw else train_cfg
 
 
+def log_control_authority(dynamics: Any) -> None:
     if not hasattr(dynamics, "u_max"):
         return
     a_max = max(dynamics._semi_axes)
