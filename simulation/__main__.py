@@ -171,9 +171,15 @@ def main() -> None:
         max_pert = float(os.environ.get("FILTER_MAX_PERTURB_M_S", "0.08"))
         n_sph = int(os.environ.get("FILTER_N_SPHERE", "48"))
         margin = float(os.environ.get("FILTER_BRT_MARGIN", "0.0"))
-        print(
-            f"Sampling-based safety filter (max Δv perturb {max_pert} m/s, {n_sph} sphere samples)…"
-        )
+        from simulation.sampling.safety_filter import default_filter_mode
+
+        fmode = default_filter_mode()
+        if fmode == "linesearch":
+            print("BRT safety filter (line-search α·Δv toward 0, V(x⁺, t_k), passive from x_k)…")
+        else:
+            print(
+                f"BRT safety filter — sampling mode (max Δv perturb {max_pert} m/s, {n_sph} samples)…"
+            )
         segs_filt, filt_results = filter_maneuver_plan(
             plant,
             x0,
@@ -189,8 +195,8 @@ def main() -> None:
         print(f"  Filter: {len(filt_results)} burns, {n_ok} accepted safe perturbations.")
         for i, fr in enumerate(filt_results):
             print(
-                f"    burn {i}: accepted={fr.accepted} |Δv|_res={fr.residual_norm:.4f} m/s "
-                f"V={fr.brt_value:.3f}"
+                f"    burn {i}: accepted={fr.accepted} α={fr.scale_alpha:.3f} "
+                f"|Δv|_res={fr.residual_norm:.4f} m/s V(x⁺,t={fr.time_s:.1f})={fr.brt_value:.3f}"
             )
         segs = segs_filt
 

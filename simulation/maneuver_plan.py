@@ -11,9 +11,12 @@ Expected JSON shapes (flexible keys, see :func:`parse_llm_maneuver_json`):
       ]
     }
 
-or a bare list ``[ {...}, ... ]``. All burns are modeled as **impulsive** Δv in **LVLH**
-(m/s) at the start of each coast of duration ``t_s`` seconds, matching the pitch's
-``{timestep, ΔV}`` JSON and :func:`simulation.cw_dynamics.simulate_impulsive_segments`.
+or a bare list ``[ {...}, ... ]``. Each entry is coast duration ``t_s`` then Δv at segment
+start (see :func:`simulation.cw_dynamics.simulate_impulsive_segments`).
+
+Frozen LLM benchmarks in ``llm/`` use **absolute** burn times in ``llm_plans.json``;
+load ``llm/llm_plans_segments.jsonl`` via :mod:`simulation.llm_plans` (or
+:func:`simulation.llm_plans.absolute_burns_to_segments`) for simulation.
 """
 
 from __future__ import annotations
