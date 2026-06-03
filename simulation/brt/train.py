@@ -29,7 +29,11 @@ def main() -> None:
 
     p = argparse.ArgumentParser(description="Train DeepReach-MPC 6D CW KOZ avoid-BRT.")
     p.add_argument("--altitude-km", type=float, default=float(os.environ.get("LEO_ALTITUDE_KM", "400")))
-    p.add_argument("--checkpoint-dir", type=str, default=str(default_checkpoint_dir()))
+    p.add_argument(
+        "--checkpoint-dir",
+        type=str,
+        default=os.environ.get("DEEPREACH_CHECKPOINT_DIR", str(default_checkpoint_dir())),
+    )
     p.add_argument(
         "--epochs",
         type=int,
@@ -45,6 +49,22 @@ def main() -> None:
     p.add_argument("--num-target-samples", type=int, default=8000)
     p.add_argument("--device", type=str, default=os.environ.get("DEEPREACH_DEVICE", "auto"))
     p.add_argument("--force", action="store_true")
+    p.add_argument(
+        "--no-koz-invariant",
+        action="store_true",
+        help="Disable explicit KOZ interior constraint at t>0 (legacy training).",
+    )
+    p.add_argument(
+        "--koz-samples",
+        type=int,
+        default=int(os.environ.get("DEEPREACH_KOZ_SAMPLES", "2500")),
+        help="KOZ interior points per batch with random t.",
+    )
+    p.add_argument(
+        "--koz-loss-weight",
+        type=float,
+        default=float(os.environ.get("DEEPREACH_KOZ_LOSS_WEIGHT", "25")),
+    )
     p.add_argument("--semi-axes", type=str, default=os.environ.get("KOZ_INNER_SEMIAXES_M", "28,45,18"))
     p.add_argument("--u-max", type=float, default=None)
     args = p.parse_args()
@@ -66,6 +86,9 @@ def main() -> None:
         num_target_samples=args.num_target_samples,
         deepreach_model="exact",
         hidden_features=512,
+        enforce_koz_invariant=not args.no_koz_invariant,
+        num_koz_invariant_samples=args.koz_samples,
+        koz_invariant_loss_weight=args.koz_loss_weight,
     )
     config = KozBRTConfig(
         n_rad_s=leo.n_rad_s,

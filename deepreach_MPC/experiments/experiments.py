@@ -26,7 +26,12 @@ class Experiment(ABC):
         self.experiment_dir = experiment_dir
         self.use_wandb = use_wandb
         ## Dynamic Weighting
-        self.loss_weights = {'dirichlet': 1., 'mpc_loss': 1., 'diff_constraint_hom': 1.}
+        self.loss_weights = {
+            'dirichlet': 1.,
+            'mpc_loss': 1.,
+            'diff_constraint_hom': 1.,
+            'koz_invariant': 1.,
+        }
 
     @abstractmethod
     def init_special(self):
@@ -145,7 +150,9 @@ class Experiment(ABC):
                     if self.dataset.dynamics.loss_type == 'brt_hjivi':
                         losses = loss_fn(
                             states, values, dvs[..., 0], dvs[..., 1:], boundary_values, dirichlet_masks, model_results['model_out'],
-                            MPC_values, gt['MPC_values'],self.use_MPC_terminal_loss)
+                            MPC_values, gt['MPC_values'], self.use_MPC_terminal_loss,
+                            koz_invariant_mask=gt.get('koz_invariant_masks'),
+                        )
                     elif self.dataset.dynamics.loss_type == 'brat_hjivi':
                         losses = loss_fn(
                             states, values, dvs[..., 0], dvs[..., 1:], boundary_values, reach_values, avoid_values, dirichlet_masks, model_results[

@@ -170,10 +170,11 @@ def log_control_authority(dynamics: Any) -> None:
         print(f"  Displacement/a_max~{reach / max(a_max, 1e-9):.1f}")
 
 
-def build_dynamics(config: KozBRTConfig) -> Any:
+def build_dynamics(config: KozBRTConfig, *, device: str | None = None) -> Any:
     with _deepreach_mpc_imports():
         from dynamics import dynamics as dr_dynamics  # noqa: WPS433
 
+    dev = _resolve_device(device or config.train.device) if DEEPREACH_MPC_AVAILABLE else "cpu"
     ax = config.semi_axes_m
     cen = config.center_m
     dyn = dr_dynamics.Cw6DKoz(
@@ -188,8 +189,12 @@ def build_dynamics(config: KozBRTConfig) -> Any:
         d_max_m_s2=config.d_max_m_s2,
         horizon_s=config.horizon_s,
         set_mode="avoid",
+        device=dev,
     )
     dyn.set_model(config.train.deepreach_model)
+    train = config.train
+    dyn.enforce_koz_invariant = bool(getattr(train, "enforce_koz_invariant", False))
+    dyn.num_koz_invariant_samples = int(getattr(train, "num_koz_invariant_samples", 0) or 0)
     return dyn
 
 
@@ -265,7 +270,7 @@ def train_koz_deepreach_mpc(
             from experiments import experiments as dr_experiments  # noqa: WPS433
             from utils import dataio, losses  # noqa: WPS433
 
-            dynamics = build_dynamics(config)
+            dynamics = build_dynamics(config, device="cuda")
             num_target = train_cfg.num_target_samples if train_cfg.num_target_samples > 0 else 0
 
             dataset = dataio.ReachabilityDataset(
@@ -317,7 +322,13 @@ def train_koz_deepreach_mpc(
                 "l1",
                 train_cfg.use_mpc,
                 MPC_finetune_lambda=train_cfg.MPC_finetune_lambda,
+                koz_invariant_loss_divisor=train_cfg.koz_invariant_loss_divisor,
             )
+
+            if getattr(dynamics, "enforce_koz_invariant", False):
+                experiment.loss_weights["koz_invariant"] = train_cfg.koz_invariant_loss_weight
+            else:
+                experiment.loss_weights["koz_invariant"] = 0.0
 
             print(
                 f"Training DeepReach-MPC KOZ BRT: T={config.horizon_s:.0f} s, "
@@ -325,6 +336,9 @@ def train_koz_deepreach_mpc(
                 f"MPC H_R={time_hr:.0f}s, dt={train_cfg.MPC_dt:g}s ({mpc_steps} steps), "
                 f"batch={train_cfg.MPC_batch_size}, perturb={train_cfg.num_MPC_perturbation_samples}, "
                 f"target_samples={num_target}, "
+                f"koz_invariant={getattr(dynamics, 'enforce_koz_invariant', False)} "
+                f"(n={getattr(dynamics, 'num_koz_invariant_samples', 0)}, "
+                f"w={train_cfg.koz_invariant_loss_weight:g}), "
                 f"curriculum counter_end={train_cfg.counter_end}, epochs={train_cfg.num_epochs}"
             )
             log_control_authority(dynamics)
@@ -357,7 +371,12 @@ def train_koz_deepreach_mpc(
 
 
 class KozDeepReachBRT:
-    """Learned 6D BRT V(t, x). Unsafe iff V ≤ 0 at horizon t = T (seconds)."""
+    """Learned 6D BRT V(t, x). Unsafe iff V ≤ 0.
+
+    KOZ invariant (default on): if g(x) ≤ 0 (inside/on KOZ), V ← min(V, g(x)) so the
+    keep-out zone stays unsafe at every query time, not only at t = 0.
+    Disable: ``BRT_KOZ_PROJECT=0``.
+    """
 
     def __init__(self, model: Any, dynamics: Any, config: KozBRTConfig, *, device: str = "cpu") -> None:
         self._model = model
@@ -367,6 +386,8 @@ class KozDeepReachBRT:
         self._lo = np.asarray(config.domain_lo, dtype=np.float64).reshape(6)
         self._hi = np.asarray(config.domain_hi, dtype=np.float64).reshape(6)
         self._horizon = float(config.horizon_s)
+        self._koz_center = np.asarray(config.center_m, dtype=np.float64).reshape(3)
+        self._koz_axes = np.asarray(config.semi_axes_m, dtype=np.float64).reshape(3)
         self._model.eval()
 
     @property
@@ -393,7 +414,7 @@ class KozDeepReachBRT:
         checkpoint_dir = Path(checkpoint_dir).resolve()
         config = load_brt_config(checkpoint_dir)
         dev = _resolve_device(device or config.train.device)
-        dynamics = build_dynamics(config)
+        dynamics = build_dynamics(config, device=dev)
         model = build_model(dynamics, config.train)
         ckpt = _model_path(checkpoint_dir)
         if not ckpt.is_file():
@@ -430,6 +451,26 @@ class KozDeepReachBRT:
     def backward_times_s(self, n_nodes: int) -> np.ndarray:
         return np.linspace(0.0, -abs(self._horizon), int(n_nodes), dtype=np.float64)
 
+    def koz_boundary_g(self, pos_lvlh_m: np.ndarray) -> np.ndarray:
+        """Ellipsoid boundary g(x)=√(Σ (r_i/a_i)²)−1; negative inside KOZ (matches Cw6DKoz)."""
+        pos = np.asarray(pos_lvlh_m, dtype=np.float64).reshape(-1, 3)
+        r = pos - self._koz_center.reshape(1, 3)
+        ax = self._koz_axes.reshape(1, 3)
+        s = np.sum((r / ax) ** 2, axis=-1)
+        return np.sqrt(s + 1e-18) - 1.0
+
+    def _project_koz_unsafe(self, states_si: np.ndarray, vals: np.ndarray) -> np.ndarray:
+        """Inside/on KOZ (g≤0), enforce V≤0 via V ← min(V, g)."""
+        if os.environ.get("BRT_KOZ_PROJECT", "1").lower() in ("0", "false", "no"):
+            return vals
+        states = np.asarray(states_si, dtype=np.float64).reshape(-1, 6)
+        v = np.asarray(vals, dtype=np.float64).reshape(-1).copy()
+        g = self.koz_boundary_g(states[:, :3])
+        inside = g <= 0.0
+        if np.any(inside):
+            v[inside] = np.minimum(v[inside], g[inside])
+        return v
+
     def _eval_coords(self, coords: np.ndarray) -> np.ndarray:
         """``coords`` are ``[t_s, x, y, z, vx, vy, vz]`` in SI (like Quadrotor: raw time in col 0)."""
         dtype = next(self._model.parameters()).dtype
@@ -442,7 +483,9 @@ class KozDeepReachBRT:
         with torch.no_grad():
             res = self._model({"coords": inp})
             vals = self._dynamics.io_to_value(res["model_in"], res["model_out"].squeeze(dim=-1))
-        return vals.detach().cpu().numpy().astype(np.float64).reshape(-1)
+        states_np = states_si.detach().cpu().numpy().astype(np.float64).reshape(-1, 6)
+        v_np = vals.detach().cpu().numpy().astype(np.float64).reshape(-1)
+        return self._project_koz_unsafe(states_np, v_np)
 
 
 def load_or_train_koz_brt(

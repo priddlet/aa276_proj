@@ -216,6 +216,24 @@ class ReachabilityDataset(Dataset):
                 self.num_target_samples, 1), target_state_samples), dim=-1))[:, 1:self.dynamics.state_dim+1]
         model_inputs = torch.cat((times, model_states_normed), dim=1)
 
+        koz_invariant_masks = torch.zeros(model_inputs.shape[0], dtype=torch.bool)
+        num_koz = int(getattr(self.dynamics, "num_koz_invariant_samples", 0) or 0)
+        if num_koz > 0 and getattr(self.dynamics, "enforce_koz_invariant", False):
+            n = min(num_koz, model_inputs.shape[0])
+            koz_states = self.dynamics.sample_koz_interior_states(n)
+            if self.pretrain:
+                koz_times = torch.full((n, 1), self.tMin)
+            else:
+                t_hi = (self.tMax * 1.1 - self.tMin) * min(
+                    (self.counter + 1) / self.counter_end, 1.0
+                )
+                koz_times = self.tMin + torch.zeros(n, 1).uniform_(0, t_hi)
+            koz_coords = torch.cat((koz_times, koz_states), dim=1)
+            koz_inputs = self.dynamics.coord_to_input(koz_coords)
+            model_inputs[-n:, 0:1] = koz_times
+            model_inputs[-n:, 1:] = koz_inputs[:, 1 : self.dynamics.state_dim + 1]
+            koz_invariant_masks[-n:] = True
+
         # generating MPC inputs
         if self.use_MPC:
             current_t = (self.tMax*1.0 - self.tMin) * \
@@ -291,7 +309,9 @@ class ReachabilityDataset(Dataset):
         if self.dynamics.loss_type == 'brt_hjivi':
             return {'model_inputs': model_inputs, 'MPC_inputs': MPC_inputs_}, \
                 {'boundary_values': boundary_values,
-                    'dirichlet_masks': dirichlet_masks, 'MPC_values': MPC_values_}
+                    'dirichlet_masks': dirichlet_masks,
+                    'koz_invariant_masks': koz_invariant_masks,
+                    'MPC_values': MPC_values_}
         elif self.dynamics.loss_type == 'brat_hjivi':
             return {'model_inputs': model_inputs, 'MPC_inputs': MPC_inputs_}, \
                 {'boundary_values': boundary_values, 'reach_values': reach_values, 'avoid_values': avoid_values, 'dirichlet_masks': dirichlet_masks,

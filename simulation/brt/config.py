@@ -57,6 +57,12 @@ class DeepReachTrainConfig:
     aug_with_MPC_data: int = 0
     dirichlet_loss_divisor: float = 1.0
 
+    # Enforce V(x,t)=g(x) on KOZ interior samples at random t (not only t=0 Dirichlet).
+    enforce_koz_invariant: bool = True
+    num_koz_invariant_samples: int = 2500
+    koz_invariant_loss_divisor: float = 1.0
+    koz_invariant_loss_weight: float = 25.0
+
 
 @dataclass
 class KozBRTConfig:

@@ -280,6 +280,58 @@ def main() -> None:
         f"and maneuver segment boundaries, de-duplicated by time_s)."
     )
 
+    if os.environ.get("BRT_KOZ_CENTERED_VIZ", "1").lower() not in ("0", "false", "no"):
+        from simulation.brt.slice_viz import parse_time_slices_s, render_brt_koz_centered_png
+
+        koz_png = os.path.join(str(out_dir), "brt_koz_centered_xy.png")
+        times = parse_time_slices_s(brt.horizon_s)
+        print(
+            f"Rendering KOZ-centered BRT x–y slices ({len(times)} times: "
+            f"{', '.join(f'{t:.0f}' for t in times)} s)…"
+        )
+        render_brt_koz_centered_png(
+            brt,
+            koz_png,
+            inner_koz=inner_koz,
+            semi_axes_m=tuple(float(x) for x in inner_axes),
+            times_s=times,
+            z_m=float(os.environ.get("BRT_SLICE_Z_M", "0")),
+            vx_m_s=float(os.environ.get("BRT_SLICE_VX_M_S", "0")),
+            vy_m_s=float(os.environ.get("BRT_SLICE_VY_M_S", "0")),
+            vz_m_s=float(os.environ.get("BRT_SLICE_VZ_M_S", "0")),
+            grid_n=int(os.environ.get("BRT_KOZ_VIZ_GRID_N", "100")),
+        )
+        print(f"  Wrote {koz_png}")
+
+    if os.environ.get("BRT_VALUE_EVOLUTION_GIF", "1").lower() not in ("0", "false", "no"):
+        from simulation.brt.slice_viz import render_brt_xy_value_evolution_gif
+
+        evo_path = os.path.join(str(out_dir), "brt_koz_centered_xy_evolution.gif")
+        z_sl = float(os.environ.get("BRT_SLICE_Z_M", "0"))
+        vxs = float(os.environ.get("BRT_SLICE_VX_M_S", "0"))
+        vys = float(os.environ.get("BRT_SLICE_VY_M_S", "0"))
+        vzs = float(os.environ.get("BRT_SLICE_VZ_M_S", "0"))
+        n_evo = int(os.environ.get("BRT_SLICE_EVOLUTION_FRAMES", "21"))
+        grid_n = int(os.environ.get("BRT_SLICE_GRID_N", "80"))
+        evo_fps = float(os.environ.get("BRT_SLICE_EVOLUTION_FPS", "4"))
+        print("Rendering x–y BRT value slice evolution (τ = 0 → -T)…")
+        written_evo = render_brt_xy_value_evolution_gif(
+            brt,
+            evo_path,
+            inner_koz=inner_koz,
+            semi_axes_m=tuple(float(x) for x in inner_axes),
+            z_m=z_sl,
+            vx_m_s=vxs,
+            vy_m_s=vys,
+            vz_m_s=vzs,
+            n_frames=n_evo,
+            grid_n=grid_n,
+            fps=evo_fps,
+            koz_centered=True,
+        )
+        if written_evo:
+            print(f"  Wrote {written_evo}")
+
     if os.environ.get("BRT_SNAPSHOT", "1").lower() not in ("0", "false", "no"):
         from simulation.snapshot_viz import render_brt_lvlh_snapshot
 

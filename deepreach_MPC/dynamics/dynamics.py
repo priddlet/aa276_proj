@@ -1268,6 +1268,15 @@ class LessLinearND(Dynamics):
         }
 
 
+def _default_torch_device() -> torch.device:
+    """CUDA for training VMs; MPS or CPU for local inference on Mac/laptop."""
+    if torch.cuda.is_available():
+        return torch.device("cuda")
+    if getattr(torch.backends, "mps", None) and torch.backends.mps.is_available():
+        return torch.device("mps")
+    return torch.device("cpu")
+
+
 class Cw6DKoz(Dynamics):
     """6D CW deputy KOZ avoid-BRT in SI (m, m/s, s) — same coord pattern as Quadrotor."""
 
@@ -1288,6 +1297,7 @@ class Cw6DKoz(Dynamics):
         d_max_m_s2: float = 0.0,
         horizon_s: float = 1800.0,
         set_mode: str = "avoid",
+        device: str | torch.device | None = None,
     ) -> None:
         self.n = float(n_rad_s)
         self.nn = self.n * self.n
@@ -1327,15 +1337,18 @@ class Cw6DKoz(Dynamics):
         )
 
         u = self.u_max
+        dev = torch.device(device) if device is not None else _default_torch_device()
+        self._torch_device = dev
         self.state_range_ = torch.tensor(
             [[lo, hi] for lo, hi in zip(self._domain_lo, self._domain_hi)],
             dtype=torch.float32,
-        ).cuda()
+            device=dev,
+        )
         self.control_range_ = torch.tensor(
-            [[-u, u], [-u, u], [-u, u]], dtype=torch.float32
-        ).cuda()
-        self.eps_var = torch.tensor([u, u, u], dtype=torch.float32).cuda()
-        self.control_init = torch.zeros(3, dtype=torch.float32).cuda()
+            [[-u, u], [-u, u], [-u, u]], dtype=torch.float32, device=dev
+        )
+        self.eps_var = torch.tensor([u, u, u], dtype=torch.float32, device=dev)
+        self.control_init = torch.zeros(3, dtype=torch.float32, device=dev)
 
     def clamp_control(self, state, control):
         u = self.u_max
@@ -1411,6 +1424,27 @@ class Cw6DKoz(Dynamics):
         states[n_koz:, 1] = y
         states[n_koz:, 2] = z
         states[n_koz:, 3:6] = torch.stack((vx, vy, vz), dim=-1)
+        return states
+
+    def sample_koz_interior_states(self, num_samples: int) -> torch.Tensor:
+        """Uniform random positions inside the KOZ ellipsoid and velocities in the training box."""
+        a, b, c = self._semi_axes
+        theta = torch.rand(num_samples) * 2.0 * math.pi
+        phi = torch.acos(2.0 * torch.rand(num_samples) - 1.0)
+        sin_p = torch.sin(phi)
+        dirs = torch.stack(
+            (sin_p * torch.cos(theta), sin_p * torch.sin(theta), torch.cos(phi)),
+            dim=-1,
+        )
+        axes = torch.tensor([a, b, c], dtype=torch.float32)
+        alpha = torch.rand(num_samples) * 0.80 + 0.05
+        pts = dirs * axes.unsqueeze(0) * torch.sqrt(alpha.unsqueeze(-1))
+        lo = torch.tensor(self._domain_lo[3:6], dtype=torch.float32)
+        hi = torch.tensor(self._domain_hi[3:6], dtype=torch.float32)
+        vel = lo + torch.rand(num_samples, 3) * (hi - lo)
+        states = torch.zeros(num_samples, 6, dtype=torch.float32)
+        states[:, :3] = pts + self._center.to(dtype=torch.float32)
+        states[:, 3:6] = vel
         return states
 
     def cost_fn(self, state_traj):

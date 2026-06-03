@@ -4,12 +4,35 @@ from utils import diff_operators, quaternion
 # uses real units
 
 
-def init_brt_hjivi_loss(dynamics, minWith, dirichlet_loss_divisor, MPC_loss_type, use_MPC, MPC_finetune_lambda):
-    def brt_hjivi_loss(state, value, dvdt, dvds, boundary_value, dirichlet_mask, output, MPC_values, MPC_labels,
-                        use_MPC_terminal_loss=False):
+def _zero_loss_like(values):
+    return torch.zeros((), device=values.device, dtype=values.dtype)
+
+
+def init_brt_hjivi_loss(
+    dynamics,
+    minWith,
+    dirichlet_loss_divisor,
+    MPC_loss_type,
+    use_MPC,
+    MPC_finetune_lambda,
+    koz_invariant_loss_divisor=1.0,
+):
+    def brt_hjivi_loss(
+        state,
+        value,
+        dvdt,
+        dvds,
+        boundary_value,
+        dirichlet_mask,
+        output,
+        MPC_values,
+        MPC_labels,
+        use_MPC_terminal_loss=False,
+        koz_invariant_mask=None,
+    ):
         # Curriculum training loss
         if dynamics.deepReach_model == 'exact':
-            dirichlet_loss = torch.Tensor([0]).cuda()
+            dirichlet_loss = _zero_loss_like(value)
         else:
             dirichlet = value[dirichlet_mask] - boundary_value[dirichlet_mask]
             dirichlet_loss=torch.abs(dirichlet).sum() / dirichlet_loss_divisor
@@ -42,10 +65,23 @@ def init_brt_hjivi_loss(dynamics, minWith, dirichlet_loss_divisor, MPC_loss_type
                         * torch.abs(MPC_values[:,unsafe_cost_safe_value_indeces])).sum()*MPC_finetune_lambda
         else:
             raise NotImplementedError
-        
+
+        koz_invariant_loss = _zero_loss_like(value)
+        if koz_invariant_mask is not None and koz_invariant_mask.any():
+            koz_v = value[koz_invariant_mask]
+            koz_g = boundary_value[koz_invariant_mask]
+            inside = koz_g <= 0.0
+            if inside.any():
+                v_in = koz_v[inside]
+                g_in = koz_g[inside]
+                # V(x,t) = g(x) inside KOZ for all t (matches inference min(V,g) projection).
+                koz_invariant_loss = (
+                    torch.relu(v_in - g_in).sum()
+                    + torch.abs(v_in - g_in).sum()
+                ) / max(float(inside.sum()), 1.0) / koz_invariant_loss_divisor
 
         if torch.all(dirichlet_mask): # pretraining loss
-            diff_constraint_hom = torch.Tensor([0]).cuda()
+            diff_constraint_hom = _zero_loss_like(value)
             if dynamics.deepReach_model == 'exact':
                 dirichlet = value[dirichlet_mask] - boundary_value[dirichlet_mask]
                 dirichlet_loss = torch.abs(dirichlet).sum() / dirichlet_loss_divisor
@@ -65,6 +101,7 @@ def init_brt_hjivi_loss(dynamics, minWith, dirichlet_loss_divisor, MPC_loss_type
         return {'dirichlet': dirichlet_loss,
                 'diff_constraint_hom': torch.abs(diff_constraint_hom).sum(),
                 'mpc_loss': mpc_loss,
+                'koz_invariant': koz_invariant_loss,
                 }
 
     return brt_hjivi_loss

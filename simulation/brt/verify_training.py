@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import math
+import os
 import sys
 from pathlib import Path
 
@@ -117,6 +118,15 @@ def _numeric_checks(brt, semi_axes: tuple[float, float, float], horizon_s: float
         vT = brt.value_at_tau(state, T)
         lines.append(f"  {label}: V(t=0)={v0:.3f}, V(t=T)={vT:.3f}, unsafe@T={vT <= 0}")
 
+    g_in = brt.koz_boundary_g(inside[:3]) if hasattr(brt, "koz_boundary_g") else g_in
+    if float(g_in) <= 0:
+        for t_check in (0.0, T / 2.0, T):
+            v_in = brt.value_at_tau(inside, t_check)
+            ok = v_in <= 0.0
+            lines.append(f"  KOZ origin @ t={t_check:.0f}: V={v_in:.3f}  {'OK' if ok else 'FAIL'} (expect ≤0)")
+        if os.environ.get("BRT_KOZ_PROJECT", "1").lower() in ("0", "false", "no"):
+            lines.append("  (BRT_KOZ_PROJECT=0: raw network values, no inference projection)")
+
     if brt.value_at_tau(outside, T) <= 0:
         lines.append("WARN: LLM nominal start is BRT-unsafe at horizon (filter may reject burns)")
     else:
@@ -148,7 +158,7 @@ def _regenerate_validation(checkpoint_dir: Path, epoch: int, device: str) -> Pat
         ckpt = checkpoint_dir / "training" / "checkpoints" / "model_final.pth"
 
     dev = device
-    dynamics = build_dynamics(config)
+    dynamics = build_dynamics(config, device=dev)
     model = build_model(dynamics, config.train)
     state = torch.load(ckpt, map_location=dev, weights_only=False)
     model.load_state_dict(state["model"] if isinstance(state, dict) and "model" in state else state)
