@@ -212,9 +212,11 @@ def train_koz_deepreach_mpc(
         raise RuntimeError("DeepReach-MPC training requires CUDA.\n  " + "\n  ".join(diag))
 
     checkpoint_dir = Path(checkpoint_dir).resolve()
-    ckpt = _model_path(checkpoint_dir)
-    if ckpt.is_file() and not force:
-        return ckpt
+    if not force:
+        from simulation.brt.training_metrics import any_checkpoint_path
+
+        if any_checkpoint_path(checkpoint_dir) is not None:
+            return _model_path(checkpoint_dir)
 
     if force and checkpoint_dir.exists():
         import shutil
@@ -503,13 +505,14 @@ def load_or_train_koz_brt(
 
     force = force_train or os.environ.get("DEEPREACH_FORCE_TRAIN", "0").lower() in ("1", "true", "yes")
     auto_train = os.environ.get("DEEPREACH_AUTO_TRAIN", "1").lower() not in ("0", "false", "no")
-    ckpt = _model_path(ck_dir)
-    loaded = ckpt.is_file() and not force
+    from simulation.brt.training_metrics import any_checkpoint_path
+
+    loaded = any_checkpoint_path(ck_dir) is not None and not force
 
     if not loaded:
         if not auto_train:
             raise FileNotFoundError(
-                f"No checkpoint at {ckpt}. Train: python -m simulation.brt.train --force"
+                f"No checkpoint under {ck_dir}. Train: python -m simulation.brt.train --force"
             )
         train_koz_deepreach_mpc(config, ck_dir, force=force)
     elif not _config_path(ck_dir).is_file():

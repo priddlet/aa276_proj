@@ -18,11 +18,11 @@ echo "  repo:  $ROOT"
 echo "  env:   $CONDA_ENV_NAME"
 echo ""
 
-# --- GPU driver (install manually first on plain Ubuntu) ---
+# --- GPU driver (install first on fresh Ubuntu: sudo ./scripts/install_nvidia_driver_gcp.sh && sudo reboot) ---
 if ! command -v nvidia-smi &>/dev/null || ! nvidia-smi &>/dev/null; then
   echo "ERROR: nvidia-smi not working." >&2
-  echo "  On a new Ubuntu GCP VM, install the driver first:" >&2
-  echo "    sudo $ROOT/scripts/install_nvidia_driver_ubuntu.sh" >&2
+  echo "  On a new GCP Ubuntu GPU VM run:" >&2
+  echo "    sudo $ROOT/scripts/install_nvidia_driver_gcp.sh" >&2
   echo "    sudo reboot" >&2
   echo "  See docs/GCP_GPU_VM_SETUP.md" >&2
   exit 1

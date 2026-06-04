@@ -64,6 +64,36 @@ def _checkpoint_select_mode() -> str:
     return os.environ.get("DEEPREACH_CHECKPOINT_SELECT", "best").strip().lower()
 
 
+def _latest_epoch_checkpoint(sub: Path) -> Path | None:
+    best_ep = 0
+    best_path: Path | None = None
+    for p in sub.glob("model_epoch_*.pth"):
+        try:
+            ep = int(p.stem.rsplit("_", 1)[-1])
+        except ValueError:
+            continue
+        if ep >= best_ep:
+            best_ep = ep
+            best_path = p
+    return best_path
+
+
+def any_checkpoint_path(
+    checkpoint_dir: Path,
+    *,
+    ckpt_sub: Path | None = None,
+) -> Path | None:
+    """Return any ``.pth`` without requiring loss logs (skip-train / empty-dir checks)."""
+    sub = ckpt_sub or (checkpoint_dir / "training" / "checkpoints")
+    if not sub.is_dir():
+        return None
+    for name in ("model_final.pth", "model_current.pth"):
+        p = sub / name
+        if p.is_file():
+            return p
+    return _latest_epoch_checkpoint(sub)
+
+
 def resolve_inference_checkpoint(
     checkpoint_dir: Path,
     *,
@@ -90,17 +120,9 @@ def resolve_inference_checkpoint(
         raise FileNotFoundError(f"No checkpoint for epoch {ep}: {p}")
 
     if mode == "latest":
-        best_ep = 0
-        best_path: Path | None = None
-        for p in sub.glob("model_epoch_*.pth"):
-            try:
-                ep = int(p.stem.rsplit("_", 1)[-1])
-            except ValueError:
-                continue
-            if ep >= best_ep:
-                best_ep = ep
-                best_path = p
+        best_path = _latest_epoch_checkpoint(sub)
         if best_path is not None:
+            best_ep = int(best_path.stem.rsplit("_", 1)[-1])
             return best_path, best_ep, f"latest epoch {best_ep}"
         for name in ("model_current.pth", "model_final.pth"):
             p = sub / name
@@ -114,7 +136,11 @@ def resolve_inference_checkpoint(
             p = sub / name
             if p.is_file():
                 return p, 0, name
-        raise FileNotFoundError(f"No train_losses_epoch_*.txt under {sub}")
+        latest = _latest_epoch_checkpoint(sub)
+        if latest is not None:
+            ep = int(latest.stem.rsplit("_", 1)[-1])
+            return latest, ep, f"latest epoch {ep} (no loss logs)"
+        raise FileNotFoundError(f"No checkpoints or train_losses_epoch_*.txt under {sub}")
 
     metric = "point" if mode == "point" else "window_mean"
     losses = point if metric == "point" else wmean

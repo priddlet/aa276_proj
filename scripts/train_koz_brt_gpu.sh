@@ -3,8 +3,8 @@
 #
 # Interactive (on a GPU worker, not a login node):
 #   cd ~/aa276_proj
-#   export CONDA_ENV=proj          # or: source .venv/bin/activate
-#   ./scripts/train_koz_brt_gpu.sh
+#   conda activate proj && ./scripts/train_koz_brt_gpu.sh
+#   # or venv already active (prompt shows proj):  unset CONDA_ENV; ./scripts/train_koz_brt_gpu.sh
 #
 # Background + log:
 #   ./scripts/train_koz_brt_gpu.sh --background
@@ -31,17 +31,26 @@ for arg in "$@"; do
   esac
 done
 
-# --- Python env: conda name, or project .venv, or active env ---
-if [[ -n "${CONDA_ENV:-}" ]]; then
+# --- Python env: conda (if installed), else .venv, else already-active shell ---
+if [[ -n "${CONDA_ENV:-}" ]] && command -v conda &>/dev/null; then
   # shellcheck source=/dev/null
   source "$(conda info --base)/etc/profile.d/conda.sh"
   conda activate "$CONDA_ENV"
-elif [[ -f "$ROOT/.venv/bin/activate" ]]; then
+elif [[ -n "${CONDA_ENV:-}" ]]; then
+  echo "Note: CONDA_ENV=$CONDA_ENV but 'conda' not found — using current shell (venv/virtualenv OK)."
+elif [[ -z "${VIRTUAL_ENV:-}" ]] && [[ -f "$ROOT/.venv/bin/activate" ]]; then
   # shellcheck source=/dev/null
   source "$ROOT/.venv/bin/activate"
 fi
 
-PYTHON="${PYTHON:-python3}"
+PYTHON="${PYTHON:-}"
+if [[ -z "$PYTHON" ]]; then
+  PYTHON="$(command -v python || command -v python3 || true)"
+fi
+if [[ -z "$PYTHON" ]]; then
+  echo "ERROR: no python on PATH. Activate your env first (conda/venv)." >&2
+  exit 1
+fi
 
 # --- GPU / CUDA preflight ---
 if ! command -v nvidia-smi &>/dev/null; then
