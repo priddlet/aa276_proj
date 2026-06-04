@@ -118,8 +118,9 @@ def _numeric_checks(brt, semi_axes: tuple[float, float, float], horizon_s: float
         vT = brt.value_at_tau(state, T)
         lines.append(f"  {label}: V(t=0)={v0:.3f}, V(t=T)={vT:.3f}, unsafe@T={vT <= 0}")
 
-    g_in = brt.koz_boundary_g(inside[:3]) if hasattr(brt, "koz_boundary_g") else g_in
-    if float(g_in) <= 0:
+    if hasattr(brt, "koz_boundary_g"):
+        g_in = float(np.asarray(brt.koz_boundary_g(inside[:3])).reshape(-1)[0])
+    if g_in <= 0:
         for t_check in (0.0, T / 2.0, T):
             v_in = brt.value_at_tau(inside, t_check)
             ok = v_in <= 0.0

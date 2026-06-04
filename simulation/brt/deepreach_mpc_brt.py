@@ -60,7 +60,7 @@ def default_checkpoint_dir(project_root: str | Path | None = None) -> Path:
     env = os.environ.get("DEEPREACH_CHECKPOINT_DIR", "").strip()
     if env:
         return Path(env).expanduser().resolve()
-    return (root / "simulation_output" / "deepreach_mpc_koz").resolve()
+    return (root / "simulation_output" / "deepreach_mpc_koz_v2").resolve()
 
 
 def _resolve_device(requested: str) -> str:

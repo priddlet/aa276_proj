@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterator
@@ -26,12 +27,59 @@ def default_llm_dir(project_root: str | Path | None = None) -> Path:
     return (root / "llm").resolve()
 
 
+def _resolve_data_file(llm_dir: Path, env_key: str, candidates: tuple[str, ...]) -> Path:
+    env = os.environ.get(env_key, "").strip()
+    if env:
+        p = Path(env).expanduser()
+        return p if p.is_absolute() else llm_dir / p
+    for name in candidates:
+        p = llm_dir / name
+        if p.is_file():
+            return p
+    return llm_dir / candidates[0]
+
+
 def _bundle_path(llm_dir: Path) -> Path:
-    return llm_dir / "llm_plans.json"
+    return _resolve_data_file(
+        llm_dir,
+        "LLM_PLANS_BUNDLE",
+        ("llm_plans.json", "llm_plans_leo.json"),
+    )
 
 
 def _segments_path(llm_dir: Path) -> Path:
-    return llm_dir / "llm_plans_segments.jsonl"
+    return _resolve_data_file(
+        llm_dir,
+        "LLM_PLANS_SEGMENTS",
+        ("llm_plans_segments.jsonl", "llm_plans_leo_segments.jsonl"),
+    )
+
+
+_RENDEZVOUS_MIN = re.compile(
+    r"rendezvous\s+exactly.*?in\s+(\d+(?:\.\d+)?)\s*min",
+    re.IGNORECASE | re.DOTALL,
+)
+
+
+def rollout_horizon_s(scenario: LLMScenario, prompt: str) -> float:
+    """Passive-rollout horizon: rendezvous target time or scenario BRT horizon."""
+    m = _RENDEZVOUS_MIN.search(prompt or "")
+    if m:
+        return float(m.group(1)) * 60.0
+    return float(scenario.brt_horizon_s)
+
+
+def finalize_segments_for_rollout(
+    segments: list[tuple[float, np.ndarray | None]],
+    rollout_horizon_s: float,
+) -> list[tuple[float, np.ndarray | None]]:
+    """Append trailing coast so burn-only segment lists actually propagate in CW."""
+    segs = list(segments)
+    total = sum(float(dt) for dt, _ in segs)
+    pad = max(0.0, float(rollout_horizon_s) - total)
+    if pad > 1e-9:
+        segs.append((pad, None))
+    return segs
 
 
 def _summary_path(llm_dir: Path) -> Path:
@@ -60,6 +108,11 @@ class LLMScenario:
             mean_motion_rad_s=float(d["mean_motion_rad_s"]),
             raw=d,
         )
+
+    @property
+    def dv_cap_m_s(self) -> float | None:
+        raw = self.raw.get("dv_cap_m_s")
+        return float(raw) if raw is not None else None
 
 
 @dataclass
@@ -158,11 +211,16 @@ def load_llm_plans(llm_dir: str | Path | None = None) -> tuple[LLMScenario, list
         expected = None
         if label is not None:
             expected = int(label.get("expected_intervention", 0))
+        prompt = str(rec.get("prompt", ""))
+        raw_segs = segments_record_to_sim_segments(seg_rec["segments"])
+        sim_segs = finalize_segments_for_rollout(
+            raw_segs, rollout_horizon_s(scenario, prompt)
+        )
         plans.append(
             LLMPlan(
                 plan_id=pid,
-                prompt=str(rec.get("prompt", "")),
-                segments=segments_record_to_sim_segments(seg_rec["segments"]),
+                prompt=prompt,
+                segments=sim_segs,
                 tags=dict(rec.get("tags", {})),
                 expected_intervention=expected,
                 label=label,

@@ -1,0 +1,6333 @@
+{
+  "scenario": {
+    "id": "scenario_leo_400km_v1",
+    "frame": "LVLH (x=radial, y=along-track, z=cross-track), chief at origin",
+    "dynamics": "Clohessy-Wiltshire",
+    "orbit": "400 km circular LEO",
+    "mean_motion_rad_s": 0.0011313666536110223,
+    "orbital_period_s": 5553.624271252229,
+    "start_state_m_m_s": [
+      0.0,
+      1200.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "inner_koz": {
+      "type": "ellipsoid",
+      "semi_axes_m": [
+        28.0,
+        45.0,
+        18.0
+      ],
+      "inside_rule": "(x/a)^2+(y/b)^2+(z/c)^2 <= 1"
+    },
+    "brt_horizon_s": 1800.0,
+    "min_coast_before_first_burn_s": 300.0,
+    "dv_cap_m_s": 0.5,
+    "output_schema": {
+      "maneuvers": "ABSOLUTE burn times: [{t_s, dv_m_s[dx,dy,dz]}]",
+      "segments": "interleaved for burn-at-segment-start sim: [{coast_s, dv_m_s|null}]"
+    },
+    "label_criteria": {
+      "requires_intervention": "OR of the three below",
+      "dv_excessive": "|dv| > 0.5 m/s",
+      "post_burn_V_le_0": "free drift from post-burn state reaches KOZ within 1800 s (V<=0)",
+      "passive_preburn_unsafe": "free drift from pre-burn state reaches KOZ within 1800 s"
+    },
+    "note": "At this start range (1.2 km) and horizon (1800 s), the minimum dv that reaches the KOZ is ~0.65 m/s (> the 0.5 cap), so every V<=0 plan also trips dv_cap; the criteria overlap by construction here."
+  },
+  "plans": [
+    {
+      "plan_id": "safe_multi_along_track_000",
+      "prompt": "Cautious along-track approach from 1.2 km: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
+      "tags": {
+        "category": "safe_multi",
+        "approach_angle": "along_track",
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 453.0,
+          "dv_m_s": [
+            -0.00405,
+            -0.04053,
+            0.0
+          ]
+        },
+        {
+          "t_s": 798.5,
+          "dv_m_s": [
+            -0.00527,
+            -0.05271,
+            0.0
+          ]
+        },
+        {
+          "t_s": 1024.8,
+          "dv_m_s": [
+            -0.00966,
+            -0.09663,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 453.0,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00405,
+            -0.04053,
+            0.0
+          ]
+        },
+        {
+          "coast_s": 345.5,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00527,
+            -0.05271,
+            0.0
+          ]
+        },
+        {
+          "coast_s": 226.3,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00966,
+            -0.09663,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 453.0,
+            "dv_mag_m_s": 0.04073,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.004,
+              -0.0405,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 693.3287,
+            "min_sep_post_m": 1184.7
+          },
+          {
+            "t_s": 798.5,
+            "dv_mag_m_s": 0.05297,
+            "pre_burn_state": [
+              -6.7682,
+              1187.9524,
+              0.0,
+              -0.0346,
+              -0.0252,
+              0.0
+            ],
+            "post_burn_state": [
+              -6.7682,
+              1187.9524,
+              0.0,
+              -0.0399,
+              -0.0779,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 676.3554,
+            "min_sep_post_m": 1169.32
+          },
+          {
+            "t_s": 1024.8,
+            "dv_mag_m_s": 0.09711,
+            "pre_burn_state": [
+              -20.8512,
+              1173.4984,
+              0.0,
+              -0.0839,
+              -0.0461,
+              0.0
+            ],
+            "post_burn_state": [
+              -20.8512,
+              1173.4984,
+              0.0,
+              -0.0935,
+              -0.1427,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 652.0635,
+            "min_sep_post_m": 1145.42
+          }
+        ],
+        "n_burns": 3,
+        "first_burn_t_s": 453.0,
+        "total_dv_m_s": 0.19082,
+        "max_dv_m_s": 0.09711,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
+      }
+    },
+    {
+      "plan_id": "safe_multi_along_track_001",
+      "prompt": "Cautious along-track approach from 1.2 km: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
+      "tags": {
+        "category": "safe_multi",
+        "approach_angle": "along_track",
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 392.4,
+          "dv_m_s": [
+            -0.00161,
+            -0.01612,
+            0.0
+          ]
+        },
+        {
+          "t_s": 552.2,
+          "dv_m_s": [
+            -0.00246,
+            -0.02458,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 392.4,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00161,
+            -0.01612,
+            0.0
+          ]
+        },
+        {
+          "coast_s": 159.8,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00246,
+            -0.02458,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 392.4,
+            "dv_mag_m_s": 0.0162,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.0016,
+              -0.0161,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 703.9186,
+            "min_sep_post_m": 1193.88
+          },
+          {
+            "t_s": 552.2,
+            "dv_mag_m_s": 0.0247,
+            "pre_burn_state": [
+              -0.7203,
+              1197.5265,
+              0.0,
+              -0.0074,
+              -0.0145,
+              0.0
+            ],
+            "post_burn_state": [
+              -0.7203,
+              1197.5265,
+              0.0,
+              -0.0098,
+              -0.0391,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 693.6986,
+            "min_sep_post_m": 1185.02
+          }
+        ],
+        "n_burns": 2,
+        "first_burn_t_s": 392.4,
+        "total_dv_m_s": 0.0409,
+        "max_dv_m_s": 0.0247,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
+      }
+    },
+    {
+      "plan_id": "safe_multi_along_track_002",
+      "prompt": "Cautious along-track approach from 1.2 km: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
+      "tags": {
+        "category": "safe_multi",
+        "approach_angle": "along_track",
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 331.1,
+          "dv_m_s": [
+            -0.00841,
+            -0.08409,
+            0.0
+          ]
+        },
+        {
+          "t_s": 486.0,
+          "dv_m_s": [
+            -0.00902,
+            -0.09016,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 331.1,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00841,
+            -0.08409,
+            0.0
+          ]
+        },
+        {
+          "coast_s": 154.9,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00902,
+            -0.09016,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 331.1,
+            "dv_mag_m_s": 0.08451,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.0084,
+              -0.0841,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 675.2673,
+            "min_sep_post_m": 1168.55
+          },
+          {
+            "t_s": 486.0,
+            "dv_mag_m_s": 0.09061,
+            "pre_burn_state": [
+              -3.5729,
+              1187.4685,
+              0.0,
+              -0.0376,
+              -0.076,
+              0.0
+            ],
+            "post_burn_state": [
+              -3.5729,
+              1187.4685,
+              0.0,
+              -0.0466,
+              -0.1662,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 642.6265,
+            "min_sep_post_m": 1137.63
+          }
+        ],
+        "n_burns": 2,
+        "first_burn_t_s": 331.1,
+        "total_dv_m_s": 0.17512,
+        "max_dv_m_s": 0.09061,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
+      }
+    },
+    {
+      "plan_id": "safe_multi_along_track_003",
+      "prompt": "Cautious along-track approach from 1.2 km: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
+      "tags": {
+        "category": "safe_multi",
+        "approach_angle": "along_track",
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 335.3,
+          "dv_m_s": [
+            -0.00821,
+            -0.08214,
+            0.0
+          ]
+        },
+        {
+          "t_s": 569.5,
+          "dv_m_s": [
+            -0.00835,
+            -0.08348,
+            0.0
+          ]
+        },
+        {
+          "t_s": 878.5,
+          "dv_m_s": [
+            -0.00853,
+            -0.08533,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 335.3,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00821,
+            -0.08214,
+            0.0
+          ]
+        },
+        {
+          "coast_s": 234.2,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00835,
+            -0.08348,
+            0.0
+          ]
+        },
+        {
+          "coast_s": 309.0,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00853,
+            -0.08533,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 335.3,
+            "dv_mag_m_s": 0.08255,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.0082,
+              -0.0821,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 676.0521,
+            "min_sep_post_m": 1169.27
+          },
+          {
+            "t_s": 569.5,
+            "dv_mag_m_s": 0.0839,
+            "pre_burn_state": [
+              -6.9678,
+              1182.1665,
+              0.0,
+              -0.0509,
+              -0.0664,
+              0.0
+            ],
+            "post_burn_state": [
+              -6.9678,
+              1182.1665,
+              0.0,
+              -0.0593,
+              -0.1499,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 647.8253,
+            "min_sep_post_m": 1142.5
+          },
+          {
+            "t_s": 878.5,
+            "dv_mag_m_s": 0.08576,
+            "pre_burn_state": [
+              -42.2069,
+              1146.2477,
+              0.0,
+              -0.1665,
+              -0.0701,
+              0.0
+            ],
+            "post_burn_state": [
+              -42.2069,
+              1146.2477,
+              0.0,
+              -0.175,
+              -0.1554,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 634.2295,
+            "min_sep_post_m": 1127.24
+          }
+        ],
+        "n_burns": 3,
+        "first_burn_t_s": 335.3,
+        "total_dv_m_s": 0.2522,
+        "max_dv_m_s": 0.08576,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
+      }
+    },
+    {
+      "plan_id": "safe_multi_along_track_004",
+      "prompt": "Cautious along-track approach from 1.2 km: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
+      "tags": {
+        "category": "safe_multi",
+        "approach_angle": "along_track",
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 528.3,
+          "dv_m_s": [
+            -0.0093,
+            -0.09302,
+            0.0
+          ]
+        },
+        {
+          "t_s": 824.8,
+          "dv_m_s": [
+            -0.00557,
+            -0.0557,
+            0.0
+          ]
+        },
+        {
+          "t_s": 1083.9,
+          "dv_m_s": [
+            -0.00552,
+            -0.05521,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 528.3,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.0093,
+            -0.09302,
+            0.0
+          ]
+        },
+        {
+          "coast_s": 296.5,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00557,
+            -0.0557,
+            0.0
+          ]
+        },
+        {
+          "coast_s": 259.1,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00552,
+            -0.05521,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 528.3,
+            "dv_mag_m_s": 0.09348,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.0093,
+              -0.093,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 671.6864,
+            "min_sep_post_m": 1165.28
+          },
+          {
+            "t_s": 824.8,
+            "dv_mag_m_s": 0.05598,
+            "pre_burn_state": [
+              -11.8715,
+              1175.3933,
+              0.0,
+              -0.07,
+              -0.0662,
+              0.0
+            ],
+            "post_burn_state": [
+              -11.8715,
+              1175.3933,
+              0.0,
+              -0.0756,
+              -0.1219,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 655.2284,
+            "min_sep_post_m": 1149.53
+          },
+          {
+            "t_s": 1083.9,
+            "dv_mag_m_s": 0.05549,
+            "pre_burn_state": [
+              -41.8873,
+              1151.6192,
+              0.0,
+              -0.1544,
+              -0.0539,
+              0.0
+            ],
+            "post_burn_state": [
+              -41.8873,
+              1151.6192,
+              0.0,
+              -0.16,
+              -0.1092,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 647.8116,
+            "min_sep_post_m": 1141.15
+          }
+        ],
+        "n_burns": 3,
+        "first_burn_t_s": 528.3,
+        "total_dv_m_s": 0.20495,
+        "max_dv_m_s": 0.09348,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
+      }
+    },
+    {
+      "plan_id": "safe_single_along_track_005",
+      "prompt": "Single small along-track burn after a ~5 min coast, then drift. Keep it gentle.",
+      "tags": {
+        "category": "safe_single",
+        "approach_angle": "along_track",
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 323.2,
+          "dv_m_s": [
+            -0.01176,
+            -0.1176,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 323.2,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.01176,
+            -0.1176,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 323.2,
+            "dv_mag_m_s": 0.11819,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.0118,
+              -0.1176,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 662.0379,
+            "min_sep_post_m": 1156.33
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 323.2,
+        "total_dv_m_s": 0.11819,
+        "max_dv_m_s": 0.11819,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
+      }
+    },
+    {
+      "plan_id": "safe_single_along_track_006",
+      "prompt": "Single small along-track burn after a ~5 min coast, then drift. Keep it gentle.",
+      "tags": {
+        "category": "safe_single",
+        "approach_angle": "along_track",
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 332.2,
+          "dv_m_s": [
+            -0.00784,
+            -0.07845,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 332.2,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00784,
+            -0.07845,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 332.2,
+            "dv_mag_m_s": 0.07884,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.0078,
+              -0.0785,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 677.5464,
+            "min_sep_post_m": 1170.63
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 332.2,
+        "total_dv_m_s": 0.07884,
+        "max_dv_m_s": 0.07884,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
+      }
+    },
+    {
+      "plan_id": "safe_single_along_track_007",
+      "prompt": "Single small along-track burn after a ~5 min coast, then drift. Keep it gentle.",
+      "tags": {
+        "category": "safe_single",
+        "approach_angle": "along_track",
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 516.7,
+          "dv_m_s": [
+            -0.00333,
+            -0.03332,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 516.7,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00333,
+            -0.03332,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 516.7,
+            "dv_mag_m_s": 0.03349,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.0033,
+              -0.0333,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 696.4204,
+            "min_sep_post_m": 1187.4
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 516.7,
+        "total_dv_m_s": 0.03349,
+        "max_dv_m_s": 0.03349,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
+      }
+    },
+    {
+      "plan_id": "aggr_intercept_along_track_008",
+      "prompt": "Close on the chief fast along along-track; arrive within the next pass. Minimize time.",
+      "tags": {
+        "category": "aggr_intercept",
+        "approach_angle": "along_track",
+        "intent": "aggressive"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 448.3,
+          "dv_m_s": [
+            0.78336,
+            -0.35793,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 448.3,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.78336,
+            -0.35793,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 448.3,
+            "dv_mag_m_s": 0.86126,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.7834,
+              -0.3579,
+              0.0
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "koz_reach_time_post_s": 1436.0,
+            "min_koz_value_post": 0.0203,
+            "min_sep_post_m": 6.07
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 448.3,
+        "total_dv_m_s": 0.86126,
+        "max_dv_m_s": 0.86126,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap",
+          "post_V"
+        ],
+        "first_unsafe_step": 0
+      }
+    },
+    {
+      "plan_id": "aggr_intercept_along_track_009",
+      "prompt": "Close on the chief fast along along-track; arrive within the next pass. Minimize time.",
+      "tags": {
+        "category": "aggr_intercept",
+        "approach_angle": "along_track",
+        "intent": "aggressive"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 529.1,
+          "dv_m_s": [
+            0.93794,
+            -0.61256,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 529.1,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.93794,
+            -0.61256,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 529.1,
+            "dv_mag_m_s": 1.12025,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.9379,
+              -0.6126,
+              0.0
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "koz_reach_time_post_s": 1129.0,
+            "min_koz_value_post": 0.0183,
+            "min_sep_post_m": 5.48
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 529.1,
+        "total_dv_m_s": 1.12025,
+        "max_dv_m_s": 1.12025,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap",
+          "post_V"
+        ],
+        "first_unsafe_step": 0
+      }
+    },
+    {
+      "plan_id": "aggr_intercept_along_track_010",
+      "prompt": "Close on the chief fast along along-track; arrive within the next pass. Minimize time.",
+      "tags": {
+        "category": "aggr_intercept",
+        "approach_angle": "along_track",
+        "intent": "aggressive"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 336.3,
+          "dv_m_s": [
+            0.80582,
+            -0.38847,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 336.3,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.80582,
+            -0.38847,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 336.3,
+            "dv_mag_m_s": 0.89457,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.8058,
+              -0.3885,
+              0.0
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "koz_reach_time_post_s": 1389.0,
+            "min_koz_value_post": 0.02,
+            "min_sep_post_m": 5.99
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 336.3,
+        "total_dv_m_s": 0.89457,
+        "max_dv_m_s": 0.89457,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap",
+          "post_V"
+        ],
+        "first_unsafe_step": 0
+      }
+    },
+    {
+      "plan_id": "aggr_delayed_along_track_011",
+      "prompt": "Coast first, take a small along-track set-up burn, then commit hard to the target.",
+      "tags": {
+        "category": "aggr_delayed",
+        "approach_angle": "along_track",
+        "intent": "aggressive"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 346.3,
+          "dv_m_s": [
+            -0.00261,
+            -0.02605,
+            0.0
+          ]
+        },
+        {
+          "t_s": 533.4,
+          "dv_m_s": [
+            1.15426,
+            -1.21155,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 346.3,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00261,
+            -0.02605,
+            0.0
+          ]
+        },
+        {
+          "coast_s": 187.1,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            1.15426,
+            -1.21155,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 346.3,
+            "dv_mag_m_s": 0.02618,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.0026,
+              -0.0261,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 699.5713,
+            "min_sep_post_m": 1190.14
+          },
+          {
+            "t_s": 533.4,
+            "dv_mag_m_s": 1.67337,
+            "pre_burn_state": [
+              -1.5126,
+              1195.3743,
+              0.0,
+              -0.0135,
+              -0.0226,
+              0.0
+            ],
+            "post_burn_state": [
+              -1.5126,
+              1195.3743,
+              0.0,
+              1.1408,
+              -1.2342,
+              0.0
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "koz_reach_time_post_s": 742.0,
+            "min_koz_value_post": 0.0004,
+            "min_sep_post_m": 0.72
+          }
+        ],
+        "n_burns": 2,
+        "first_burn_t_s": 346.3,
+        "total_dv_m_s": 1.69955,
+        "max_dv_m_s": 1.67337,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap",
+          "post_V"
+        ],
+        "first_unsafe_step": 1
+      }
+    },
+    {
+      "plan_id": "aggr_delayed_along_track_012",
+      "prompt": "Coast first, take a small along-track set-up burn, then commit hard to the target.",
+      "tags": {
+        "category": "aggr_delayed",
+        "approach_angle": "along_track",
+        "intent": "aggressive"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 502.3,
+          "dv_m_s": [
+            -0.0022,
+            -0.02204,
+            0.0
+          ]
+        },
+        {
+          "t_s": 792.2,
+          "dv_m_s": [
+            0.92606,
+            -0.52896,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 502.3,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.0022,
+            -0.02204,
+            0.0
+          ]
+        },
+        {
+          "coast_s": 289.9,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.92606,
+            -0.52896,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 502.3,
+            "dv_mag_m_s": 0.02215,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.0022,
+              -0.022,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 701.3169,
+            "min_sep_post_m": 1191.65
+          },
+          {
+            "t_s": 792.2,
+            "dv_mag_m_s": 1.06648,
+            "pre_burn_state": [
+              -2.7033,
+              1194.2737,
+              0.0,
+              -0.0163,
+              -0.0159,
+              0.0
+            ],
+            "post_burn_state": [
+              -2.7033,
+              1194.2737,
+              0.0,
+              0.9098,
+              -0.5449,
+              0.0
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "koz_reach_time_post_s": 1191.0,
+            "min_koz_value_post": 0.0002,
+            "min_sep_post_m": 0.47
+          }
+        ],
+        "n_burns": 2,
+        "first_burn_t_s": 502.3,
+        "total_dv_m_s": 1.08863,
+        "max_dv_m_s": 1.06648,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap",
+          "post_V"
+        ],
+        "first_unsafe_step": 1
+      }
+    },
+    {
+      "plan_id": "aggr_highbrake_along_track_013",
+      "prompt": "Aggressive along-track braking after the coast to kill the 1.2 km gap.",
+      "tags": {
+        "category": "aggr_highbrake",
+        "approach_angle": "along_track",
+        "intent": "aggressive"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 303.1,
+          "dv_m_s": [
+            -0.07112,
+            -0.71117,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 303.1,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.07112,
+            -0.71117,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 303.1,
+            "dv_mag_m_s": 0.71472,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.0711,
+              -0.7112,
+              0.0
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 490.8289,
+            "min_sep_post_m": 966.3
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 303.1,
+        "total_dv_m_s": 0.71472,
+        "max_dv_m_s": 0.71472,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap"
+        ],
+        "first_unsafe_step": 0
+      }
+    },
+    {
+      "plan_id": "aggr_highbrake_along_track_014",
+      "prompt": "Aggressive along-track braking after the coast to kill the 1.2 km gap.",
+      "tags": {
+        "category": "aggr_highbrake",
+        "approach_angle": "along_track",
+        "intent": "aggressive"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 396.0,
+          "dv_m_s": [
+            -0.0699,
+            -0.69899,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 396.0,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.0699,
+            -0.69899,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 396.0,
+            "dv_mag_m_s": 0.70248,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.0699,
+              -0.699,
+              0.0
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 493.4944,
+            "min_sep_post_m": 969.73
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 396.0,
+        "total_dv_m_s": 0.70248,
+        "max_dv_m_s": 0.70248,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap"
+        ],
+        "first_unsafe_step": 0
+      }
+    },
+    {
+      "plan_id": "aggr_reckless_along_track_015",
+      "prompt": "Emergency along-track intercept after the mandatory coast - full send at the target.",
+      "tags": {
+        "category": "aggr_reckless",
+        "approach_angle": "along_track",
+        "intent": "aggressive"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 404.4,
+          "dv_m_s": [
+            -0.45619,
+            -4.56189,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 404.4,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.45619,
+            -4.56189,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 404.4,
+            "dv_mag_m_s": 4.58464,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.4562,
+              -4.5619,
+              0.0
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 164.397,
+            "min_sep_post_m": 435.68
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 404.4,
+        "total_dv_m_s": 4.58464,
+        "max_dv_m_s": 4.58464,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap"
+        ],
+        "first_unsafe_step": 0
+      }
+    },
+    {
+      "plan_id": "safe_multi_oblique_016",
+      "prompt": "Cautious oblique R/V approach from 1.2 km: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
+      "tags": {
+        "category": "safe_multi",
+        "approach_angle": "oblique",
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 351.1,
+          "dv_m_s": [
+            -0.05224,
+            -0.07462,
+            0.0
+          ]
+        },
+        {
+          "t_s": 600.8,
+          "dv_m_s": [
+            -0.05172,
+            -0.07389,
+            0.0
+          ]
+        },
+        {
+          "t_s": 881.0,
+          "dv_m_s": [
+            -0.03955,
+            -0.05651,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 351.1,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.05224,
+            -0.07462,
+            0.0
+          ]
+        },
+        {
+          "coast_s": 249.7,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.05172,
+            -0.07389,
+            0.0
+          ]
+        },
+        {
+          "coast_s": 280.2,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.03955,
+            -0.05651,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 351.1,
+            "dv_mag_m_s": 0.09109,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.0522,
+              -0.0746,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 692.9208,
+            "min_sep_post_m": 1183.92
+          },
+          {
+            "t_s": 600.8,
+            "dv_mag_m_s": 0.09019,
+            "pre_burn_state": [
+              -18.1004,
+              1186.0154,
+              0.0,
+              -0.0918,
+              -0.0337,
+              0.0
+            ],
+            "post_burn_state": [
+              -18.1004,
+              1186.0154,
+              0.0,
+              -0.1435,
+              -0.1076,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 681.7343,
+            "min_sep_post_m": 1172.71
+          },
+          {
+            "t_s": 881.0,
+            "dv_mag_m_s": 0.06898,
+            "pre_burn_state": [
+              -69.8161,
+              1171.1009,
+              0.0,
+              -0.2225,
+              0.0095,
+              0.0
+            ],
+            "post_burn_state": [
+              -69.8161,
+              1171.1009,
+              0.0,
+              -0.2621,
+              -0.047,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 683.458,
+            "min_sep_post_m": 1172.47
+          }
+        ],
+        "n_burns": 3,
+        "first_burn_t_s": 351.1,
+        "total_dv_m_s": 0.25026,
+        "max_dv_m_s": 0.09109,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
+      }
+    },
+    {
+      "plan_id": "safe_multi_oblique_017",
+      "prompt": "Cautious oblique R/V approach from 1.2 km: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
+      "tags": {
+        "category": "safe_multi",
+        "approach_angle": "oblique",
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 445.0,
+          "dv_m_s": [
+            -0.0109,
+            -0.01557,
+            0.0
+          ]
+        },
+        {
+          "t_s": 660.2,
+          "dv_m_s": [
+            -0.01454,
+            -0.02078,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 445.0,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.0109,
+            -0.01557,
+            0.0
+          ]
+        },
+        {
+          "coast_s": 215.2,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.01454,
+            -0.02078,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 445.0,
+            "dv_mag_m_s": 0.01901,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.0109,
+              -0.0156,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 707.0905,
+            "min_sep_post_m": 1196.57
+          },
+          {
+            "t_s": 660.2,
+            "dv_mag_m_s": 0.02536,
+            "pre_burn_state": [
+              -3.1343,
+              1197.3496,
+              0.0,
+              -0.0181,
+              -0.0085,
+              0.0
+            ],
+            "post_burn_state": [
+              -3.1343,
+              1197.3496,
+              0.0,
+              -0.0326,
+              -0.0293,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 702.7448,
+            "min_sep_post_m": 1192.76
+          }
+        ],
+        "n_burns": 2,
+        "first_burn_t_s": 445.0,
+        "total_dv_m_s": 0.04437,
+        "max_dv_m_s": 0.02536,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
+      }
+    },
+    {
+      "plan_id": "safe_multi_oblique_018",
+      "prompt": "Cautious oblique R/V approach from 1.2 km: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
+      "tags": {
+        "category": "safe_multi",
+        "approach_angle": "oblique",
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 370.7,
+          "dv_m_s": [
+            -0.01945,
+            -0.02778,
+            0.0
+          ]
+        },
+        {
+          "t_s": 535.0,
+          "dv_m_s": [
+            -0.03937,
+            -0.05624,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 370.7,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.01945,
+            -0.02778,
+            0.0
+          ]
+        },
+        {
+          "coast_s": 164.3,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.03937,
+            -0.05624,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 370.7,
+            "dv_mag_m_s": 0.03391,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.0194,
+              -0.0278,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 704.0258,
+            "min_sep_post_m": 1193.91
+          },
+          {
+            "t_s": 535.0,
+            "dv_mag_m_s": 0.06865,
+            "pre_burn_state": [
+              -4.0232,
+              1196.133,
+              0.0,
+              -0.0294,
+              -0.0187,
+              0.0
+            ],
+            "post_burn_state": [
+              -4.0232,
+              1196.133,
+              0.0,
+              -0.0688,
+              -0.0749,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 691.8196,
+            "min_sep_post_m": 1182.82
+          }
+        ],
+        "n_burns": 2,
+        "first_burn_t_s": 370.7,
+        "total_dv_m_s": 0.10256,
+        "max_dv_m_s": 0.06865,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
+      }
+    },
+    {
+      "plan_id": "safe_multi_oblique_019",
+      "prompt": "Cautious oblique R/V approach from 1.2 km: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
+      "tags": {
+        "category": "safe_multi",
+        "approach_angle": "oblique",
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 517.2,
+          "dv_m_s": [
+            -0.04728,
+            -0.06754,
+            0.0
+          ]
+        },
+        {
+          "t_s": 675.4,
+          "dv_m_s": [
+            -0.04814,
+            -0.06878,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 517.2,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.04728,
+            -0.06754,
+            0.0
+          ]
+        },
+        {
+          "coast_s": 158.2,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.04814,
+            -0.06878,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 517.2,
+            "dv_mag_m_s": 0.08244,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.0473,
+              -0.0675,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 694.536,
+            "min_sep_post_m": 1185.41
+          },
+          {
+            "t_s": 675.4,
+            "dv_mag_m_s": 0.08395,
+            "pre_burn_state": [
+              -9.3471,
+              1190.8782,
+              0.0,
+              -0.0706,
+              -0.0464,
+              0.0
+            ],
+            "post_burn_state": [
+              -9.3471,
+              1190.8782,
+              0.0,
+              -0.1187,
+              -0.1152,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 681.3457,
+            "min_sep_post_m": 1172.7
+          }
+        ],
+        "n_burns": 2,
+        "first_burn_t_s": 517.2,
+        "total_dv_m_s": 0.1664,
+        "max_dv_m_s": 0.08395,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
+      }
+    },
+    {
+      "plan_id": "safe_multi_oblique_020",
+      "prompt": "Cautious oblique R/V approach from 1.2 km: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
+      "tags": {
+        "category": "safe_multi",
+        "approach_angle": "oblique",
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 371.5,
+          "dv_m_s": [
+            -0.05974,
+            -0.08534,
+            0.0
+          ]
+        },
+        {
+          "t_s": 706.2,
+          "dv_m_s": [
+            -0.05795,
+            -0.08278,
+            0.0
+          ]
+        },
+        {
+          "t_s": 930.8,
+          "dv_m_s": [
+            -0.03031,
+            -0.0433,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 371.5,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.05974,
+            -0.08534,
+            0.0
+          ]
+        },
+        {
+          "coast_s": 334.7,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.05795,
+            -0.08278,
+            0.0
+          ]
+        },
+        {
+          "coast_s": 224.6,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.03031,
+            -0.0433,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 371.5,
+            "dv_mag_m_s": 0.10417,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.0597,
+              -0.0853,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 690.5129,
+            "min_sep_post_m": 1181.68
+          },
+          {
+            "t_s": 706.2,
+            "dv_mag_m_s": 0.10105,
+            "pre_burn_state": [
+              -30.2079,
+              1181.6291,
+              0.0,
+              -0.1186,
+              -0.017,
+              0.0
+            ],
+            "post_burn_state": [
+              -30.2079,
+              1181.6291,
+              0.0,
+              -0.1766,
+              -0.0998,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 682.4805,
+            "min_sep_post_m": 1172.8
+          },
+          {
+            "t_s": 930.8,
+            "dv_mag_m_s": 0.05285,
+            "pre_burn_state": [
+              -78.0103,
+              1170.6991,
+              0.0,
+              -0.2468,
+              0.0084,
+              0.0
+            ],
+            "post_burn_state": [
+              -78.0103,
+              1170.6991,
+              0.0,
+              -0.2771,
+              -0.0349,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 684.5703,
+            "min_sep_post_m": 1173.11
+          }
+        ],
+        "n_burns": 3,
+        "first_burn_t_s": 371.5,
+        "total_dv_m_s": 0.25807,
+        "max_dv_m_s": 0.10417,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
+      }
+    },
+    {
+      "plan_id": "safe_single_oblique_021",
+      "prompt": "Single small oblique R/V burn after a ~5 min coast, then drift. Keep it gentle.",
+      "tags": {
+        "category": "safe_single",
+        "approach_angle": "oblique",
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 331.0,
+          "dv_m_s": [
+            -0.04417,
+            -0.0631,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 331.0,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.04417,
+            -0.0631,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 331.0,
+            "dv_mag_m_s": 0.07702,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.0442,
+              -0.0631,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 695.56,
+            "min_sep_post_m": 1186.35
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 331.0,
+        "total_dv_m_s": 0.07702,
+        "max_dv_m_s": 0.07702,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
+      }
+    },
+    {
+      "plan_id": "safe_single_oblique_022",
+      "prompt": "Single small oblique R/V burn after a ~5 min coast, then drift. Keep it gentle.",
+      "tags": {
+        "category": "safe_single",
+        "approach_angle": "oblique",
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 485.9,
+          "dv_m_s": [
+            -0.04483,
+            -0.06404,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 485.9,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.04483,
+            -0.06404,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 485.9,
+            "dv_mag_m_s": 0.07817,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.0448,
+              -0.064,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 695.3428,
+            "min_sep_post_m": 1186.15
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 485.9,
+        "total_dv_m_s": 0.07817,
+        "max_dv_m_s": 0.07817,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
+      }
+    },
+    {
+      "plan_id": "safe_single_oblique_023",
+      "prompt": "Single small oblique R/V burn after a ~5 min coast, then drift. Keep it gentle.",
+      "tags": {
+        "category": "safe_single",
+        "approach_angle": "oblique",
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 318.1,
+          "dv_m_s": [
+            -0.0569,
+            -0.08129,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 318.1,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.0569,
+            -0.08129,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 318.1,
+            "dv_mag_m_s": 0.09923,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.0569,
+              -0.0813,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 691.4158,
+            "min_sep_post_m": 1182.52
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 318.1,
+        "total_dv_m_s": 0.09923,
+        "max_dv_m_s": 0.09923,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
+      }
+    },
+    {
+      "plan_id": "aggr_intercept_oblique_024",
+      "prompt": "Close on the chief fast along oblique R/V; arrive within the next pass. Minimize time.",
+      "tags": {
+        "category": "aggr_intercept",
+        "approach_angle": "oblique",
+        "intent": "aggressive"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 536.5,
+          "dv_m_s": [
+            0.72593,
+            -0.28617,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 536.5,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.72593,
+            -0.28617,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 536.5,
+            "dv_mag_m_s": 0.7803,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.7259,
+              -0.2862,
+              0.0
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "koz_reach_time_post_s": 1560.0,
+            "min_koz_value_post": 0.008,
+            "min_sep_post_m": 3.85
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 536.5,
+        "total_dv_m_s": 0.7803,
+        "max_dv_m_s": 0.7803,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap",
+          "post_V"
+        ],
+        "first_unsafe_step": 0
+      }
+    },
+    {
+      "plan_id": "aggr_intercept_oblique_025",
+      "prompt": "Close on the chief fast along oblique R/V; arrive within the next pass. Minimize time.",
+      "tags": {
+        "category": "aggr_intercept",
+        "approach_angle": "oblique",
+        "intent": "aggressive"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 394.4,
+          "dv_m_s": [
+            0.93003,
+            -0.59292,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 394.4,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.93003,
+            -0.59292,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 394.4,
+            "dv_mag_m_s": 1.10296,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.93,
+              -0.5929,
+              0.0
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "koz_reach_time_post_s": 1149.0,
+            "min_koz_value_post": 0.0045,
+            "min_sep_post_m": 2.67
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 394.4,
+        "total_dv_m_s": 1.10296,
+        "max_dv_m_s": 1.10296,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap",
+          "post_V"
+        ],
+        "first_unsafe_step": 0
+      }
+    },
+    {
+      "plan_id": "aggr_intercept_oblique_026",
+      "prompt": "Close on the chief fast along oblique R/V; arrive within the next pass. Minimize time.",
+      "tags": {
+        "category": "aggr_intercept",
+        "approach_angle": "oblique",
+        "intent": "aggressive"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 535.9,
+          "dv_m_s": [
+            0.75884,
+            -0.32517,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 535.9,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.75884,
+            -0.32517,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 535.9,
+            "dv_mag_m_s": 0.82557,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.7588,
+              -0.3252,
+              0.0
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "koz_reach_time_post_s": 1490.0,
+            "min_koz_value_post": 0.0074,
+            "min_sep_post_m": 3.69
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 535.9,
+        "total_dv_m_s": 0.82557,
+        "max_dv_m_s": 0.82557,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap",
+          "post_V"
+        ],
+        "first_unsafe_step": 0
+      }
+    },
+    {
+      "plan_id": "aggr_delayed_oblique_027",
+      "prompt": "Coast first, take a small oblique R/V set-up burn, then commit hard to the target.",
+      "tags": {
+        "category": "aggr_delayed",
+        "approach_angle": "oblique",
+        "intent": "aggressive"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 387.1,
+          "dv_m_s": [
+            -0.01432,
+            -0.02045,
+            0.0
+          ]
+        },
+        {
+          "t_s": 626.0,
+          "dv_m_s": [
+            0.84639,
+            -0.38273,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 387.1,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.01432,
+            -0.02045,
+            0.0
+          ]
+        },
+        {
+          "coast_s": 238.9,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.84639,
+            -0.38273,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 387.1,
+            "dv_mag_m_s": 0.02497,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.0143,
+              -0.0204,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 705.8572,
+            "min_sep_post_m": 1195.51
+          },
+          {
+            "t_s": 626.0,
+            "dv_mag_m_s": 0.9289,
+            "pre_burn_state": [
+              -4.692,
+              1196.2706,
+              0.0,
+              -0.0247,
+              -0.0098,
+              0.0
+            ],
+            "post_burn_state": [
+              -4.692,
+              1196.2706,
+              0.0,
+              0.8217,
+              -0.3926,
+              0.0
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "koz_reach_time_post_s": 1373.0,
+            "min_koz_value_post": 0.0,
+            "min_sep_post_m": 0.12
+          }
+        ],
+        "n_burns": 2,
+        "first_burn_t_s": 387.1,
+        "total_dv_m_s": 0.95387,
+        "max_dv_m_s": 0.9289,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap",
+          "post_V"
+        ],
+        "first_unsafe_step": 1
+      }
+    },
+    {
+      "plan_id": "aggr_delayed_oblique_028",
+      "prompt": "Coast first, take a small oblique R/V set-up burn, then commit hard to the target.",
+      "tags": {
+        "category": "aggr_delayed",
+        "approach_angle": "oblique",
+        "intent": "aggressive"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 322.6,
+          "dv_m_s": [
+            -0.03033,
+            -0.04333,
+            0.0
+          ]
+        },
+        {
+          "t_s": 619.1,
+          "dv_m_s": [
+            1.09906,
+            -0.78195,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 322.6,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.03033,
+            -0.04333,
+            0.0
+          ]
+        },
+        {
+          "coast_s": 296.5,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            1.09906,
+            -0.78195,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 322.6,
+            "dv_mag_m_s": 0.05289,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.0303,
+              -0.0433,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 700.2267,
+            "min_sep_post_m": 1190.56
+          },
+          {
+            "t_s": 619.1,
+            "dv_mag_m_s": 1.34884,
+            "pre_burn_state": [
+              -13.0945,
+              1191.0995,
+              0.0,
+              -0.0572,
+              -0.0137,
+              0.0
+            ],
+            "post_burn_state": [
+              -13.0945,
+              1191.0995,
+              0.0,
+              1.0419,
+              -0.7957,
+              0.0
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "koz_reach_time_post_s": 966.0,
+            "min_koz_value_post": 0.0,
+            "min_sep_post_m": 0.16
+          }
+        ],
+        "n_burns": 2,
+        "first_burn_t_s": 322.6,
+        "total_dv_m_s": 1.40173,
+        "max_dv_m_s": 1.34884,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap",
+          "post_V"
+        ],
+        "first_unsafe_step": 1
+      }
+    },
+    {
+      "plan_id": "aggr_highbrake_oblique_029",
+      "prompt": "Aggressive oblique R/V braking after the coast to kill the 1.2 km gap.",
+      "tags": {
+        "category": "aggr_highbrake",
+        "approach_angle": "oblique",
+        "intent": "aggressive"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 325.4,
+          "dv_m_s": [
+            -1.06919,
+            -1.52741,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 325.4,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -1.06919,
+            -1.52741,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 325.4,
+            "dv_mag_m_s": 1.86444,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -1.0692,
+              -1.5274,
+              0.0
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 543.5242,
+            "min_sep_post_m": 985.74
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 325.4,
+        "total_dv_m_s": 1.86444,
+        "max_dv_m_s": 1.86444,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap"
+        ],
+        "first_unsafe_step": 0
+      }
+    },
+    {
+      "plan_id": "aggr_highbrake_oblique_030",
+      "prompt": "Aggressive oblique R/V braking after the coast to kill the 1.2 km gap.",
+      "tags": {
+        "category": "aggr_highbrake",
+        "approach_angle": "oblique",
+        "intent": "aggressive"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 517.4,
+          "dv_m_s": [
+            -0.88049,
+            -1.25785,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 517.4,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.88049,
+            -1.25785,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 517.4,
+            "dv_mag_m_s": 1.5354,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.8805,
+              -1.2578,
+              0.0
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 558.1164,
+            "min_sep_post_m": 1010.96
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 517.4,
+        "total_dv_m_s": 1.5354,
+        "max_dv_m_s": 1.5354,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap"
+        ],
+        "first_unsafe_step": 0
+      }
+    },
+    {
+      "plan_id": "aggr_reckless_oblique_031",
+      "prompt": "Emergency oblique R/V intercept after the mandatory coast - full send at the target.",
+      "tags": {
+        "category": "aggr_reckless",
+        "approach_angle": "oblique",
+        "intent": "aggressive"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 396.1,
+          "dv_m_s": [
+            -2.09067,
+            -2.98667,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 396.1,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -2.09067,
+            -2.98667,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 396.1,
+            "dv_mag_m_s": 3.6457,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -2.0907,
+              -2.9867,
+              0.0
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 495.7546,
+            "min_sep_post_m": 894.5
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 396.1,
+        "total_dv_m_s": 3.6457,
+        "max_dv_m_s": 3.6457,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap"
+        ],
+        "first_unsafe_step": 0
+      }
+    },
+    {
+      "plan_id": "safe_multi_radial_032",
+      "prompt": "Cautious radial approach from 1.2 km: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
+      "tags": {
+        "category": "safe_multi",
+        "approach_angle": "radial",
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 360.1,
+          "dv_m_s": [
+            -0.08593,
+            -0.02578,
+            0.0
+          ]
+        },
+        {
+          "t_s": 678.7,
+          "dv_m_s": [
+            -0.02756,
+            -0.00827,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 360.1,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.08593,
+            -0.02578,
+            0.0
+          ]
+        },
+        {
+          "coast_s": 318.6,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.02756,
+            -0.00827,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 360.1,
+            "dv_mag_m_s": 0.08971,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.0859,
+              -0.0258,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 709.2929,
+            "min_sep_post_m": 1198.39
+          },
+          {
+            "t_s": 678.7,
+            "dv_mag_m_s": 0.02877,
+            "pre_burn_state": [
+              -29.717,
+              1202.2552,
+              0.0,
+              -0.0986,
+              0.0415,
+              0.0
+            ],
+            "post_burn_state": [
+              -29.717,
+              1202.2552,
+              0.0,
+              -0.1262,
+              0.0332,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 714.9128,
+            "min_sep_post_m": 1202.62
+          }
+        ],
+        "n_burns": 2,
+        "first_burn_t_s": 360.1,
+        "total_dv_m_s": 0.11849,
+        "max_dv_m_s": 0.08971,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
+      }
+    },
+    {
+      "plan_id": "safe_multi_radial_033",
+      "prompt": "Cautious radial approach from 1.2 km: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
+      "tags": {
+        "category": "safe_multi",
+        "approach_angle": "radial",
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 417.3,
+          "dv_m_s": [
+            -0.10363,
+            -0.03109,
+            0.0
+          ]
+        },
+        {
+          "t_s": 750.0,
+          "dv_m_s": [
+            -0.09751,
+            -0.02925,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 417.3,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.10363,
+            -0.03109,
+            0.0
+          ]
+        },
+        {
+          "coast_s": 332.7,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.09751,
+            -0.02925,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 417.3,
+            "dv_mag_m_s": 0.10819,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.1036,
+              -0.0311,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 708.9529,
+            "min_sep_post_m": 1198.07
+          },
+          {
+            "t_s": 750.0,
+            "dv_mag_m_s": 0.1018,
+            "pre_burn_state": [
+              -37.517,
+              1203.4516,
+              0.0,
+              -0.1192,
+              0.0538,
+              0.0
+            ],
+            "post_burn_state": [
+              -37.517,
+              1203.4516,
+              0.0,
+              -0.2167,
+              0.0246,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 717.003,
+            "min_sep_post_m": 1204.04
+          }
+        ],
+        "n_burns": 2,
+        "first_burn_t_s": 417.3,
+        "total_dv_m_s": 0.21,
+        "max_dv_m_s": 0.10819,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
+      }
+    },
+    {
+      "plan_id": "safe_multi_radial_034",
+      "prompt": "Cautious radial approach from 1.2 km: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
+      "tags": {
+        "category": "safe_multi",
+        "approach_angle": "radial",
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 380.5,
+          "dv_m_s": [
+            -0.03342,
+            -0.01003,
+            0.0
+          ]
+        },
+        {
+          "t_s": 625.0,
+          "dv_m_s": [
+            -0.03977,
+            -0.01193,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 380.5,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.03342,
+            -0.01003,
+            0.0
+          ]
+        },
+        {
+          "coast_s": 244.5,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.03977,
+            -0.01193,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 380.5,
+            "dv_mag_m_s": 0.03489,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.0334,
+              -0.01,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 710.3681,
+            "min_sep_post_m": 1199.36
+          },
+          {
+            "t_s": 625.0,
+            "dv_mag_m_s": 0.04152,
+            "pre_burn_state": [
+              -8.7414,
+              1199.9182,
+              0.0,
+              -0.0376,
+              0.0097,
+              0.0
+            ],
+            "post_burn_state": [
+              -8.7414,
+              1199.9182,
+              0.0,
+              -0.0774,
+              -0.0022,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 711.11,
+            "min_sep_post_m": 1199.94
+          }
+        ],
+        "n_burns": 2,
+        "first_burn_t_s": 380.5,
+        "total_dv_m_s": 0.07641,
+        "max_dv_m_s": 0.04152,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
+      }
+    },
+    {
+      "plan_id": "safe_multi_radial_035",
+      "prompt": "Cautious radial approach from 1.2 km: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
+      "tags": {
+        "category": "safe_multi",
+        "approach_angle": "radial",
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 523.3,
+          "dv_m_s": [
+            -0.05092,
+            -0.01528,
+            0.0
+          ]
+        },
+        {
+          "t_s": 674.7,
+          "dv_m_s": [
+            -0.03295,
+            -0.00989,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 523.3,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.05092,
+            -0.01528,
+            0.0
+          ]
+        },
+        {
+          "coast_s": 151.4,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.03295,
+            -0.00989,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 523.3,
+            "dv_mag_m_s": 0.05316,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.0509,
+              -0.0153,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 709.9979,
+            "min_sep_post_m": 1199.03
+          },
+          {
+            "t_s": 674.7,
+            "dv_mag_m_s": 0.0344,
+            "pre_burn_state": [
+              -8.0669,
+              1199.0491,
+              0.0,
+              -0.0554,
+              0.003,
+              0.0
+            ],
+            "post_burn_state": [
+              -8.0669,
+              1199.0491,
+              0.0,
+              -0.0883,
+              -0.0069,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 709.9891,
+            "min_sep_post_m": 1198.98
+          }
+        ],
+        "n_burns": 2,
+        "first_burn_t_s": 523.3,
+        "total_dv_m_s": 0.08757,
+        "max_dv_m_s": 0.05316,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
+      }
+    },
+    {
+      "plan_id": "safe_multi_radial_036",
+      "prompt": "Cautious radial approach from 1.2 km: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
+      "tags": {
+        "category": "safe_multi",
+        "approach_angle": "radial",
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 443.7,
+          "dv_m_s": [
+            -0.07226,
+            -0.02168,
+            0.0
+          ]
+        },
+        {
+          "t_s": 600.1,
+          "dv_m_s": [
+            -0.03646,
+            -0.01094,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 443.7,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.07226,
+            -0.02168,
+            0.0
+          ]
+        },
+        {
+          "coast_s": 156.4,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.03646,
+            -0.01094,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 443.7,
+            "dv_mag_m_s": 0.07544,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.0723,
+              -0.0217,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 709.5628,
+            "min_sep_post_m": 1198.64
+          },
+          {
+            "t_s": 600.1,
+            "dv_mag_m_s": 0.03807,
+            "pre_burn_state": [
+              -11.841,
+              1198.6744,
+              0.0,
+              -0.0788,
+              0.0051,
+              0.0
+            ],
+            "post_burn_state": [
+              -11.841,
+              1198.6744,
+              0.0,
+              -0.1152,
+              -0.0058,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 709.7029,
+            "min_sep_post_m": 1198.69
+          }
+        ],
+        "n_burns": 2,
+        "first_burn_t_s": 443.7,
+        "total_dv_m_s": 0.11351,
+        "max_dv_m_s": 0.07544,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
+      }
+    },
+    {
+      "plan_id": "safe_single_radial_037",
+      "prompt": "Single small radial burn after a ~5 min coast, then drift. Keep it gentle.",
+      "tags": {
+        "category": "safe_single",
+        "approach_angle": "radial",
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 540.0,
+          "dv_m_s": [
+            -0.13946,
+            -0.04184,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 540.0,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.13946,
+            -0.04184,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 540.0,
+            "dv_mag_m_s": 0.1456,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.1395,
+              -0.0418,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 708.2962,
+            "min_sep_post_m": 1197.44
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 540.0,
+        "total_dv_m_s": 0.1456,
+        "max_dv_m_s": 0.1456,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
+      }
+    },
+    {
+      "plan_id": "safe_single_radial_038",
+      "prompt": "Single small radial burn after a ~5 min coast, then drift. Keep it gentle.",
+      "tags": {
+        "category": "safe_single",
+        "approach_angle": "radial",
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 408.6,
+          "dv_m_s": [
+            -0.04628,
+            -0.01388,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 408.6,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.04628,
+            -0.01388,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 408.6,
+            "dv_mag_m_s": 0.04832,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.0463,
+              -0.0139,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 710.096,
+            "min_sep_post_m": 1199.12
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 408.6,
+        "total_dv_m_s": 0.04832,
+        "max_dv_m_s": 0.04832,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
+      }
+    },
+    {
+      "plan_id": "safe_single_radial_039",
+      "prompt": "Single small radial burn after a ~5 min coast, then drift. Keep it gentle.",
+      "tags": {
+        "category": "safe_single",
+        "approach_angle": "radial",
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 530.4,
+          "dv_m_s": [
+            -0.11076,
+            -0.03323,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 530.4,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.11076,
+            -0.03323,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 530.4,
+            "dv_mag_m_s": 0.11564,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.1108,
+              -0.0332,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 708.8188,
+            "min_sep_post_m": 1197.94
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 530.4,
+        "total_dv_m_s": 0.11564,
+        "max_dv_m_s": 0.11564,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
+      }
+    },
+    {
+      "plan_id": "aggr_intercept_radial_040",
+      "prompt": "Close on the chief fast along radial; arrive within the next pass. Minimize time.",
+      "tags": {
+        "category": "aggr_intercept",
+        "approach_angle": "radial",
+        "intent": "aggressive"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 420.5,
+          "dv_m_s": [
+            0.99403,
+            -0.72622,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 420.5,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.99403,
+            -0.72622,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 420.5,
+            "dv_mag_m_s": 1.23105,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.994,
+              -0.7262,
+              0.0
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "koz_reach_time_post_s": 1035.0,
+            "min_koz_value_post": 0.0037,
+            "min_sep_post_m": 2.45
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 420.5,
+        "total_dv_m_s": 1.23105,
+        "max_dv_m_s": 1.23105,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap",
+          "post_V"
+        ],
+        "first_unsafe_step": 0
+      }
+    },
+    {
+      "plan_id": "aggr_intercept_radial_041",
+      "prompt": "Close on the chief fast along radial; arrive within the next pass. Minimize time.",
+      "tags": {
+        "category": "aggr_intercept",
+        "approach_angle": "radial",
+        "intent": "aggressive"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 496.8,
+          "dv_m_s": [
+            1.00041,
+            -0.74181,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 496.8,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            1.00041,
+            -0.74181,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 496.8,
+            "dv_mag_m_s": 1.24543,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              1.0004,
+              -0.7418,
+              0.0
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "koz_reach_time_post_s": 1023.0,
+            "min_koz_value_post": 0.0038,
+            "min_sep_post_m": 2.47
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 496.8,
+        "total_dv_m_s": 1.24543,
+        "max_dv_m_s": 1.24543,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap",
+          "post_V"
+        ],
+        "first_unsafe_step": 0
+      }
+    },
+    {
+      "plan_id": "aggr_intercept_radial_042",
+      "prompt": "Close on the chief fast along radial; arrive within the next pass. Minimize time.",
+      "tags": {
+        "category": "aggr_intercept",
+        "approach_angle": "radial",
+        "intent": "aggressive"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 342.0,
+          "dv_m_s": [
+            1.10725,
+            -1.07192,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 342.0,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            1.10725,
+            -1.07192,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 342.0,
+            "dv_mag_m_s": 1.54111,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              1.1073,
+              -1.0719,
+              0.0
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "koz_reach_time_post_s": 820.0,
+            "min_koz_value_post": 0.0078,
+            "min_sep_post_m": 3.31
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 342.0,
+        "total_dv_m_s": 1.54111,
+        "max_dv_m_s": 1.54111,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap",
+          "post_V"
+        ],
+        "first_unsafe_step": 0
+      }
+    },
+    {
+      "plan_id": "aggr_delayed_radial_043",
+      "prompt": "Coast first, take a small radial set-up burn, then commit hard to the target.",
+      "tags": {
+        "category": "aggr_delayed",
+        "approach_angle": "radial",
+        "intent": "aggressive"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 396.4,
+          "dv_m_s": [
+            -0.0535,
+            -0.01605,
+            0.0
+          ]
+        },
+        {
+          "t_s": 549.6,
+          "dv_m_s": [
+            1.01697,
+            -0.61329,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 396.4,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.0535,
+            -0.01605,
+            0.0
+          ]
+        },
+        {
+          "coast_s": 153.2,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            1.01697,
+            -0.61329,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 396.4,
+            "dv_mag_m_s": 0.05586,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.0535,
+              -0.016,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 709.9449,
+            "min_sep_post_m": 1198.98
+          },
+          {
+            "t_s": 549.6,
+            "dv_mag_m_s": 1.18758,
+            "pre_burn_state": [
+              -8.5803,
+              1199.0074,
+              0.0,
+              -0.0582,
+              0.0034,
+              0.0
+            ],
+            "post_burn_state": [
+              -8.5803,
+              1199.0074,
+              0.0,
+              0.9587,
+              -0.6099,
+              0.0
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "koz_reach_time_post_s": 1121.0,
+            "min_koz_value_post": 0.0001,
+            "min_sep_post_m": 0.36
+          }
+        ],
+        "n_burns": 2,
+        "first_burn_t_s": 396.4,
+        "total_dv_m_s": 1.24344,
+        "max_dv_m_s": 1.18758,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap",
+          "post_V"
+        ],
+        "first_unsafe_step": 1
+      }
+    },
+    {
+      "plan_id": "aggr_delayed_radial_044",
+      "prompt": "Coast first, take a small radial set-up burn, then commit hard to the target.",
+      "tags": {
+        "category": "aggr_delayed",
+        "approach_angle": "radial",
+        "intent": "aggressive"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 369.1,
+          "dv_m_s": [
+            -0.0255,
+            -0.00765,
+            0.0
+          ]
+        },
+        {
+          "t_s": 569.6,
+          "dv_m_s": [
+            1.14193,
+            -1.07038,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 369.1,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.0255,
+            -0.00765,
+            0.0
+          ]
+        },
+        {
+          "coast_s": 200.5,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            1.14193,
+            -1.07038,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 369.1,
+            "dv_mag_m_s": 0.02662,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.0255,
+              -0.0076,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 710.5403,
+            "min_sep_post_m": 1199.51
+          },
+          {
+            "t_s": 569.6,
+            "dv_mag_m_s": 1.56516,
+            "pre_burn_state": [
+              -5.4155,
+              1199.6735,
+              0.0,
+              -0.0283,
+              0.0046,
+              0.0
+            ],
+            "post_burn_state": [
+              -5.4155,
+              1199.6735,
+              0.0,
+              1.1136,
+              -1.0658,
+              0.0
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "koz_reach_time_post_s": 819.0,
+            "min_koz_value_post": 0.0,
+            "min_sep_post_m": 0.01
+          }
+        ],
+        "n_burns": 2,
+        "first_burn_t_s": 369.1,
+        "total_dv_m_s": 1.59178,
+        "max_dv_m_s": 1.56516,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap",
+          "post_V"
+        ],
+        "first_unsafe_step": 1
+      }
+    },
+    {
+      "plan_id": "aggr_highbrake_radial_045",
+      "prompt": "Aggressive radial braking after the coast to kill the 1.2 km gap.",
+      "tags": {
+        "category": "aggr_highbrake",
+        "approach_angle": "radial",
+        "intent": "aggressive"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 418.8,
+          "dv_m_s": [
+            -2.06636,
+            -0.61991,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 418.8,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -2.06636,
+            -0.61991,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 418.8,
+            "dv_mag_m_s": 2.15734,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -2.0664,
+              -0.6199,
+              0.0
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 695.294,
+            "min_sep_post_m": 1177.56
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 418.8,
+        "total_dv_m_s": 2.15734,
+        "max_dv_m_s": 2.15734,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap"
+        ],
+        "first_unsafe_step": 0
+      }
+    },
+    {
+      "plan_id": "aggr_highbrake_radial_046",
+      "prompt": "Aggressive radial braking after the coast to kill the 1.2 km gap.",
+      "tags": {
+        "category": "aggr_highbrake",
+        "approach_angle": "radial",
+        "intent": "aggressive"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 382.2,
+          "dv_m_s": [
+            -1.39193,
+            -0.41758,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 382.2,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -1.39193,
+            -0.41758,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 382.2,
+            "dv_mag_m_s": 1.45322,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -1.3919,
+              -0.4176,
+              0.0
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 697.5151,
+            "min_sep_post_m": 1182.35
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 382.2,
+        "total_dv_m_s": 1.45322,
+        "max_dv_m_s": 1.45322,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap"
+        ],
+        "first_unsafe_step": 0
+      }
+    },
+    {
+      "plan_id": "aggr_reckless_radial_047",
+      "prompt": "Emergency radial intercept after the mandatory coast - full send at the target.",
+      "tags": {
+        "category": "aggr_reckless",
+        "approach_angle": "radial",
+        "intent": "aggressive"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 452.7,
+          "dv_m_s": [
+            -3.85387,
+            -1.15616,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 452.7,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -3.85387,
+            -1.15616,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 452.7,
+            "dv_mag_m_s": 4.02356,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -3.8539,
+              -1.1562,
+              0.0
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 692.3519,
+            "min_sep_post_m": 1169.7
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 452.7,
+        "total_dv_m_s": 4.02356,
+        "max_dv_m_s": 4.02356,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap"
+        ],
+        "first_unsafe_step": 0
+      }
+    },
+    {
+      "plan_id": "safe_multi_out_of_plane_048",
+      "prompt": "Cautious out-of-plane approach from 1.2 km: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
+      "tags": {
+        "category": "safe_multi",
+        "approach_angle": "out_of_plane",
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 428.8,
+          "dv_m_s": [
+            -0.00359,
+            -0.03593,
+            0.02156
+          ]
+        },
+        {
+          "t_s": 631.4,
+          "dv_m_s": [
+            -0.00298,
+            -0.02983,
+            0.0179
+          ]
+        },
+        {
+          "t_s": 813.1,
+          "dv_m_s": [
+            -0.00414,
+            -0.04136,
+            0.02482
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 428.8,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00359,
+            -0.03593,
+            0.02156
+          ]
+        },
+        {
+          "coast_s": 202.6,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00298,
+            -0.02983,
+            0.0179
+          ]
+        },
+        {
+          "coast_s": 181.7,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00414,
+            -0.04136,
+            0.02482
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 428.8,
+            "dv_mag_m_s": 0.04206,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.0036,
+              -0.0359,
+              0.0216
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 695.7108,
+            "min_sep_post_m": 1186.48
+          },
+          {
+            "t_s": 631.4,
+            "dv_mag_m_s": 0.03492,
+            "pre_burn_state": [
+              -2.3822,
+              1193.1409,
+              4.3299,
+              -0.0198,
+              -0.0305,
+              0.021
+            ],
+            "post_burn_state": [
+              -2.3822,
+              1193.1409,
+              4.3299,
+              -0.0228,
+              -0.0604,
+              0.0389
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 685.1729,
+            "min_sep_post_m": 1176.49
+          },
+          {
+            "t_s": 813.1,
+            "dv_mag_m_s": 0.04841,
+            "pre_burn_state": [
+              -8.894,
+              1183.3495,
+              11.2565,
+              -0.0486,
+              -0.0456,
+              0.0371
+            ],
+            "post_burn_state": [
+              -8.894,
+              1183.3495,
+              11.2565,
+              -0.0528,
+              -0.087,
+              0.0619
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 674.017,
+            "min_sep_post_m": 1164.84
+          }
+        ],
+        "n_burns": 3,
+        "first_burn_t_s": 428.8,
+        "total_dv_m_s": 0.12538,
+        "max_dv_m_s": 0.04841,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
+      }
+    },
+    {
+      "plan_id": "safe_multi_out_of_plane_049",
+      "prompt": "Cautious out-of-plane approach from 1.2 km: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
+      "tags": {
+        "category": "safe_multi",
+        "approach_angle": "out_of_plane",
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 416.8,
+          "dv_m_s": [
+            -0.00703,
+            -0.07033,
+            0.0422
+          ]
+        },
+        {
+          "t_s": 610.4,
+          "dv_m_s": [
+            -0.00728,
+            -0.07282,
+            0.04369
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 416.8,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00703,
+            -0.07033,
+            0.0422
+          ]
+        },
+        {
+          "coast_s": 193.6,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00728,
+            -0.07282,
+            0.04369
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 416.8,
+            "dv_mag_m_s": 0.08232,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.007,
+              -0.0703,
+              0.0422
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 682.3657,
+            "min_sep_post_m": 1173.84
+          },
+          {
+            "t_s": 610.4,
+            "dv_mag_m_s": 0.08523,
+            "pre_burn_state": [
+              -4.3206,
+              1187.1155,
+              8.1048,
+              -0.0374,
+              -0.0606,
+              0.0412
+            ],
+            "post_burn_state": [
+              -4.3206,
+              1187.1155,
+              8.1048,
+              -0.0447,
+              -0.1334,
+              0.0849
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 660.0319,
+            "min_sep_post_m": 1150.01
+          }
+        ],
+        "n_burns": 2,
+        "first_burn_t_s": 416.8,
+        "total_dv_m_s": 0.16755,
+        "max_dv_m_s": 0.08523,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
+      }
+    },
+    {
+      "plan_id": "safe_multi_out_of_plane_050",
+      "prompt": "Cautious out-of-plane approach from 1.2 km: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
+      "tags": {
+        "category": "safe_multi",
+        "approach_angle": "out_of_plane",
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 390.5,
+          "dv_m_s": [
+            -0.00452,
+            -0.04523,
+            0.02714
+          ]
+        },
+        {
+          "t_s": 599.5,
+          "dv_m_s": [
+            -0.01042,
+            -0.10415,
+            0.06249
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 390.5,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00452,
+            -0.04523,
+            0.02714
+          ]
+        },
+        {
+          "coast_s": 209.0,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.01042,
+            -0.10415,
+            0.06249
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 390.5,
+            "dv_mag_m_s": 0.05294,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.0045,
+              -0.0452,
+              0.0271
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 691.9754,
+            "min_sep_post_m": 1183.04
+          },
+          {
+            "t_s": 599.5,
+            "dv_mag_m_s": 0.1219,
+            "pre_burn_state": [
+              -3.1607,
+              1191.1206,
+              5.6196,
+              -0.0256,
+              -0.0381,
+              0.0264
+            ],
+            "post_burn_state": [
+              -3.1607,
+              1191.1206,
+              5.6196,
+              -0.036,
+              -0.1422,
+              0.0889
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 658.2786,
+            "min_sep_post_m": 1147.99
+          }
+        ],
+        "n_burns": 2,
+        "first_burn_t_s": 390.5,
+        "total_dv_m_s": 0.17485,
+        "max_dv_m_s": 0.1219,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
+      }
+    },
+    {
+      "plan_id": "safe_multi_out_of_plane_051",
+      "prompt": "Cautious out-of-plane approach from 1.2 km: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
+      "tags": {
+        "category": "safe_multi",
+        "approach_angle": "out_of_plane",
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 345.3,
+          "dv_m_s": [
+            -0.00319,
+            -0.0319,
+            0.01914
+          ]
+        },
+        {
+          "t_s": 498.6,
+          "dv_m_s": [
+            -0.00303,
+            -0.03026,
+            0.01815
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 345.3,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00319,
+            -0.0319,
+            0.01914
+          ]
+        },
+        {
+          "coast_s": 153.3,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00303,
+            -0.03026,
+            0.01815
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 345.3,
+            "dv_mag_m_s": 0.03734,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.0032,
+              -0.0319,
+              0.0191
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 697.3614,
+            "min_sep_post_m": 1187.98
+          },
+          {
+            "t_s": 498.6,
+            "dv_mag_m_s": 0.03542,
+            "pre_burn_state": [
+              -1.3326,
+              1195.2923,
+              2.9195,
+              -0.0142,
+              -0.0289,
+              0.0189
+            ],
+            "post_burn_state": [
+              -1.3326,
+              1195.2923,
+              2.9195,
+              -0.0172,
+              -0.0591,
+              0.037
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 686.0342,
+            "min_sep_post_m": 1177.36
+          }
+        ],
+        "n_burns": 2,
+        "first_burn_t_s": 345.3,
+        "total_dv_m_s": 0.07275,
+        "max_dv_m_s": 0.03734,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
+      }
+    },
+    {
+      "plan_id": "safe_multi_out_of_plane_052",
+      "prompt": "Cautious out-of-plane approach from 1.2 km: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
+      "tags": {
+        "category": "safe_multi",
+        "approach_angle": "out_of_plane",
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 442.4,
+          "dv_m_s": [
+            -0.00209,
+            -0.02091,
+            0.01255
+          ]
+        },
+        {
+          "t_s": 656.4,
+          "dv_m_s": [
+            -0.00292,
+            -0.02923,
+            0.01754
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 442.4,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00209,
+            -0.02091,
+            0.01255
+          ]
+        },
+        {
+          "coast_s": 214.0,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00292,
+            -0.02923,
+            0.01754
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 442.4,
+            "dv_mag_m_s": 0.02448,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.0021,
+              -0.0209,
+              0.0126
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 701.9563,
+            "min_sep_post_m": 1192.09
+          },
+          {
+            "t_s": 656.4,
+            "dv_mag_m_s": 0.03421,
+            "pre_burn_state": [
+              -1.521,
+              1195.8074,
+              2.6595,
+              -0.0121,
+              -0.0175,
+              0.0122
+            ],
+            "post_burn_state": [
+              -1.521,
+              1195.8074,
+              2.6595,
+              -0.015,
+              -0.0467,
+              0.0297
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 691.0017,
+            "min_sep_post_m": 1182.07
+          }
+        ],
+        "n_burns": 2,
+        "first_burn_t_s": 442.4,
+        "total_dv_m_s": 0.05869,
+        "max_dv_m_s": 0.03421,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
+      }
+    },
+    {
+      "plan_id": "safe_single_out_of_plane_053",
+      "prompt": "Single small out-of-plane burn after a ~5 min coast, then drift. Keep it gentle.",
+      "tags": {
+        "category": "safe_single",
+        "approach_angle": "out_of_plane",
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 467.8,
+          "dv_m_s": [
+            -0.0043,
+            -0.04301,
+            0.0258
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 467.8,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.0043,
+            -0.04301,
+            0.0258
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 467.8,
+            "dv_mag_m_s": 0.05034,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.0043,
+              -0.043,
+              0.0258
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 692.8587,
+            "min_sep_post_m": 1183.86
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 467.8,
+        "total_dv_m_s": 0.05034,
+        "max_dv_m_s": 0.05034,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
+      }
+    },
+    {
+      "plan_id": "safe_single_out_of_plane_054",
+      "prompt": "Single small out-of-plane burn after a ~5 min coast, then drift. Keep it gentle.",
+      "tags": {
+        "category": "safe_single",
+        "approach_angle": "out_of_plane",
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 492.6,
+          "dv_m_s": [
+            -0.00557,
+            -0.05573,
+            0.03344
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 492.6,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00557,
+            -0.05573,
+            0.03344
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 492.6,
+            "dv_mag_m_s": 0.06523,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.0056,
+              -0.0557,
+              0.0334
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 687.8736,
+            "min_sep_post_m": 1179.17
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 492.6,
+        "total_dv_m_s": 0.06523,
+        "max_dv_m_s": 0.06523,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
+      }
+    },
+    {
+      "plan_id": "safe_single_out_of_plane_055",
+      "prompt": "Single small out-of-plane burn after a ~5 min coast, then drift. Keep it gentle.",
+      "tags": {
+        "category": "safe_single",
+        "approach_angle": "out_of_plane",
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 385.8,
+          "dv_m_s": [
+            -0.01222,
+            -0.1222,
+            0.07332
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 385.8,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.01222,
+            -0.1222,
+            0.07332
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 385.8,
+            "dv_mag_m_s": 0.14303,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.0122,
+              -0.1222,
+              0.0733
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 664.4804,
+            "min_sep_post_m": 1155.33
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 385.8,
+        "total_dv_m_s": 0.14303,
+        "max_dv_m_s": 0.14303,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
+      }
+    },
+    {
+      "plan_id": "aggr_intercept_out_of_plane_056",
+      "prompt": "Close on the chief fast along out-of-plane; arrive within the next pass. Minimize time.",
+      "tags": {
+        "category": "aggr_intercept",
+        "approach_angle": "out_of_plane",
+        "intent": "aggressive"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 390.1,
+          "dv_m_s": [
+            0.88065,
+            -0.50391,
+            -0.0041
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 390.1,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.88065,
+            -0.50391,
+            -0.0041
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 390.1,
+            "dv_mag_m_s": 1.01464,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.8807,
+              -0.5039,
+              -0.0041
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "koz_reach_time_post_s": 1242.0,
+            "min_koz_value_post": 0.0538,
+            "min_sep_post_m": 6.08
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 390.1,
+        "total_dv_m_s": 1.01464,
+        "max_dv_m_s": 1.01464,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap",
+          "post_V"
+        ],
+        "first_unsafe_step": 0
+      }
+    },
+    {
+      "plan_id": "aggr_intercept_out_of_plane_057",
+      "prompt": "Close on the chief fast along out-of-plane; arrive within the next pass. Minimize time.",
+      "tags": {
+        "category": "aggr_intercept",
+        "approach_angle": "out_of_plane",
+        "intent": "aggressive"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 486.2,
+          "dv_m_s": [
+            0.84157,
+            -0.44033,
+            -0.00406
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 486.2,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.84157,
+            -0.44033,
+            -0.00406
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 486.2,
+            "dv_mag_m_s": 0.94981,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.8416,
+              -0.4403,
+              -0.0041
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "koz_reach_time_post_s": 1319.0,
+            "min_koz_value_post": 0.0543,
+            "min_sep_post_m": 6.18
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 486.2,
+        "total_dv_m_s": 0.94981,
+        "max_dv_m_s": 0.94981,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap",
+          "post_V"
+        ],
+        "first_unsafe_step": 0
+      }
+    },
+    {
+      "plan_id": "aggr_intercept_out_of_plane_058",
+      "prompt": "Close on the chief fast along out-of-plane; arrive within the next pass. Minimize time.",
+      "tags": {
+        "category": "aggr_intercept",
+        "approach_angle": "out_of_plane",
+        "intent": "aggressive"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 348.6,
+          "dv_m_s": [
+            1.15714,
+            -1.33956,
+            -0.00558
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 348.6,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            1.15714,
+            -1.33956,
+            -0.00558
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 348.6,
+            "dv_mag_m_s": 1.77015,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              1.1571,
+              -1.3396,
+              -0.0056
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "koz_reach_time_post_s": 703.0,
+            "min_koz_value_post": 0.049,
+            "min_sep_post_m": 5.0
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 348.6,
+        "total_dv_m_s": 1.77015,
+        "max_dv_m_s": 1.77015,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap",
+          "post_V"
+        ],
+        "first_unsafe_step": 0
+      }
+    },
+    {
+      "plan_id": "aggr_delayed_out_of_plane_059",
+      "prompt": "Coast first, take a small out-of-plane set-up burn, then commit hard to the target.",
+      "tags": {
+        "category": "aggr_delayed",
+        "approach_angle": "out_of_plane",
+        "intent": "aggressive"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 302.7,
+          "dv_m_s": [
+            -0.00189,
+            -0.01891,
+            0.01135
+          ]
+        },
+        {
+          "t_s": 533.1,
+          "dv_m_s": [
+            1.12397,
+            -1.08851,
+            -0.01315
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 302.7,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00189,
+            -0.01891,
+            0.01135
+          ]
+        },
+        {
+          "coast_s": 230.4,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            1.12397,
+            -1.08851,
+            -0.01315
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 302.7,
+            "dv_mag_m_s": 0.02214,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.0019,
+              -0.0189,
+              0.0114
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 702.8082,
+            "min_sep_post_m": 1192.85
+          },
+          {
+            "t_s": 533.1,
+            "dv_mag_m_s": 1.56472,
+            "pre_burn_state": [
+              -1.5598,
+              1195.9527,
+              2.5855,
+              -0.0116,
+              -0.0154,
+              0.011
+            ],
+            "post_burn_state": [
+              -1.5598,
+              1195.9527,
+              2.5855,
+              1.1124,
+              -1.1039,
+              -0.0022
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "koz_reach_time_post_s": 801.0,
+            "min_koz_value_post": 0.0,
+            "min_sep_post_m": 0.06
+          }
+        ],
+        "n_burns": 2,
+        "first_burn_t_s": 302.7,
+        "total_dv_m_s": 1.58685,
+        "max_dv_m_s": 1.56472,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap",
+          "post_V"
+        ],
+        "first_unsafe_step": 1
+      }
+    },
+    {
+      "plan_id": "aggr_delayed_out_of_plane_060",
+      "prompt": "Coast first, take a small out-of-plane set-up burn, then commit hard to the target.",
+      "tags": {
+        "category": "aggr_delayed",
+        "approach_angle": "out_of_plane",
+        "intent": "aggressive"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 314.0,
+          "dv_m_s": [
+            -0.00498,
+            -0.0498,
+            0.02988
+          ]
+        },
+        {
+          "t_s": 591.4,
+          "dv_m_s": [
+            0.80982,
+            -0.29357,
+            -0.0273
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 314.0,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00498,
+            -0.0498,
+            0.02988
+          ]
+        },
+        {
+          "coast_s": 277.4,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.80982,
+            -0.29357,
+            -0.0273
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 314.0,
+            "dv_mag_m_s": 0.05829,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.005,
+              -0.0498,
+              0.0299
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 690.1766,
+            "min_sep_post_m": 1181.35
+          },
+          {
+            "t_s": 591.4,
+            "dv_mag_m_s": 0.86182,
+            "pre_burn_state": [
+              -5.659,
+              1187.5182,
+              8.1533,
+              -0.0355,
+              -0.037,
+              0.0284
+            ],
+            "post_burn_state": [
+              -5.659,
+              1187.5182,
+              8.1533,
+              0.7743,
+              -0.3306,
+              0.0011
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "koz_reach_time_post_s": 1460.0,
+            "min_koz_value_post": 0.0,
+            "min_sep_post_m": 0.12
+          }
+        ],
+        "n_burns": 2,
+        "first_burn_t_s": 314.0,
+        "total_dv_m_s": 0.92011,
+        "max_dv_m_s": 0.86182,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap",
+          "post_V"
+        ],
+        "first_unsafe_step": 1
+      }
+    },
+    {
+      "plan_id": "aggr_highbrake_out_of_plane_061",
+      "prompt": "Aggressive out-of-plane braking after the coast to kill the 1.2 km gap.",
+      "tags": {
+        "category": "aggr_highbrake",
+        "approach_angle": "out_of_plane",
+        "intent": "aggressive"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 443.8,
+          "dv_m_s": [
+            -0.07702,
+            -0.77017,
+            0.4621
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 443.8,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.07702,
+            -0.77017,
+            0.4621
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 443.8,
+            "dv_mag_m_s": 0.90146,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.077,
+              -0.7702,
+              0.4621
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 558.1452,
+            "min_sep_post_m": 972.7
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 443.8,
+        "total_dv_m_s": 0.90146,
+        "max_dv_m_s": 0.90146,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap"
+        ],
+        "first_unsafe_step": 0
+      }
+    },
+    {
+      "plan_id": "aggr_highbrake_out_of_plane_062",
+      "prompt": "Aggressive out-of-plane braking after the coast to kill the 1.2 km gap.",
+      "tags": {
+        "category": "aggr_highbrake",
+        "approach_angle": "out_of_plane",
+        "intent": "aggressive"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 355.0,
+          "dv_m_s": [
+            -0.07141,
+            -0.7141,
+            0.42846
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 355.0,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.07141,
+            -0.7141,
+            0.42846
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 355.0,
+            "dv_mag_m_s": 0.83583,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.0714,
+              -0.7141,
+              0.4285
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 562.6962,
+            "min_sep_post_m": 985.35
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 355.0,
+        "total_dv_m_s": 0.83583,
+        "max_dv_m_s": 0.83583,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap"
+        ],
+        "first_unsafe_step": 0
+      }
+    },
+    {
+      "plan_id": "aggr_reckless_out_of_plane_063",
+      "prompt": "Emergency out-of-plane intercept after the mandatory coast - full send at the target.",
+      "tags": {
+        "category": "aggr_reckless",
+        "approach_angle": "out_of_plane",
+        "intent": "aggressive"
+      },
+      "scenario_ref": "scenario_leo_400km_v1",
+      "maneuvers": [
+        {
+          "t_s": 322.7,
+          "dv_m_s": [
+            -0.23129,
+            -2.31287,
+            1.38772
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 322.7,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.23129,
+            -2.31287,
+            1.38772
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 322.7,
+            "dv_mag_m_s": 2.70714,
+            "pre_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              1200.0,
+              0.0,
+              -0.2313,
+              -2.3129,
+              1.3877
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "koz_reach_time_post_s": null,
+            "min_koz_value_post": 512.6813,
+            "min_sep_post_m": 771.76
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 322.7,
+        "total_dv_m_s": 2.70714,
+        "max_dv_m_s": 2.70714,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap"
+        ],
+        "first_unsafe_step": 0
+      }
+    }
+  ]
+}

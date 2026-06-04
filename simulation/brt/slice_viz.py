@@ -22,13 +22,24 @@ def default_koz_xy_limits(
     *,
     x_scale: float = 4.0,
     y_neg_scale: float = 2.5,
-    y_pos_scale: float = 28.0,
+    y_pos_scale: float = 12.0,
 ) -> tuple[tuple[float, float], tuple[float, float]]:
-    """x–y plot window: centered on KOZ, extra +y room for backward-tube growth (m)."""
+    """x–y plot window: centered on KOZ, +y room for along-track BRT (m)."""
     a, b, _ = (float(x) for x in np.asarray(semi_axes_m, dtype=np.float64).reshape(3))
     x_half = max(x_scale * a, 120.0)
     y_lo = -max(y_neg_scale * b, 80.0)
     y_hi = max(y_pos_scale * b, 400.0)
+    return ((-x_half, x_half), (y_lo, y_hi))
+
+
+def default_report_koz_xy_limits(
+    semi_axes_m: tuple[float, float, float] | np.ndarray,
+) -> tuple[tuple[float, float], tuple[float, float]]:
+    """Tighter LVLH window for report slices: KOZ + typical along-track approach (y≈1.2 km)."""
+    a, b, _ = (float(x) for x in np.asarray(semi_axes_m, dtype=np.float64).reshape(3))
+    x_half = max(5.0 * a, 200.0)
+    y_lo = -max(2.0 * b, 100.0)
+    y_hi = max(28.0 * b, 1400.0)
     return ((-x_half, x_half), (y_lo, y_hi))
 
 
@@ -200,17 +211,20 @@ def _add_contours(
                 linewidths=1.8,
                 linestyles="--",
             )
-    if draw_low_v and np.any(np.isfinite(sl)):
-        lv = _low_v_level(sl, low_v_percentile)
-        ax.contour(
-            x_coords,
-            y_coords,
-            sl.T,
-            levels=[lv],
-            colors="navy",
-            linewidths=1.4,
-            linestyles="-",
-        )
+    # Low-V percentile is misleading when V=0 is not bracketed (entire slice negative).
+    if draw_low_v and tag != "zero" and np.any(np.isfinite(sl)):
+        finite = sl[np.isfinite(sl)]
+        if float(np.min(finite)) < 0.0 and float(np.max(finite)) > 0.0:
+            lv = _low_v_level(sl, low_v_percentile)
+            ax.contour(
+                x_coords,
+                y_coords,
+                sl.T,
+                levels=[lv],
+                colors="navy",
+                linewidths=1.4,
+                linestyles="-",
+            )
     if koz_s is not None:
         ax.contour(
             x_coords,
@@ -220,6 +234,27 @@ def _add_contours(
             colors="saddlebrown",
             linewidths=2.0,
             linestyles="-",
+        )
+        try:
+            ax.contourf(
+                x_coords,
+                y_coords,
+                koz_s.T,
+                levels=[0.0, 1.0, 1e6],
+                colors=["#ffcccc", "none"],
+                alpha=0.35,
+            )
+        except Exception:
+            pass
+    unsafe = np.where(sl <= 0.0, 1.0, np.nan)
+    if np.any(np.isfinite(unsafe)):
+        ax.contourf(
+            x_coords,
+            y_coords,
+            unsafe.T,
+            levels=[0.5, 1.5],
+            colors=["#c44e52"],
+            alpha=0.18,
         )
     return tag
 
@@ -320,15 +355,14 @@ def render_brt_koz_centered_png(
         ax.set_xlabel("x (m)")
         if i == 0:
             ax.set_ylabel("y (m)")
-        v0_note = "V=0" if ctag == "zero" else "no V=0 on slice"
-        ax.set_title(
-            f"t = {tq:.0f} s\n{v0_note}; navy = low-V ({low_pct:.0f}%ile); brown = KOZ"
-        )
-    cbar_label = "unsafe (V≤0)" if color_mode == "unsafe_only" else "V (learned; per-panel scale)"
+        v0_note = "black dashed = V=0" if ctag == "zero" else "no V=0 crossing"
+        ax.set_title(f"τ = {tq:.0f} s  ({v0_note})\nbrown = KOZ; red tint = V≤0")
+    scale_note = "shared scale" if color_mode not in ("per_panel", "relative", "training") else "per-panel scale"
+    cbar_label = "unsafe (V≤0)" if color_mode == "unsafe_only" else f"V learned ({scale_note})"
     fig.colorbar(im, ax=axes_flat.tolist(), fraction=0.035, pad=0.04, label=cbar_label)
     fig.suptitle(
-        f"BRT x–y slice (KOZ-centered, {color_mode})  z={z_m:.1f} m,  v=0  "
-        f"[x∈[{xlim[0]:.0f},{xlim[1]:.0f}], y∈[{ylim[0]:.0f},{ylim[1]:.0f}]]",
+        f"BRT x–y slices at backward times τ (z={z_m:.1f} m, v=0)  "
+        f"x∈[{xlim[0]:.0f},{xlim[1]:.0f}] m, y∈[{ylim[0]:.0f},{ylim[1]:.0f}] m",
         fontsize=11,
         y=1.02,
     )

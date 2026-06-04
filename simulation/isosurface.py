@@ -375,6 +375,7 @@ def unsafe_set_mesh_lvlh(
     domain_hi: np.ndarray,
     grid_n: tuple[int, int, int],
     *,
+    box_half_xyz: tuple[float, float, float] | None = None,
     unsafe_level: float = 0.0,
 ) -> tuple[np.ndarray, np.ndarray] | None:
     """Marching-cubes mesh of the **physical BRT**: ``{ x : V(x) <= unsafe_level }`` in position at fixed ``v``.
@@ -385,13 +386,17 @@ def unsafe_set_mesh_lvlh(
     c = np.asarray(center_m, dtype=np.float64).reshape(3)
     lo6 = np.asarray(domain_lo, dtype=np.float64).reshape(6)
     hi6 = np.asarray(domain_hi, dtype=np.float64).reshape(6)
-    h = float(box_half_m)
-    x_lo = max(float(lo6[0]), float(c[0] - h))
-    x_hi = min(float(hi6[0]), float(c[0] + h))
-    y_lo = max(float(lo6[1]), float(c[1] - h))
-    y_hi = min(float(hi6[1]), float(c[1] + h))
-    z_lo = max(float(lo6[2]), float(c[2] - h))
-    z_hi = min(float(hi6[2]), float(c[2] + h))
+    if box_half_xyz is not None:
+        hx, hy, hz = (float(x) for x in box_half_xyz)
+    else:
+        h = float(box_half_m)
+        hx = hy = hz = h
+    x_lo = max(float(lo6[0]), float(c[0] - hx))
+    x_hi = min(float(hi6[0]), float(c[0] + hx))
+    y_lo = max(float(lo6[1]), float(c[1] - hy))
+    y_hi = min(float(hi6[1]), float(c[1] + hy))
+    z_lo = max(float(lo6[2]), float(c[2] - hz))
+    z_hi = min(float(hi6[2]), float(c[2] + hz))
     if x_hi <= x_lo or y_hi <= y_lo or z_hi <= z_lo:
         return None
     nx, ny, nz = (max(8, int(grid_n[i])) for i in range(3))
@@ -431,13 +436,21 @@ def xy_unsafe_footprint_at_z(
     domain_hi: np.ndarray,
     n2d: int,
     *,
+    center_m: np.ndarray | None = None,
+    half_xy_m: tuple[float, float] | None = None,
     unsafe_level: float = 0.0,
 ) -> list[np.ndarray]:
     """Closed polygons (N,3) in LVLH for the x–y slice of ``{V <= unsafe_level}`` at ``z=z_m``."""
     lo6 = np.asarray(domain_lo, dtype=np.float64).reshape(6)
     hi6 = np.asarray(domain_hi, dtype=np.float64).reshape(6)
-    u = np.linspace(float(lo6[0]), float(hi6[0]), int(n2d), dtype=np.float64)
-    v = np.linspace(float(lo6[1]), float(hi6[1]), int(n2d), dtype=np.float64)
+    if center_m is not None and half_xy_m is not None:
+        c = np.asarray(center_m, dtype=np.float64).reshape(3)
+        hx, hy = float(half_xy_m[0]), float(half_xy_m[1])
+        u = np.linspace(max(lo6[0], c[0] - hx), min(hi6[0], c[0] + hx), int(n2d), dtype=np.float64)
+        v = np.linspace(max(lo6[1], c[1] - hy), min(hi6[1], c[1] + hy), int(n2d), dtype=np.float64)
+    else:
+        u = np.linspace(float(lo6[0]), float(hi6[0]), int(n2d), dtype=np.float64)
+        v = np.linspace(float(lo6[1]), float(hi6[1]), int(n2d), dtype=np.float64)
     U, V = np.meshgrid(u, v, indexing="ij")
     pts = np.stack(
         [
@@ -511,6 +524,28 @@ def marching_cubes_v0_lvlh(
         return None
     origin = np.array([x_lo, y_lo, z_lo], dtype=np.float64)
     return verts + origin, faces
+
+
+def filter_mesh_in_lvhl_box(
+    verts: np.ndarray,
+    faces: np.ndarray,
+    center_m: np.ndarray,
+    half_xyz: tuple[float, float, float],
+) -> tuple[np.ndarray, np.ndarray]:
+    """Keep triangles whose centroid lies inside ``center ± half_xyz`` (LVLH m)."""
+    c = np.asarray(center_m, dtype=np.float64).reshape(3)
+    hx, hy, hz = (float(x) for x in half_xyz)
+    verts = np.asarray(verts, dtype=np.float64)
+    faces = np.asarray(faces, dtype=np.int64)
+    if faces.size == 0:
+        return verts, faces
+    centroids = verts[faces].mean(axis=1)
+    inside = (
+        (np.abs(centroids[:, 0] - c[0]) <= hx)
+        & (np.abs(centroids[:, 1] - c[1]) <= hy)
+        & (np.abs(centroids[:, 2] - c[2]) <= hz)
+    )
+    return verts, faces[inside]
 
 
 def filter_mesh_by_radius(
@@ -770,6 +805,17 @@ def _box_unsafe_fraction(
     return float(np.mean(V[finite] <= 0.0))
 
 
+def _parse_snapshot_half_xyz(display_radius_m: float) -> tuple[float, float, float]:
+    """Anisotropic LVLH half-extents (x, y along-track, z) for BRT mesh near chief."""
+    env = os.environ.get("BRT_SNAPSHOT_HALF_XYZ", "").strip()
+    if env:
+        parts = [float(x.strip()) for x in env.split(",") if x.strip()]
+        if len(parts) == 3:
+            return tuple(parts)
+    dr = float(display_radius_m)
+    return (max(160.0, 1.2 * dr), max(900.0, 12.0 * dr), max(140.0, 1.1 * dr))
+
+
 def extract_brt_v0_near_center(
     value_on_grid: Callable[[np.ndarray], np.ndarray],
     center_m: np.ndarray,
@@ -798,13 +844,27 @@ def extract_brt_v0_near_center(
     cap = int(os.environ.get("BRT_SNAPSHOT_ISO_MAX", "32"))
     nx, ny, nz = (min(cap, max(12, int(iso_resolution[i]))) for i in range(3))
     n2 = min(48, int(contour_n2d))
+    half_xyz = _parse_snapshot_half_xyz(display_radius_m)
+    mesh_radius_m = float(os.environ.get("BRT_SNAPSHOT_MESH_RADIUS_M", str(max(half_xyz) * 1.05)))
+    display_half_env = os.environ.get("BRT_SNAPSHOT_DISPLAY_HALF_XYZ", "").strip()
+    display_half_xyz = half_xyz
+    if display_half_env:
+        parts = [float(x.strip()) for x in display_half_env.split(",") if x.strip()]
+        if len(parts) == 3:
+            display_half_xyz = tuple(parts)
+    fp_half = (
+        float(os.environ.get("BRT_SNAPSHOT_FOOTPRINT_HALF_X_M", str(half_xyz[0]))),
+        float(os.environ.get("BRT_SNAPSHOT_FOOTPRINT_HALF_Y_M", str(half_xyz[1]))),
+    )
 
     mesh_verts: np.ndarray | None = None
     mesh_faces: np.ndarray | None = None
     half_used: float | None = None
-    half_try = float(initial_half_m)
+    half_try = float(max(initial_half_m, max(half_xyz)))
     max_h = float(max_half_m)
     while half_try <= max_h * (1.0 + 1e-9):
+        scale = half_try / max(half_xyz)
+        try_xyz = tuple(float(h) * scale for h in half_xyz)
         frac = _box_unsafe_fraction(value_on_grid, c, vx, vy, vz, half_try, lo6, hi6)
         iso = unsafe_set_mesh_lvlh(
             value_on_grid,
@@ -816,9 +876,15 @@ def extract_brt_v0_near_center(
             lo6,
             hi6,
             (nx, ny, nz),
+            box_half_xyz=try_xyz,
         )
         if iso is not None:
             vm, fm = iso
+            vm, fm = filter_mesh_by_radius(vm, fm, c, mesh_radius_m)
+            vm, fm = filter_mesh_in_lvhl_box(vm, fm, c, display_half_xyz)
+            if fm.size == 0:
+                half_try = min(max_h, half_try * 1.45)
+                continue
             max_f = int(os.environ.get("BRT_SNAPSHOT_MAX_FACES", "8000"))
             mesh_verts, mesh_faces = decimate_mesh_faces(vm, fm, max_faces=max_f)
             half_used = half_try
@@ -837,6 +903,8 @@ def extract_brt_v0_near_center(
         lo6,
         hi6,
         n2,
+        center_m=c,
+        half_xy_m=fp_half,
     )
 
     contour_lines: list[np.ndarray] = []
@@ -870,6 +938,11 @@ def extract_brt_v0_near_center(
     if mesh_verts is None and footprint_polys:
         contour_tag = "footprint_only"
 
+    bounds_lo = bounds_hi = None
+    if mesh_verts is not None and mesh_verts.size > 0:
+        bounds_lo = np.min(mesh_verts, axis=0)
+        bounds_hi = np.max(mesh_verts, axis=0)
+
     return {
         "mesh_verts": mesh_verts,
         "mesh_faces": mesh_faces,
@@ -877,5 +950,7 @@ def extract_brt_v0_near_center(
         "contour_lines": contour_lines,
         "bracket_half_m": half_used,
         "view_half_m": view_half,
+        "mesh_bounds_lo": bounds_lo,
+        "mesh_bounds_hi": bounds_hi,
         "contour_level_tag": contour_tag,
     }

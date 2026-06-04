@@ -159,10 +159,14 @@ def render_brt_lvlh_snapshot(
     else:
         warnings.warn("brt has no value_batch; BRT surface skipped.", UserWarning)
 
-    chief_edges = scale_edges(bus_and_panel_edges((10.0, 4.0, 4.0), panel_length=22.0, panel_half_width=2.5), 1.0)
     half_view = float(surf.get("view_half_m", display_r * 1.08))
-    view_cap = float(os.environ.get("BRT_SNAPSHOT_VIEW_HALF_M", "2800"))
+    view_cap = float(os.environ.get("BRT_SNAPSHOT_VIEW_HALF_M", "1600"))
     half_view = min(half_view, view_cap)
+    chief_scale = max(35.0, 0.06 * half_view)
+    chief_edges = scale_edges(
+        bus_and_panel_edges((10.0, 4.0, 4.0), panel_length=22.0, panel_half_width=2.5),
+        chief_scale / 10.0,
+    )
     vm = surf.get("mesh_verts")
     if vm is not None and np.asarray(vm).size > 0:
         half_view = min(
@@ -174,19 +178,21 @@ def render_brt_lvlh_snapshot(
 
     def _draw_brt(ax) -> None:
         nonlocal brt_label_added
-        for poly in surf.get("footprint_polys") or []:
-            p3 = np.asarray(poly, dtype=np.float64)
-            if p3.shape[0] >= 3:
-                coll_fp = Poly3DCollection(
-                    [p3],
-                    facecolors=(0.55, 0.15, 0.75, 0.22),
-                    edgecolors=(0.4, 0.05, 0.55, 0.55),
-                    linewidths=0.35,
-                )
-                ax.add_collection3d(coll_fp)
-                if not brt_label_added:
-                    coll_fp.set_label("BRT")
-                    brt_label_added = True
+        # Full-domain footprints read as flat cutting planes; only use when there is no 3D shell.
+        if surf.get("mesh_verts") is None:
+            for poly in surf.get("footprint_polys") or []:
+                p3 = np.asarray(poly, dtype=np.float64)
+                if p3.shape[0] >= 3:
+                    coll_fp = Poly3DCollection(
+                        [p3],
+                        facecolors=(0.55, 0.15, 0.75, 0.22),
+                        edgecolors=(0.4, 0.05, 0.55, 0.55),
+                        linewidths=0.35,
+                    )
+                    ax.add_collection3d(coll_fp)
+                    if not brt_label_added:
+                        coll_fp.set_label("BRT (V≤0 footprint)")
+                        brt_label_added = True
         if surf.get("mesh_verts") is not None and surf.get("mesh_faces") is not None:
             verts_m = np.asarray(surf["mesh_verts"], dtype=np.float64)
             faces = np.asarray(surf["mesh_faces"], dtype=np.int64)
@@ -199,7 +205,7 @@ def render_brt_lvlh_snapshot(
                     linewidths=0.22,
                 )
                 if not brt_label_added:
-                    coll.set_label("BRT")
+                    coll.set_label("BRT (V≤0 shell)")
                     brt_label_added = True
                 try:
                     coll.set_zsort("average")
@@ -254,8 +260,12 @@ def render_brt_lvlh_snapshot(
         ax.set_xlabel("x (m)")
         ax.set_ylabel("y (m)")
         ax.set_zlabel("z (m)")
-        ax.set_title("BRT + KOZ" + title_suffix, fontsize=10)
+        ax.set_title("BRT unsafe set {V≤0} @ horizon + KOZ" + title_suffix, fontsize=10)
         ax.legend(loc="upper right", fontsize=7)
+        try:
+            ax.view_init(elev=float(os.environ.get("BRT_SNAPSHOT_ELEV", "22")), azim=float(os.environ.get("BRT_SNAPSHOT_AZIM", "-58")))
+        except Exception:
+            pass
         _axis_fit_geometry(
             ax,
             o0,
