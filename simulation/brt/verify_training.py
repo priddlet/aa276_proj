@@ -1,9 +1,14 @@
 """Verify a finished DeepReach-MPC KOZ training run (artifacts + optional load tests).
 
+Inference loads best-by-loss checkpoint by default (``DEEPREACH_CHECKPOINT_SELECT=best``),
+not the latest epoch. Use ``--sync-final`` to copy that weights file to ``model_final.pth``.
+
 Usage:
   python -m simulation.brt.verify_training
-  python -m simulation.brt.verify_training --checkpoint-dir simulation_output/deepreach_mpc_koz
-  python -m simulation.brt.verify_training --epoch 98000 --regenerate-plot
+  python -m simulation.brt.verify_training --sync-final
+  python -m simulation.brt.verify_training --checkpoint-dir simulation_output/deepreach_mpc_koz_v3
+  python -m simulation.brt.verify_training --epoch 98000
+  DEEPREACH_CHECKPOINT_SELECT=latest python -m simulation.brt.verify_training
 """
 
 from __future__ import annotations
@@ -34,32 +39,40 @@ def _ellipsoid_boundary(xyz: np.ndarray, semi_axes: tuple[float, float, float]) 
     return float(math.sqrt(s + 1e-18) - 1.0)
 
 
-def _collect_epoch_losses(ckpt_dir: Path) -> tuple[np.ndarray, np.ndarray]:
-    """Per-epoch training loss from cumulative ``train_losses_epoch_*.txt`` files."""
-    files = sorted(
-        ckpt_dir.glob("train_losses_epoch_*.txt"),
-        key=lambda p: int(p.stem.rsplit("_", 1)[-1]),
-    )
-    epochs: list[int] = []
-    losses: list[float] = []
-    for f in files:
-        ep = int(f.stem.rsplit("_", 1)[-1])
-        L = np.loadtxt(f)
-        if len(L) < ep:
-            continue
-        epochs.append(ep)
-        losses.append(float(L[ep - 1]))
-    return np.asarray(epochs, dtype=np.int64), np.asarray(losses, dtype=np.float64)
-
-
-def _plot_loss_curve(epochs: np.ndarray, losses: np.ndarray, out_path: Path) -> None:
+def _plot_loss_curve(
+    epochs: np.ndarray,
+    point_losses: np.ndarray,
+    window_means: np.ndarray,
+    out_path: Path,
+    *,
+    best_ep: int,
+    infer_ep: int,
+) -> None:
     import matplotlib.pyplot as plt
 
     fig, ax = plt.subplots(figsize=(10, 4))
-    ax.semilogy(epochs, np.maximum(losses, 1.0), ".-", markersize=3, linewidth=0.8)
+    ax.semilogy(
+        epochs,
+        np.maximum(point_losses, 1.0),
+        ".",
+        markersize=3,
+        alpha=0.45,
+        label="checkpoint step loss L[ep-1] (noisy)",
+    )
+    ax.semilogy(
+        epochs,
+        np.maximum(window_means, 1.0),
+        "-",
+        linewidth=1.2,
+        label=f"last-{int(os.environ.get('DEEPREACH_LOSS_WINDOW', '200'))} step mean",
+    )
+    ax.axvline(best_ep, color="tab:green", linestyle="--", linewidth=1.0, alpha=0.8, label=f"best-by-loss ep {best_ep}")
+    if infer_ep != best_ep:
+        ax.axvline(infer_ep, color="tab:red", linestyle=":", linewidth=1.0, alpha=0.8, label=f"inference ep {infer_ep}")
     ax.set_xlabel("epoch")
-    ax.set_ylabel("epoch loss (log)")
-    ax.set_title("DeepReach-MPC training loss (end-of-epoch)")
+    ax.set_ylabel("loss (log)")
+    ax.set_title("DeepReach-MPC training loss at checkpoints")
+    ax.legend(loc="upper right", fontsize=8)
     ax.grid(True, alpha=0.3)
     fig.tight_layout()
     fig.savefig(out_path, dpi=150)
@@ -235,6 +248,11 @@ def main() -> None:
     p.add_argument("--epoch", type=int, default=0, help="Load this epoch (0 = latest/final).")
     p.add_argument("--device", type=str, default="auto")
     p.add_argument("--regenerate-plot", action="store_true")
+    p.add_argument(
+        "--sync-final",
+        action="store_true",
+        help="Copy best-by-loss epoch checkpoint to model_final.pth for legacy loaders.",
+    )
     p.add_argument("--skip-load", action="store_true", help="Only scan artifacts and loss curve.")
     args = p.parse_args()
 
@@ -248,19 +266,38 @@ def main() -> None:
         print(line)
 
     print("\n=== Loss curve ===")
-    epochs, losses = _collect_epoch_losses(ckpt_sub)
+    from simulation.brt.training_metrics import (
+        best_epoch_from_losses,
+        collect_epoch_losses,
+        resolve_inference_checkpoint,
+        sync_model_final_from_best,
+    )
+
+    epochs, point, wmean = collect_epoch_losses(ckpt_sub)
     if len(epochs) == 0:
         print("No train_losses_epoch_*.txt files found.")
     else:
         out_png = checkpoint_dir / "training" / "verify_training_loss.png"
-        _plot_loss_curve(epochs, losses, out_png)
+        best_ep, best_loss = best_epoch_from_losses(epochs, wmean)
+        best_pt_ep, best_pt = best_epoch_from_losses(epochs, point)
+        try:
+            _, infer_ep, infer_reason = resolve_inference_checkpoint(checkpoint_dir, ckpt_sub=ckpt_sub)
+        except FileNotFoundError:
+            infer_ep = int(epochs[-1])
+            infer_reason = "latest (fallback)"
+        _plot_loss_curve(epochs, point, wmean, out_png, best_ep=best_ep, infer_ep=infer_ep)
         print(f"Wrote {out_png}")
-        best_i = int(np.argmin(losses))
-        print(f"Lowest logged epoch loss: {losses[best_i]:.4e} at epoch {epochs[best_i]}")
-        print(f"Final checkpoint epoch: {epochs[-1]}, loss={losses[-1]:.4e}")
-        spikes = epochs[losses > 5e5]
+        print(f"Best window-mean loss: {best_loss:.4e} at epoch {best_ep}")
+        print(f"Best single-step loss: {best_pt:.4e} at epoch {best_pt_ep}")
+        print(f"Latest logged checkpoint: epoch {epochs[-1]}, step loss={point[-1]:.4e}")
+        print(f"Inference selection ({os.environ.get('DEEPREACH_CHECKPOINT_SELECT', 'best')}): {infer_reason}")
+        spikes = epochs[point > 5e5]
         if len(spikes):
-            print(f"Spike epochs (loss > 5e5): {spikes.tolist()}")
+            print(f"Spike checkpoints (step loss > 5e5): {spikes.tolist()}")
+
+    if args.sync_final and len(epochs) > 0:
+        dst = sync_model_final_from_best(checkpoint_dir)
+        print(f"Synced model_final.pth from best-by-loss: {dst}")
 
     if args.skip_load:
         print("\n(skip-load) Install torch and re-run without --skip-load for V(x,t) checks.")
@@ -292,7 +329,6 @@ def main() -> None:
         print(f"\nWrote default {cfg_path}")
 
     if args.epoch > 0:
-        import os
         import shutil
 
         src = ckpt_sub / f"model_epoch_{args.epoch:05d}.pth"

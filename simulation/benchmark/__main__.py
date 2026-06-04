@@ -4,7 +4,7 @@ Example (after BRT training)::
 
     # Original 3.2 km LLM bundle (labels; filter rarely changes plans):
     python -m simulation.benchmark \\
-        --checkpoint-dir simulation_output/deepreach_mpc_koz_v2 \\
+        --checkpoint-dir simulation_output/deepreach_mpc_koz_v3 \\
         --conditions no_filter,brt_filter,rule_based
 
     # Filter demonstration bundle (y=1200 m, timed near-boundary burns):
@@ -120,14 +120,14 @@ def main() -> None:
     args = p.parse_args()
 
     ck_dir = Path(args.checkpoint_dir).resolve()
-    ckpt = ck_dir / "training" / "checkpoints" / "model_final.pth"
-    if not ckpt.is_file():
-        latest = sorted((ck_dir / "training" / "checkpoints").glob("model_epoch_*.pth"))
-        if not latest:
-            print(f"No checkpoint under {ck_dir}. Train: python -m simulation.brt.train --force", file=sys.stderr)
-            sys.exit(1)
-        ckpt = latest[-1]
-        print(f"Using checkpoint {ckpt.name}")
+    from simulation.brt.training_metrics import resolve_inference_checkpoint
+
+    try:
+        ckpt, _ep, reason = resolve_inference_checkpoint(ck_dir)
+    except FileNotFoundError as exc:
+        print(f"{exc}. Train: python -m simulation.brt.train --force", file=sys.stderr)
+        sys.exit(1)
+    print(f"Using checkpoint {ckpt.name} ({reason})")
 
     scenario, plans = load_llm_plans(args.llm_dir)
     if args.plan_id.strip():

@@ -16,6 +16,7 @@ import numpy as np
 
 from simulation.brt.config import (
     BRT_HORIZON_S,
+    DEFAULT_DEEPREACH_CHECKPOINT_SUBDIR,
     TRAIN_DOMAIN_HI,
     TRAIN_DOMAIN_LO,
     U_MAX_M_S2,
@@ -60,7 +61,7 @@ def default_checkpoint_dir(project_root: str | Path | None = None) -> Path:
     env = os.environ.get("DEEPREACH_CHECKPOINT_DIR", "").strip()
     if env:
         return Path(env).expanduser().resolve()
-    return (root / "simulation_output" / "deepreach_mpc_koz_v2").resolve()
+    return (root / "simulation_output" / DEFAULT_DEEPREACH_CHECKPOINT_SUBDIR).resolve()
 
 
 def _resolve_device(requested: str) -> str:
@@ -84,51 +85,17 @@ def _config_path(checkpoint_dir: Path) -> Path:
     return checkpoint_dir / "koz_brt_config.json"
 
 
-def _latest_epoch_checkpoint(checkpoint_dir: Path) -> tuple[Path | None, int]:
-    ckpt_dir = checkpoint_dir / "training" / "checkpoints"
-    if not ckpt_dir.is_dir():
-        return None, 0
-    best_epoch = 0
-    best_path: Path | None = None
-    for p in ckpt_dir.glob("model_epoch_*.pth"):
-        try:
-            ep = int(p.stem.rsplit("_", 1)[-1])
-        except ValueError:
-            continue
-        if ep >= best_epoch:
-            best_epoch = ep
-            best_path = p
-    if best_path is not None:
-        return best_path, best_epoch
-    for name in ("model_current.pth", "model_final.pth"):
-        p = ckpt_dir / name
-        if p.is_file():
-            return p, 0
-    return None, 0
-
-
 def _model_path(checkpoint_dir: Path) -> Path:
-    latest, _ = _latest_epoch_checkpoint(checkpoint_dir)
-    if latest is not None:
-        return latest
-    ckpt_dir = checkpoint_dir / "training" / "checkpoints"
-    return ckpt_dir / "model_final.pth"
+    from simulation.brt.training_metrics import resolve_inference_checkpoint
+
+    path, _, _ = resolve_inference_checkpoint(checkpoint_dir)
+    return path
 
 
 def _finalize_training_checkpoint(checkpoint_dir: Path) -> Path:
-    import shutil
+    from simulation.brt.training_metrics import sync_model_final_from_best
 
-    ckpt_sub = checkpoint_dir / "training" / "checkpoints"
-    latest, epoch = _latest_epoch_checkpoint(checkpoint_dir)
-    final = ckpt_sub / "model_final.pth"
-    if latest is not None and epoch > 0:
-        shutil.copy2(latest, final)
-        return final
-    current = ckpt_sub / "model_current.pth"
-    if current.is_file():
-        shutil.copy2(current, final)
-        return final
-    raise FileNotFoundError(f"No checkpoint to finalize under {ckpt_sub}")
+    return sync_model_final_from_best(checkpoint_dir)
 
 
 def save_brt_config(checkpoint_dir: Path, config: KozBRTConfig) -> None:
@@ -416,9 +383,12 @@ class KozDeepReachBRT:
         dev = _resolve_device(device or config.train.device)
         dynamics = build_dynamics(config, device=dev)
         model = build_model(dynamics, config.train)
-        ckpt = _model_path(checkpoint_dir)
+        from simulation.brt.training_metrics import resolve_inference_checkpoint
+
+        ckpt, ep, reason = resolve_inference_checkpoint(checkpoint_dir)
         if not ckpt.is_file():
             raise FileNotFoundError(f"No checkpoint at {ckpt}")
+        print(f"Loading DeepReach checkpoint: {ckpt.name} ({reason})")
         state = torch.load(ckpt, map_location=dev, weights_only=False)
         if isinstance(state, dict) and "model" in state:
             model.load_state_dict(state["model"])

@@ -17,6 +17,9 @@ BRT_HORIZON_S = 1800.0
 U_MAX_M_S2 = 0.15
 D_MAX_M_S2 = 0.0
 
+# Default DeepReach-MPC artifact directory under simulation_output/ (override via DEEPREACH_CHECKPOINT_DIR).
+DEFAULT_DEEPREACH_CHECKPOINT_SUBDIR = "deepreach_mpc_koz_v3"
+
 
 @dataclass(frozen=True)
 class DeepReachTrainConfig:
@@ -25,7 +28,7 @@ class DeepReachTrainConfig:
     numpoints: int = 65000
     pretrain_iters: int = 1000
     num_epochs: int = 100_000
-    counter_end: int = 100_000
+    counter_end: int = 75_000
     num_src_samples: int = 1000
     num_target_samples: int = 8000
     lr: float = 2e-5

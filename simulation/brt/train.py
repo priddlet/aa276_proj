@@ -43,7 +43,7 @@ def main() -> None:
         "--counter-end",
         type=int,
         default=None,
-        help="Curriculum end epoch (default: same as --epochs).",
+        help="Curriculum end epoch (default: 75000, or DEEPREACH_COUNTER_END).",
     )
     p.add_argument("--pretrain-iters", type=int, default=1000)
     p.add_argument("--num-target-samples", type=int, default=8000)
@@ -73,7 +73,7 @@ def main() -> None:
     axes = tuple(float(x) for x in args.semi_axes.split(","))
     counter_end = args.counter_end
     if counter_end is None:
-        counter_end = int(os.environ.get("DEEPREACH_COUNTER_END", str(args.epochs)))
+        counter_end = int(os.environ.get("DEEPREACH_COUNTER_END", "75000"))
     u_max = args.u_max
     if u_max is None:
         u_max = float(os.environ.get("BRT_U_MAX_M_S2", str(U_MAX_M_S2)))

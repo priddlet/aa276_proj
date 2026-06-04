@@ -2,7 +2,8 @@
 
 Example::
 
-    DEEPREACH_AUTO_TRAIN=0 python -m simulation.benchmark.generate_report
+    DEEPREACH_AUTO_TRAIN=0 DEEPREACH_CHECKPOINT_DIR=simulation_output/deepreach_mpc_koz_v3 \\
+        python -m simulation.benchmark.generate_report
 """
 
 from __future__ import annotations
@@ -20,6 +21,7 @@ import numpy as np
 
 from simulation.benchmark.evaluate import EvalCondition, PlanEvalResult, summarize_results
 from simulation.brt.config import BRT_HORIZON_S
+from simulation.brt.deepreach_mpc_brt import default_checkpoint_dir
 from simulation.cw_dynamics import CWDynamics, simulate_impulsive_segments_dense
 from simulation.keepout import EllipsoidKeepOut
 from simulation.llm_plans import LLMPlan, LLMScenario, default_llm_dir, load_llm_plans
@@ -644,7 +646,10 @@ def main() -> None:
     p.add_argument(
         "--checkpoint-dir",
         type=str,
-        default=os.environ.get("DEEPREACH_CHECKPOINT_DIR", "simulation_output/deepreach_mpc_koz_v2"),
+        default=os.environ.get(
+            "DEEPREACH_CHECKPOINT_DIR",
+            str(default_checkpoint_dir()),
+        ),
     )
     p.add_argument(
         "--results-csv",
