@@ -194,10 +194,22 @@ def train_koz_deepreach_mpc(
             msg += f" ({DEEPREACH_MPC_IMPORT_ERROR})"
         raise RuntimeError(msg)
     if not torch.cuda.is_available():
-        raise RuntimeError(
-            "DeepReach-MPC training requires CUDA (experiments loop uses .cuda()). "
-            "Use a GPU machine or set DEEPREACH_AUTO_TRAIN=0 and train elsewhere."
+        diag = [
+            f"torch {torch.__version__}",
+            "cuda.is_available()=False",
+        ]
+        if "+cpu" in torch.__version__.lower() or "cpu" in str(getattr(torch.version, "cuda", "") or "").lower():
+            diag.append("This looks like a CPU-only PyTorch build.")
+        diag.extend(
+            [
+                "DeepReach-MPC training hard-codes .cuda() in experiments.py (NVIDIA GPU required).",
+                "Fix: install CUDA PyTorch in this env, e.g.",
+                "  pip install torch --index-url https://download.pytorch.org/whl/cu124",
+                "Then verify: python -c \"import torch; print(torch.cuda.is_available(), torch.cuda.get_device_name(0))\"",
+                "Also run: nvidia-smi  (driver + GPU must be visible to the session).",
+            ]
         )
+        raise RuntimeError("DeepReach-MPC training requires CUDA.\n  " + "\n  ".join(diag))
 
     checkpoint_dir = Path(checkpoint_dir).resolve()
     ckpt = _model_path(checkpoint_dir)
