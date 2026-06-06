@@ -24,7 +24,7 @@ from simulation.eci_kinematics import build_eci_ephemeris
 from simulation.keepout import EllipsoidKeepOut, EllipsoidMaxSeparation
 from simulation.maneuver_plan import burns_to_segments, parse_llm_maneuver_json
 from simulation.orbit_movie import render_orbit_eci_animation, sample_uniform_times
-from simulation.passive_safety import is_passively_safe_natural_coast
+from simulation.sampling.passive import is_passively_safe_natural_coast
 
 
 def _default_output_dir(project_root: str | Path | None = None) -> Path:

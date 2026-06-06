@@ -41,7 +41,7 @@ except ImportError as exc:
 
 @contextmanager
 def _deepreach_mpc_imports() -> Iterator[None]:
-    """Import ``deepreach_MPC`` with its package-relative imports."""
+    """Import 'deepreach_MPC' with its package-relative imports."""
     if not _DEEPREACH_MPC.is_dir():
         raise RuntimeError(f"deepreach_MPC/ not found at {_DEEPREACH_MPC}")
     prev = os.getcwd()
@@ -187,7 +187,7 @@ def train_koz_deepreach_mpc(
     *,
     force: bool = False,
 ) -> Path:
-    """Train DeepReach-MPC value function; returns path to ``model_final.pth``."""
+    """Train DeepReach-MPC value function; returns path to 'model_final.pth'."""
     if not DEEPREACH_MPC_AVAILABLE:
         msg = "Install torch (see requirements-deepreach.txt)."
         if DEEPREACH_MPC_IMPORT_ERROR:
@@ -352,11 +352,11 @@ def train_koz_deepreach_mpc(
 
 
 class KozDeepReachBRT:
-    """Learned 6D BRT V(t, x). Unsafe iff V ≤ 0.
+    """Learned 6D BRT V(t, x). Unsafe iff V <= 0.
 
-    KOZ invariant (default on): if g(x) ≤ 0 (inside/on KOZ), V ← min(V, g(x)) so the
-    keep-out zone stays unsafe at every query time, not only at t = 0.
-    Disable: ``BRT_KOZ_PROJECT=0``.
+    KOZ invariant (default on): if g(x) <= 0 (inside/on KOZ), V <- min(V, g(x)) so the
+    keep-out zone stays unsafe at every query time, not only at t <= 0.
+    Disable: 'BRT_KOZ_PROJECT=0'.
     """
 
     def __init__(self, model: Any, dynamics: Any, config: KozBRTConfig, *, device: str = "cpu") -> None:
@@ -436,7 +436,7 @@ class KozDeepReachBRT:
         return np.linspace(0.0, -abs(self._horizon), int(n_nodes), dtype=np.float64)
 
     def koz_boundary_g(self, pos_lvlh_m: np.ndarray) -> np.ndarray:
-        """Ellipsoid boundary g(x)=√(Σ (r_i/a_i)²)−1; negative inside KOZ (matches Cw6DKoz)."""
+        """Ellipsoid boundary g(x)=sqrt((sum of (r_i/a_i)^2)−1); negative inside KOZ (matches Cw6DKoz)."""
         pos = np.asarray(pos_lvlh_m, dtype=np.float64).reshape(-1, 3)
         r = pos - self._koz_center.reshape(1, 3)
         ax = self._koz_axes.reshape(1, 3)
@@ -444,7 +444,7 @@ class KozDeepReachBRT:
         return np.sqrt(s + 1e-18) - 1.0
 
     def _project_koz_unsafe(self, states_si: np.ndarray, vals: np.ndarray) -> np.ndarray:
-        """Inside/on KOZ (g≤0), enforce V≤0 via V ← min(V, g)."""
+        """Inside/on KOZ (g<=0), enforce V<=0 via V <- min(V, g)."""
         if os.environ.get("BRT_KOZ_PROJECT", "1").lower() in ("0", "false", "no"):
             return vals
         states = np.asarray(states_si, dtype=np.float64).reshape(-1, 6)
@@ -456,7 +456,7 @@ class KozDeepReachBRT:
         return v
 
     def _eval_coords(self, coords: np.ndarray) -> np.ndarray:
-        """``coords`` are ``[t_s, x, y, z, vx, vy, vz]`` in SI (like Quadrotor: raw time in col 0)."""
+        """'coords' are '[t_s, x, y, z, vx, vy, vz]' in SI (like Quadrotor: raw time in col 0)."""
         dtype = next(self._model.parameters()).dtype
         c = torch.tensor(coords, dtype=dtype, device=self._device)
         states_si = c[..., 1:]

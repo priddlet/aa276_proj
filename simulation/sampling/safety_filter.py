@@ -124,7 +124,7 @@ def collapse_zero_burn_segments(
     *,
     zero_tol_m_s: float = 1e-9,
 ) -> list[tuple[float, np.ndarray | None]]:
-    """Merge rejected burns (|Δv|≈0) into surrounding coast arcs."""
+    """Merge rejected burns (|delta_v|~=0) into surrounding coast arcs."""
     out: list[tuple[float, np.ndarray | None]] = []
     pending_coast = 0.0
     for dt, dv in segments:
@@ -161,7 +161,7 @@ def default_omit_zero_burns() -> bool:
 
 
 def default_check_passive_post() -> bool:
-    return os.environ.get("FILTER_CHECK_PASSIVE_POST", "0").lower() in ("1", "true", "yes")
+    return os.environ.get("FILTER_CHECK_PASSIVE_POST", "1").lower() in ("1", "true", "yes")
 
 
 def filter_impulsive_burn_linesearch(

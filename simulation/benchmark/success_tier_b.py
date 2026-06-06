@@ -49,7 +49,7 @@ def state_at_time_with_passive_coast(
     segments: list[tuple[float, np.ndarray | None]],
     t_s: float,
 ) -> np.ndarray:
-    """State at ``t_s``: execute plan, then passive CW coast if ``t_s`` exceeds plan duration."""
+    """State at 't_s': execute plan, then passive CW coast if 't_s' exceeds plan duration."""
     t_s = float(t_s)
     if t_s <= 0.0:
         return np.asarray(x0, dtype=np.float64).reshape(6).copy()
@@ -69,7 +69,7 @@ def intercepted_by_time(
     *,
     sample_dt_s: float = 5.0,
 ) -> bool:
-    """True if deputy enters inner KOZ on ``[0, t_end_s]`` along plan + passive coast."""
+    """True if deputy enters inner KOZ on '[0, t_end_s]' along plan + passive coast."""
     t_end_s = max(0.0, float(t_end_s))
     n = max(2, int(np.ceil(t_end_s / max(sample_dt_s, 0.5))) + 1)
     times = np.linspace(0.0, t_end_s, n, dtype=np.float64)

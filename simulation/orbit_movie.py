@@ -19,7 +19,7 @@ def lvlh_points_m_to_eci_km(
     R_lvlh_to_eci: np.ndarray,
     pts_lvlh_m: np.ndarray,
 ) -> np.ndarray:
-    """Map relative positions (m) in chief LVLH to ECI (km). ``pts_lvlh_m`` is ``(..., 3)``."""
+    """Map relative positions (m) in chief LVLH to ECI (km). 'pts_lvlh_m' is '(..., 3)'."""
     r_c = np.asarray(r_chief_km, dtype=np.float64).reshape(3)
     R = np.asarray(R_lvlh_to_eci, dtype=np.float64).reshape(3, 3)
     p = np.asarray(pts_lvlh_m, dtype=np.float64)
@@ -65,7 +65,7 @@ def brt_position_isosurface_lvlh_m(
     *,
     level: float = 0.0,
 ) -> tuple[np.ndarray, np.ndarray] | None:
-    """Return ``(verts_lvlh_m, faces)`` for ``V=level`` in position at fixed velocity, or ``None``."""
+    """Return '(verts_lvlh_m, faces)' for 'V=level' in position at fixed velocity, or 'None'."""
     from simulation.isosurface import marching_cubes_v0_lvlh
 
     return marching_cubes_v0_lvlh(
@@ -115,7 +115,7 @@ def _craft_edges_body_km(
 
 
 def _earth_koz_violation(r_eci_km: np.ndarray, r_earth_km: float, min_altitude_km: float) -> bool:
-    """True if spherical altitude is below ``min_altitude_km`` (||r|| < R_Earth + h)."""
+    """True if spherical altitude is below 'min_altitude_km' (||r|| < R_Earth + h)."""
     r = float(np.linalg.norm(np.asarray(r_eci_km, dtype=np.float64).reshape(3)))
     return r < (float(r_earth_km) + float(min_altitude_km))
 
@@ -143,26 +143,26 @@ def render_orbit_eci_animation(
 ) -> str | None:
     """ECI animation with global context and/or formation-following view.
 
-    ``eci_view`` / env ``ORBIT_ECI_VIEW``:
+    'eci_view' / env 'ORBIT_ECI_VIEW':
 
-    - ``both`` (default): left = global (Earth, trajectories, red shell at R_Earth+h);
+    - 'both' (default): left = global (Earth, trajectories, red shell at R_Earth+h);
       right = formation camera **following** chief/deputy midpoint each frame.
-    - ``global``: single global panel.
-    - ``formation``: single formation panel only.
+    - 'global': single global panel.
+    - 'formation': single formation panel only.
 
-    Earth KOZ: minimum spherical altitude ``h`` km above Earth mean sphere; unsafe if
-    ``||r|| < R_Earth + h``. Wireframe at that radius in global view. Override with
-    ``earth_koz_min_altitude_km`` or env ``EARTH_KOZ_MIN_ALT_KM`` (default 150).
+    Earth KOZ: minimum spherical altitude 'h' km above Earth mean sphere; unsafe if
+    '||r|| < R_Earth + h'. Wireframe at that radius in global view. Override with
+    'earth_koz_min_altitude_km' or env 'EARTH_KOZ_MIN_ALT_KM' (default 150).
 
-    If ``brt_option1`` is set (e.g. :class:`~simulation.legacy.hj_koz_brt.KozHJTable6D`) and ``ephem`` contains
-    ``states_lvlh_m``, each frame's suptitle includes HJ BRT status (unsafe iff ``value <= 0``).
+    If 'brt_option1' is set (e.g. :class:`~simulation.brt.deepreach_mpc_brt.KozDeepReachBRT') and 'ephem' contains
+    'states_lvlh_m', each frame's suptitle includes learned BRT status (unsafe iff 'value <= 0').
 
-    If ``inner_koz_formation`` is set and the layout includes the formation axis, the inner
-    KOZ ellipsoid is drawn in ECI attached to the chief each frame. If ``brt_option1`` has
-    ``value_batch`` (6D HJ table), a ``V=0`` position isosurface at the deputy's current
-    velocity is drawn (requires ``scikit-image`` for marching cubes).
+    If 'inner_koz_formation' is set and the layout includes the formation axis, the inner
+    KOZ ellipsoid is drawn in ECI attached to the chief each frame. If 'brt_option1' has
+    'value_batch' (6D HJ table), a 'V=0' position isosurface at the deputy's current
+    velocity is drawn (requires 'scikit-image' for marching cubes).
 
-    When ``frame_log_rows`` is a list, each animation frame appends one dict for post-run CSV.
+    When 'frame_log_rows' is a list, each animation frame appends one dict for post-run CSV.
     """
     import matplotlib
 

@@ -99,9 +99,9 @@ class EllipsoidKeepOut:
 class EllipsoidMaxSeparation:
     """Upper bound on relative separation (formation / orbit-envelope proxy).
 
-    **Safe** set is the *interior* ``(r-c)^T E (r-c) <= 1`` (same ellipsoid metric as
-    :class:`EllipsoidKeepOut`). **Unsafe** if the deputy is **outside** that ellipsoid
-    (``s > 1``): interpreted as drifting too far from the chief to still be in a
+    **Safe** set is the *interior* '(r-c)^T E (r-c) <= 1' (same ellipsoid metric as
+    'EllipsoidKeepOut'). **Unsafe** if the deputy is **outside** that ellipsoid
+    '(s > 1)': interpreted as drifting too far from the chief to still be in a
     controlled proximity / orbit-maintenance context for this demo.
 
     This is a coarse LVLH proxy—not a full altitude-keeping or ROE budget model.

@@ -8,7 +8,7 @@
     "orbital_period_s": 5553.624271252229,
     "start_state_m_m_s": [
       0.0,
-      1200.0,
+      250.0,
       0.0,
       0.0,
       0.0,
@@ -33,15 +33,16 @@
     "label_criteria": {
       "requires_intervention": "OR of the three below",
       "dv_excessive": "|dv| > 0.5 m/s",
-      "post_burn_V_le_0": "free drift from post-burn state reaches KOZ within 1800 s (V<=0)",
-      "passive_preburn_unsafe": "free drift from pre-burn state reaches KOZ within 1800 s"
+      "post_burn_V_le_0": "learned V(x\u207a, t) \u2264 0 when BRT loaded (hybrid mode); else free drift to KOZ within 1800 s",
+      "passive_preburn_unsafe": "free drift from pre-burn state reaches KOZ within 1800 s",
+      "label_mode": "hybrid"
     },
-    "note": "At this start range (1.2 km) and horizon (1800 s), the minimum dv that reaches the KOZ is ~0.65 m/s (> the 0.5 cap), so every V<=0 plan also trips dv_cap; the criteria overlap by construction here."
+    "note": "Start y=250 m (learned BRT unsafe tube ~45\u201380 m passive; KOZ y semi-axis 45 m). Closer than the old 1.2 km bundle so intercept burns are smaller and post_V / dv_cap / passive labels are less degenerate."
   },
   "plans": [
     {
       "plan_id": "safe_multi_along_track_000",
-      "prompt": "Cautious along-track approach from 1.2 km: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
+      "prompt": "Cautious along-track approach from 250 m: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
       "tags": {
         "category": "safe_multi",
         "approach_angle": "along_track",
@@ -52,24 +53,24 @@
         {
           "t_s": 453.0,
           "dv_m_s": [
-            -0.00405,
-            -0.04053,
+            -0.00715,
+            -0.07149,
             0.0
           ]
         },
         {
           "t_s": 798.5,
           "dv_m_s": [
-            -0.00527,
-            -0.05271,
+            -0.0087,
+            -0.08705,
             0.0
           ]
         },
         {
           "t_s": 1024.8,
           "dv_m_s": [
-            -0.00966,
-            -0.09663,
+            -0.01436,
+            -0.14364,
             0.0
           ]
         }
@@ -82,8 +83,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.00405,
-            -0.04053,
+            -0.00715,
+            -0.07149,
             0.0
           ]
         },
@@ -94,8 +95,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.00527,
-            -0.05271,
+            -0.0087,
+            -0.08705,
             0.0
           ]
         },
@@ -106,8 +107,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.00966,
-            -0.09663,
+            -0.01436,
+            -0.14364,
             0.0
           ]
         }
@@ -116,10 +117,10 @@
         "steps": [
           {
             "t_s": 453.0,
-            "dv_mag_m_s": 0.04073,
+            "dv_mag_m_s": 0.07185,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -127,10 +128,10 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              -0.004,
-              -0.0405,
+              -0.0072,
+              -0.0715,
               0.0
             ],
             "dv_excessive": 0,
@@ -138,26 +139,26 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 693.3287,
-            "min_sep_post_m": 1184.7
+            "min_koz_value_post": 4.0393,
+            "min_sep_post_m": 72.71
           },
           {
             "t_s": 798.5,
-            "dv_mag_m_s": 0.05297,
+            "dv_mag_m_s": 0.08748,
             "pre_burn_state": [
-              -6.7682,
-              1187.9524,
+              -11.9404,
+              228.7504,
               0.0,
-              -0.0346,
-              -0.0252,
+              -0.0611,
+              -0.0445,
               0.0
             ],
             "post_burn_state": [
-              -6.7682,
-              1187.9524,
+              -11.9404,
+              228.7504,
               0.0,
-              -0.0399,
-              -0.0779,
+              -0.0698,
+              -0.1315,
               0.0
             ],
             "dv_excessive": 0,
@@ -165,26 +166,26 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 676.3554,
-            "min_sep_post_m": 1169.32
+            "min_koz_value_post": 3.7245,
+            "min_sep_post_m": 67.04
           },
           {
             "t_s": 1024.8,
-            "dv_mag_m_s": 0.09711,
+            "dv_mag_m_s": 0.14436,
             "pre_burn_state": [
-              -20.8512,
-              1173.4984,
+              -36.3077,
+              204.5045,
               0.0,
-              -0.0839,
-              -0.0461,
+              -0.1444,
+              -0.0764,
               0.0
             ],
             "post_burn_state": [
-              -20.8512,
-              1173.4984,
+              -36.3077,
+              204.5045,
               0.0,
-              -0.0935,
-              -0.1427,
+              -0.1587,
+              -0.22,
               0.0
             ],
             "dv_excessive": 0,
@@ -192,14 +193,14 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 652.0635,
-            "min_sep_post_m": 1145.42
+            "min_koz_value_post": 3.552,
+            "min_sep_post_m": 63.94
           }
         ],
         "n_burns": 3,
         "first_burn_t_s": 453.0,
-        "total_dv_m_s": 0.19082,
-        "max_dv_m_s": 0.09711,
+        "total_dv_m_s": 0.30369,
+        "max_dv_m_s": 0.14436,
         "expected_intervention": 0,
         "intervention_reasons": [],
         "first_unsafe_step": null
@@ -207,7 +208,7 @@
     },
     {
       "plan_id": "safe_multi_along_track_001",
-      "prompt": "Cautious along-track approach from 1.2 km: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
+      "prompt": "Cautious along-track approach from 250 m: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
       "tags": {
         "category": "safe_multi",
         "approach_angle": "along_track",
@@ -218,16 +219,16 @@
         {
           "t_s": 392.4,
           "dv_m_s": [
-            -0.00161,
-            -0.01612,
+            -0.0037,
+            -0.03702,
             0.0
           ]
         },
         {
           "t_s": 552.2,
           "dv_m_s": [
-            -0.00246,
-            -0.02458,
+            -0.00488,
+            -0.04875,
             0.0
           ]
         }
@@ -240,8 +241,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.00161,
-            -0.01612,
+            -0.0037,
+            -0.03702,
             0.0
           ]
         },
@@ -252,8 +253,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.00246,
-            -0.02458,
+            -0.00488,
+            -0.04875,
             0.0
           ]
         }
@@ -262,10 +263,10 @@
         "steps": [
           {
             "t_s": 392.4,
-            "dv_mag_m_s": 0.0162,
+            "dv_mag_m_s": 0.0372,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -273,10 +274,10 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              -0.0016,
-              -0.0161,
+              -0.0037,
+              -0.037,
               0.0
             ],
             "dv_excessive": 0,
@@ -284,26 +285,26 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 703.9186,
-            "min_sep_post_m": 1193.88
+            "min_koz_value_post": 4.2689,
+            "min_sep_post_m": 76.84
           },
           {
             "t_s": 552.2,
-            "dv_mag_m_s": 0.0247,
+            "dv_mag_m_s": 0.04899,
             "pre_burn_state": [
-              -0.7203,
-              1197.5265,
+              -1.6547,
+              244.3195,
               0.0,
-              -0.0074,
-              -0.0145,
+              -0.017,
+              -0.0333,
               0.0
             ],
             "post_burn_state": [
-              -0.7203,
-              1197.5265,
+              -1.6547,
+              244.3195,
               0.0,
-              -0.0098,
-              -0.0391,
+              -0.0218,
+              -0.082,
               0.0
             ],
             "dv_excessive": 0,
@@ -311,14 +312,14 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 693.6986,
-            "min_sep_post_m": 1185.02
+            "min_koz_value_post": 3.9705,
+            "min_sep_post_m": 71.47
           }
         ],
         "n_burns": 2,
         "first_burn_t_s": 392.4,
-        "total_dv_m_s": 0.0409,
-        "max_dv_m_s": 0.0247,
+        "total_dv_m_s": 0.0862,
+        "max_dv_m_s": 0.04899,
         "expected_intervention": 0,
         "intervention_reasons": [],
         "first_unsafe_step": null
@@ -326,7 +327,7 @@
     },
     {
       "plan_id": "safe_multi_along_track_002",
-      "prompt": "Cautious along-track approach from 1.2 km: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
+      "prompt": "Cautious along-track approach from 250 m: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
       "tags": {
         "category": "safe_multi",
         "approach_angle": "along_track",
@@ -337,16 +338,16 @@
         {
           "t_s": 331.1,
           "dv_m_s": [
-            -0.00841,
-            -0.08409,
+            -0.01341,
+            -0.13409,
             0.0
           ]
         },
         {
           "t_s": 486.0,
           "dv_m_s": [
-            -0.00902,
-            -0.09016,
+            -0.014,
+            -0.14003,
             0.0
           ]
         }
@@ -359,8 +360,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.00841,
-            -0.08409,
+            -0.01341,
+            -0.13409,
             0.0
           ]
         },
@@ -371,8 +372,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.00902,
-            -0.09016,
+            -0.014,
+            -0.14003,
             0.0
           ]
         }
@@ -381,10 +382,10 @@
         "steps": [
           {
             "t_s": 331.1,
-            "dv_mag_m_s": 0.08451,
+            "dv_mag_m_s": 0.13476,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -392,10 +393,10 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              -0.0084,
-              -0.0841,
+              -0.0134,
+              -0.1341,
               0.0
             ],
             "dv_excessive": 0,
@@ -403,26 +404,26 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 675.2673,
-            "min_sep_post_m": 1168.55
+            "min_koz_value_post": 3.6862,
+            "min_sep_post_m": 66.35
           },
           {
             "t_s": 486.0,
-            "dv_mag_m_s": 0.09061,
+            "dv_mag_m_s": 0.14073,
             "pre_burn_state": [
-              -3.5729,
-              1187.4685,
+              -5.6973,
+              230.0172,
               0.0,
-              -0.0376,
-              -0.076,
+              -0.06,
+              -0.1212,
               0.0
             ],
             "post_burn_state": [
-              -3.5729,
-              1187.4685,
+              -5.6973,
+              230.0172,
               0.0,
-              -0.0466,
-              -0.1662,
+              -0.074,
+              -0.2612,
               0.0
             ],
             "dv_excessive": 0,
@@ -430,14 +431,14 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 642.6265,
-            "min_sep_post_m": 1137.63
+            "min_koz_value_post": 3.143,
+            "min_sep_post_m": 56.57
           }
         ],
         "n_burns": 2,
         "first_burn_t_s": 331.1,
-        "total_dv_m_s": 0.17512,
-        "max_dv_m_s": 0.09061,
+        "total_dv_m_s": 0.27549,
+        "max_dv_m_s": 0.14073,
         "expected_intervention": 0,
         "intervention_reasons": [],
         "first_unsafe_step": null
@@ -445,7 +446,7 @@
     },
     {
       "plan_id": "safe_multi_along_track_003",
-      "prompt": "Cautious along-track approach from 1.2 km: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
+      "prompt": "Cautious along-track approach from 250 m: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
       "tags": {
         "category": "safe_multi",
         "approach_angle": "along_track",
@@ -456,24 +457,24 @@
         {
           "t_s": 335.3,
           "dv_m_s": [
-            -0.00821,
-            -0.08214,
+            -0.01238,
+            -0.12375,
             0.0
           ]
         },
         {
           "t_s": 569.5,
           "dv_m_s": [
-            -0.00835,
-            -0.08348,
+            -0.01257,
+            -0.1257,
             0.0
           ]
         },
         {
           "t_s": 878.5,
           "dv_m_s": [
-            -0.00853,
-            -0.08533,
+            -0.01258,
+            -0.1258,
             0.0
           ]
         }
@@ -486,8 +487,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.00821,
-            -0.08214,
+            -0.01238,
+            -0.12375,
             0.0
           ]
         },
@@ -498,8 +499,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.00835,
-            -0.08348,
+            -0.01257,
+            -0.1257,
             0.0
           ]
         },
@@ -510,8 +511,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.00853,
-            -0.08533,
+            -0.01258,
+            -0.1258,
             0.0
           ]
         }
@@ -520,10 +521,10 @@
         "steps": [
           {
             "t_s": 335.3,
-            "dv_mag_m_s": 0.08255,
+            "dv_mag_m_s": 0.12437,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -531,10 +532,10 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              -0.0082,
-              -0.0821,
+              -0.0124,
+              -0.1237,
               0.0
             ],
             "dv_excessive": 0,
@@ -542,26 +543,26 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 676.0521,
-            "min_sep_post_m": 1169.27
+            "min_koz_value_post": 3.7399,
+            "min_sep_post_m": 67.32
           },
           {
             "t_s": 569.5,
-            "dv_mag_m_s": 0.0839,
+            "dv_mag_m_s": 0.12633,
             "pre_burn_state": [
-              -6.9678,
-              1182.1665,
+              -10.5001,
+              223.1333,
               0.0,
-              -0.0509,
-              -0.0664,
+              -0.0768,
+              -0.1,
               0.0
             ],
             "post_burn_state": [
-              -6.9678,
-              1182.1665,
+              -10.5001,
+              223.1333,
               0.0,
-              -0.0593,
-              -0.1499,
+              -0.0893,
+              -0.2257,
               0.0
             ],
             "dv_excessive": 0,
@@ -569,26 +570,26 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 647.8253,
-            "min_sep_post_m": 1142.5
+            "min_koz_value_post": 3.2951,
+            "min_sep_post_m": 59.31
           },
           {
             "t_s": 878.5,
-            "dv_mag_m_s": 0.08576,
+            "dv_mag_m_s": 0.12643,
             "pre_burn_state": [
-              -42.2069,
-              1146.2477,
+              -63.5831,
+              169.0402,
               0.0,
-              -0.1665,
-              -0.0701,
+              -0.2507,
+              -0.1056,
               0.0
             ],
             "post_burn_state": [
-              -42.2069,
-              1146.2477,
+              -63.5831,
+              169.0402,
               0.0,
-              -0.175,
-              -0.1554,
+              -0.2633,
+              -0.2314,
               0.0
             ],
             "dv_excessive": 0,
@@ -596,14 +597,14 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 634.2295,
-            "min_sep_post_m": 1127.24
+            "min_koz_value_post": 3.3895,
+            "min_sep_post_m": 61.01
           }
         ],
         "n_burns": 3,
         "first_burn_t_s": 335.3,
-        "total_dv_m_s": 0.2522,
-        "max_dv_m_s": 0.08576,
+        "total_dv_m_s": 0.37712,
+        "max_dv_m_s": 0.12643,
         "expected_intervention": 0,
         "intervention_reasons": [],
         "first_unsafe_step": null
@@ -611,7 +612,7 @@
     },
     {
       "plan_id": "safe_multi_along_track_004",
-      "prompt": "Cautious along-track approach from 1.2 km: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
+      "prompt": "Cautious along-track approach from 250 m: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
       "tags": {
         "category": "safe_multi",
         "approach_angle": "along_track",
@@ -622,24 +623,24 @@
         {
           "t_s": 528.3,
           "dv_m_s": [
-            -0.0093,
-            -0.09302,
+            -0.01367,
+            -0.13669,
             0.0
           ]
         },
         {
           "t_s": 824.8,
           "dv_m_s": [
-            -0.00557,
-            -0.0557,
+            -0.00922,
+            -0.09222,
             0.0
           ]
         },
         {
           "t_s": 1083.9,
           "dv_m_s": [
-            -0.00552,
-            -0.05521,
+            -0.00915,
+            -0.0915,
             0.0
           ]
         }
@@ -652,8 +653,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.0093,
-            -0.09302,
+            -0.01367,
+            -0.13669,
             0.0
           ]
         },
@@ -664,8 +665,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.00557,
-            -0.0557,
+            -0.00922,
+            -0.09222,
             0.0
           ]
         },
@@ -676,8 +677,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.00552,
-            -0.05521,
+            -0.00915,
+            -0.0915,
             0.0
           ]
         }
@@ -686,10 +687,10 @@
         "steps": [
           {
             "t_s": 528.3,
-            "dv_mag_m_s": 0.09348,
+            "dv_mag_m_s": 0.13737,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -697,10 +698,10 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              -0.0093,
-              -0.093,
+              -0.0137,
+              -0.1367,
               0.0
             ],
             "dv_excessive": 0,
@@ -708,26 +709,26 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 671.6864,
-            "min_sep_post_m": 1165.28
+            "min_koz_value_post": 3.6729,
+            "min_sep_post_m": 66.11
           },
           {
             "t_s": 824.8,
-            "dv_mag_m_s": 0.05598,
+            "dv_mag_m_s": 0.09268,
             "pre_burn_state": [
-              -11.8715,
-              1175.3933,
+              -17.4459,
+              213.8417,
               0.0,
-              -0.07,
-              -0.0662,
+              -0.1029,
+              -0.0972,
               0.0
             ],
             "post_burn_state": [
-              -11.8715,
-              1175.3933,
+              -17.4459,
+              213.8417,
               0.0,
-              -0.0756,
-              -0.1219,
+              -0.1121,
+              -0.1894,
               0.0
             ],
             "dv_excessive": 0,
@@ -735,26 +736,26 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 655.2284,
-            "min_sep_post_m": 1149.53
+            "min_koz_value_post": 3.419,
+            "min_sep_post_m": 61.54
           },
           {
             "t_s": 1083.9,
-            "dv_mag_m_s": 0.05549,
+            "dv_mag_m_s": 0.09196,
             "pre_burn_state": [
-              -41.8873,
-              1151.6192,
+              -62.6005,
+              176.4516,
               0.0,
-              -0.1544,
-              -0.0539,
+              -0.2339,
+              -0.0873,
               0.0
             ],
             "post_burn_state": [
-              -41.8873,
-              1151.6192,
+              -62.6005,
+              176.4516,
               0.0,
-              -0.16,
-              -0.1092,
+              -0.2431,
+              -0.1788,
               0.0
             ],
             "dv_excessive": 0,
@@ -762,14 +763,14 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 647.8116,
-            "min_sep_post_m": 1141.15
+            "min_koz_value_post": 3.5137,
+            "min_sep_post_m": 63.25
           }
         ],
         "n_burns": 3,
         "first_burn_t_s": 528.3,
-        "total_dv_m_s": 0.20495,
-        "max_dv_m_s": 0.09348,
+        "total_dv_m_s": 0.32201,
+        "max_dv_m_s": 0.13737,
         "expected_intervention": 0,
         "intervention_reasons": [],
         "first_unsafe_step": null
@@ -815,7 +816,7 @@
             "dv_mag_m_s": 0.11819,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -823,7 +824,7 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               -0.0118,
               -0.1176,
@@ -834,8 +835,8 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 662.0379,
-            "min_sep_post_m": 1156.33
+            "min_koz_value_post": 3.7726,
+            "min_sep_post_m": 67.91
           }
         ],
         "n_burns": 1,
@@ -887,7 +888,7 @@
             "dv_mag_m_s": 0.07884,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -895,7 +896,7 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               -0.0078,
               -0.0785,
@@ -906,8 +907,8 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 677.5464,
-            "min_sep_post_m": 1170.63
+            "min_koz_value_post": 3.9963,
+            "min_sep_post_m": 71.93
           }
         ],
         "n_burns": 1,
@@ -959,7 +960,7 @@
             "dv_mag_m_s": 0.03349,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -967,7 +968,7 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               -0.0033,
               -0.0333,
@@ -978,8 +979,8 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 696.4204,
-            "min_sep_post_m": 1187.4
+            "min_koz_value_post": 4.2954,
+            "min_sep_post_m": 77.32
           }
         ],
         "n_burns": 1,
@@ -1004,9 +1005,9 @@
         {
           "t_s": 448.3,
           "dv_m_s": [
-            0.78336,
-            -0.35793,
-            0.0
+            0.15941,
+            -0.07255,
+            -0.0
           ]
         }
       ],
@@ -1018,9 +1019,9 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            0.78336,
-            -0.35793,
-            0.0
+            0.15941,
+            -0.07255,
+            -0.0
           ]
         }
       ],
@@ -1028,10 +1029,10 @@
         "steps": [
           {
             "t_s": 448.3,
-            "dv_mag_m_s": 0.86126,
+            "dv_mag_m_s": 0.17514,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -1039,31 +1040,28 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              0.7834,
-              -0.3579,
+              0.1594,
+              -0.0726,
               0.0
             ],
-            "dv_excessive": 1,
-            "post_burn_V_le_0": 1,
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
             "passive_preburn_unsafe": 0,
-            "requires_intervention": 1,
-            "koz_reach_time_post_s": 1436.0,
-            "min_koz_value_post": 0.0203,
-            "min_sep_post_m": 6.07
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": 1310.0,
+            "min_koz_value_post": -0.857,
+            "min_sep_post_m": 0.0
           }
         ],
         "n_burns": 1,
         "first_burn_t_s": 448.3,
-        "total_dv_m_s": 0.86126,
-        "max_dv_m_s": 0.86126,
-        "expected_intervention": 1,
-        "intervention_reasons": [
-          "dv_cap",
-          "post_V"
-        ],
-        "first_unsafe_step": 0
+        "total_dv_m_s": 0.17514,
+        "max_dv_m_s": 0.17514,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
       }
     },
     {
@@ -1079,9 +1077,9 @@
         {
           "t_s": 529.1,
           "dv_m_s": [
-            0.93794,
-            -0.61256,
-            0.0
+            0.19105,
+            -0.12435,
+            -0.0
           ]
         }
       ],
@@ -1093,9 +1091,9 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            0.93794,
-            -0.61256,
-            0.0
+            0.19105,
+            -0.12435,
+            -0.0
           ]
         }
       ],
@@ -1103,10 +1101,10 @@
         "steps": [
           {
             "t_s": 529.1,
-            "dv_mag_m_s": 1.12025,
+            "dv_mag_m_s": 0.22795,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -1114,31 +1112,28 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              0.9379,
-              -0.6126,
+              0.191,
+              -0.1244,
               0.0
             ],
-            "dv_excessive": 1,
-            "post_burn_V_le_0": 1,
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
             "passive_preburn_unsafe": 0,
-            "requires_intervention": 1,
-            "koz_reach_time_post_s": 1129.0,
-            "min_koz_value_post": 0.0183,
-            "min_sep_post_m": 5.48
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": 1030.0,
+            "min_koz_value_post": -0.8655,
+            "min_sep_post_m": 0.0
           }
         ],
         "n_burns": 1,
         "first_burn_t_s": 529.1,
-        "total_dv_m_s": 1.12025,
-        "max_dv_m_s": 1.12025,
-        "expected_intervention": 1,
-        "intervention_reasons": [
-          "dv_cap",
-          "post_V"
-        ],
-        "first_unsafe_step": 0
+        "total_dv_m_s": 0.22795,
+        "max_dv_m_s": 0.22795,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
       }
     },
     {
@@ -1154,9 +1149,9 @@
         {
           "t_s": 336.3,
           "dv_m_s": [
-            0.80582,
-            -0.38847,
-            0.0
+            0.16401,
+            -0.07876,
+            -0.0
           ]
         }
       ],
@@ -1168,9 +1163,9 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            0.80582,
-            -0.38847,
-            0.0
+            0.16401,
+            -0.07876,
+            -0.0
           ]
         }
       ],
@@ -1178,10 +1173,10 @@
         "steps": [
           {
             "t_s": 336.3,
-            "dv_mag_m_s": 0.89457,
+            "dv_mag_m_s": 0.18194,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -1189,31 +1184,28 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              0.8058,
-              -0.3885,
+              0.164,
+              -0.0788,
               0.0
             ],
-            "dv_excessive": 1,
-            "post_burn_V_le_0": 1,
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
             "passive_preburn_unsafe": 0,
-            "requires_intervention": 1,
-            "koz_reach_time_post_s": 1389.0,
-            "min_koz_value_post": 0.02,
-            "min_sep_post_m": 5.99
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": 1265.0,
+            "min_koz_value_post": -0.8588,
+            "min_sep_post_m": 0.0
           }
         ],
         "n_burns": 1,
         "first_burn_t_s": 336.3,
-        "total_dv_m_s": 0.89457,
-        "max_dv_m_s": 0.89457,
-        "expected_intervention": 1,
-        "intervention_reasons": [
-          "dv_cap",
-          "post_V"
-        ],
-        "first_unsafe_step": 0
+        "total_dv_m_s": 0.18194,
+        "max_dv_m_s": 0.18194,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
       }
     },
     {
@@ -1237,8 +1229,8 @@
         {
           "t_s": 533.4,
           "dv_m_s": [
-            1.15426,
-            -1.21155,
+            0.24988,
+            -0.22914,
             0.0
           ]
         }
@@ -1263,8 +1255,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            1.15426,
-            -1.21155,
+            0.24988,
+            -0.22914,
             0.0
           ]
         }
@@ -1276,7 +1268,7 @@
             "dv_mag_m_s": 0.02618,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -1284,7 +1276,7 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               -0.0026,
               -0.0261,
@@ -1295,15 +1287,15 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 699.5713,
-            "min_sep_post_m": 1190.14
+            "min_koz_value_post": 4.3489,
+            "min_sep_post_m": 78.28
           },
           {
             "t_s": 533.4,
-            "dv_mag_m_s": 1.67337,
+            "dv_mag_m_s": 0.33904,
             "pre_burn_state": [
               -1.5126,
-              1195.3743,
+              245.3743,
               0.0,
               -0.0135,
               -0.0226,
@@ -1311,31 +1303,28 @@
             ],
             "post_burn_state": [
               -1.5126,
-              1195.3743,
+              245.3743,
               0.0,
-              1.1408,
-              -1.2342,
+              0.2364,
+              -0.2518,
               0.0
             ],
-            "dv_excessive": 1,
-            "post_burn_V_le_0": 1,
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
             "passive_preburn_unsafe": 0,
-            "requires_intervention": 1,
-            "koz_reach_time_post_s": 742.0,
-            "min_koz_value_post": 0.0004,
-            "min_sep_post_m": 0.72
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": 660.0,
+            "min_koz_value_post": -0.9755,
+            "min_sep_post_m": 0.0
           }
         ],
         "n_burns": 2,
         "first_burn_t_s": 346.3,
-        "total_dv_m_s": 1.69955,
-        "max_dv_m_s": 1.67337,
-        "expected_intervention": 1,
-        "intervention_reasons": [
-          "dv_cap",
-          "post_V"
-        ],
-        "first_unsafe_step": 1
+        "total_dv_m_s": 0.36522,
+        "max_dv_m_s": 0.33904,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
       }
     },
     {
@@ -1359,8 +1348,8 @@
         {
           "t_s": 792.2,
           "dv_m_s": [
-            0.92606,
-            -0.52896,
+            0.20553,
+            -0.09229,
             0.0
           ]
         }
@@ -1385,8 +1374,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            0.92606,
-            -0.52896,
+            0.20553,
+            -0.09229,
             0.0
           ]
         }
@@ -1398,7 +1387,7 @@
             "dv_mag_m_s": 0.02215,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -1406,7 +1395,7 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               -0.0022,
               -0.022,
@@ -1417,15 +1406,15 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 701.3169,
-            "min_sep_post_m": 1191.65
+            "min_koz_value_post": 4.379,
+            "min_sep_post_m": 78.82
           },
           {
             "t_s": 792.2,
-            "dv_mag_m_s": 1.06648,
+            "dv_mag_m_s": 0.2253,
             "pre_burn_state": [
               -2.7033,
-              1194.2737,
+              244.2737,
               0.0,
               -0.0163,
               -0.0159,
@@ -1433,36 +1422,33 @@
             ],
             "post_burn_state": [
               -2.7033,
-              1194.2737,
+              244.2737,
               0.0,
-              0.9098,
-              -0.5449,
+              0.1892,
+              -0.1082,
               0.0
             ],
-            "dv_excessive": 1,
-            "post_burn_V_le_0": 1,
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
             "passive_preburn_unsafe": 0,
-            "requires_intervention": 1,
-            "koz_reach_time_post_s": 1191.0,
-            "min_koz_value_post": 0.0002,
-            "min_sep_post_m": 0.47
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": 1075.0,
+            "min_koz_value_post": -0.9962,
+            "min_sep_post_m": 0.0
           }
         ],
         "n_burns": 2,
         "first_burn_t_s": 502.3,
-        "total_dv_m_s": 1.08863,
-        "max_dv_m_s": 1.06648,
-        "expected_intervention": 1,
-        "intervention_reasons": [
-          "dv_cap",
-          "post_V"
-        ],
-        "first_unsafe_step": 1
+        "total_dv_m_s": 0.24745,
+        "max_dv_m_s": 0.2253,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
       }
     },
     {
       "plan_id": "aggr_highbrake_along_track_013",
-      "prompt": "Aggressive along-track braking after the coast to kill the 1.2 km gap.",
+      "prompt": "Aggressive along-track braking after the coast to kill the 250 m gap.",
       "tags": {
         "category": "aggr_highbrake",
         "approach_angle": "along_track",
@@ -1473,8 +1459,8 @@
         {
           "t_s": 303.1,
           "dv_m_s": [
-            -0.07112,
-            -0.71117,
+            -0.03705,
+            -0.37049,
             0.0
           ]
         }
@@ -1487,8 +1473,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.07112,
-            -0.71117,
+            -0.03705,
+            -0.37049,
             0.0
           ]
         }
@@ -1497,10 +1483,10 @@
         "steps": [
           {
             "t_s": 303.1,
-            "dv_mag_m_s": 0.71472,
+            "dv_mag_m_s": 0.37234,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -1508,35 +1494,33 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              -0.0711,
-              -0.7112,
+              -0.037,
+              -0.3705,
               0.0
             ],
-            "dv_excessive": 1,
+            "dv_excessive": 0,
             "post_burn_V_le_0": 0,
             "passive_preburn_unsafe": 0,
-            "requires_intervention": 1,
+            "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 490.8289,
-            "min_sep_post_m": 966.3
+            "min_koz_value_post": 2.7713,
+            "min_sep_post_m": 49.88
           }
         ],
         "n_burns": 1,
         "first_burn_t_s": 303.1,
-        "total_dv_m_s": 0.71472,
-        "max_dv_m_s": 0.71472,
-        "expected_intervention": 1,
-        "intervention_reasons": [
-          "dv_cap"
-        ],
-        "first_unsafe_step": 0
+        "total_dv_m_s": 0.37234,
+        "max_dv_m_s": 0.37234,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
       }
     },
     {
       "plan_id": "aggr_highbrake_along_track_014",
-      "prompt": "Aggressive along-track braking after the coast to kill the 1.2 km gap.",
+      "prompt": "Aggressive along-track braking after the coast to kill the 250 m gap.",
       "tags": {
         "category": "aggr_highbrake",
         "approach_angle": "along_track",
@@ -1547,8 +1531,8 @@
         {
           "t_s": 396.0,
           "dv_m_s": [
-            -0.0699,
-            -0.69899,
+            -0.03681,
+            -0.36812,
             0.0
           ]
         }
@@ -1561,8 +1545,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.0699,
-            -0.69899,
+            -0.03681,
+            -0.36812,
             0.0
           ]
         }
@@ -1571,10 +1555,10 @@
         "steps": [
           {
             "t_s": 396.0,
-            "dv_mag_m_s": 0.70248,
+            "dv_mag_m_s": 0.36996,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -1582,30 +1566,28 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              -0.0699,
-              -0.699,
+              -0.0368,
+              -0.3681,
               0.0
             ],
-            "dv_excessive": 1,
+            "dv_excessive": 0,
             "post_burn_V_le_0": 0,
             "passive_preburn_unsafe": 0,
-            "requires_intervention": 1,
+            "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 493.4944,
-            "min_sep_post_m": 969.73
+            "min_koz_value_post": 2.7783,
+            "min_sep_post_m": 50.01
           }
         ],
         "n_burns": 1,
         "first_burn_t_s": 396.0,
-        "total_dv_m_s": 0.70248,
-        "max_dv_m_s": 0.70248,
-        "expected_intervention": 1,
-        "intervention_reasons": [
-          "dv_cap"
-        ],
-        "first_unsafe_step": 0
+        "total_dv_m_s": 0.36996,
+        "max_dv_m_s": 0.36996,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
       }
     },
     {
@@ -1621,8 +1603,8 @@
         {
           "t_s": 404.4,
           "dv_m_s": [
-            -0.45619,
-            -4.56189,
+            -0.09325,
+            -0.9325,
             0.0
           ]
         }
@@ -1635,8 +1617,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.45619,
-            -4.56189,
+            -0.09325,
+            -0.9325,
             0.0
           ]
         }
@@ -1645,10 +1627,10 @@
         "steps": [
           {
             "t_s": 404.4,
-            "dv_mag_m_s": 4.58464,
+            "dv_mag_m_s": 0.93715,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -1656,10 +1638,10 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              -0.4562,
-              -4.5619,
+              -0.0932,
+              -0.9325,
               0.0
             ],
             "dv_excessive": 1,
@@ -1667,14 +1649,14 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 1,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 164.397,
-            "min_sep_post_m": 435.68
+            "min_koz_value_post": 1.694,
+            "min_sep_post_m": 30.49
           }
         ],
         "n_burns": 1,
         "first_burn_t_s": 404.4,
-        "total_dv_m_s": 4.58464,
-        "max_dv_m_s": 4.58464,
+        "total_dv_m_s": 0.93715,
+        "max_dv_m_s": 0.93715,
         "expected_intervention": 1,
         "intervention_reasons": [
           "dv_cap"
@@ -1684,7 +1666,7 @@
     },
     {
       "plan_id": "safe_multi_oblique_016",
-      "prompt": "Cautious oblique R/V approach from 1.2 km: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
+      "prompt": "Cautious oblique R/V approach from 250 m: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
       "tags": {
         "category": "safe_multi",
         "approach_angle": "oblique",
@@ -1695,24 +1677,24 @@
         {
           "t_s": 351.1,
           "dv_m_s": [
-            -0.05224,
-            -0.07462,
+            -0.07635,
+            -0.10907,
             0.0
           ]
         },
         {
           "t_s": 600.8,
           "dv_m_s": [
-            -0.05172,
-            -0.07389,
+            -0.07804,
+            -0.11148,
             0.0
           ]
         },
         {
           "t_s": 881.0,
           "dv_m_s": [
-            -0.03955,
-            -0.05651,
+            -0.06266,
+            -0.08951,
             0.0
           ]
         }
@@ -1725,8 +1707,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.05224,
-            -0.07462,
+            -0.07635,
+            -0.10907,
             0.0
           ]
         },
@@ -1737,8 +1719,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.05172,
-            -0.07389,
+            -0.07804,
+            -0.11148,
             0.0
           ]
         },
@@ -1749,8 +1731,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.03955,
-            -0.05651,
+            -0.06266,
+            -0.08951,
             0.0
           ]
         }
@@ -1759,10 +1741,10 @@
         "steps": [
           {
             "t_s": 351.1,
-            "dv_mag_m_s": 0.09109,
+            "dv_mag_m_s": 0.13314,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -1770,10 +1752,10 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              -0.0522,
-              -0.0746,
+              -0.0764,
+              -0.1091,
               0.0
             ],
             "dv_excessive": 0,
@@ -1781,26 +1763,26 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 692.9208,
-            "min_sep_post_m": 1183.92
+            "min_koz_value_post": 4.1865,
+            "min_sep_post_m": 75.36
           },
           {
             "t_s": 600.8,
-            "dv_mag_m_s": 0.09019,
+            "dv_mag_m_s": 0.13608,
             "pre_burn_state": [
-              -18.1004,
-              1186.0154,
+              -26.4549,
+              229.5585,
               0.0,
-              -0.0918,
-              -0.0337,
+              -0.1341,
+              -0.0492,
               0.0
             ],
             "post_burn_state": [
-              -18.1004,
-              1186.0154,
+              -26.4549,
+              229.5585,
               0.0,
-              -0.1435,
-              -0.1076,
+              -0.2122,
+              -0.1607,
               0.0
             ],
             "dv_excessive": 0,
@@ -1808,26 +1790,26 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 681.7343,
-            "min_sep_post_m": 1172.71
+            "min_koz_value_post": 4.1087,
+            "min_sep_post_m": 73.96
           },
           {
             "t_s": 881.0,
-            "dv_mag_m_s": 0.06898,
+            "dv_mag_m_s": 0.10926,
             "pre_burn_state": [
-              -69.8161,
-              1171.1009,
+              -103.0236,
+              207.0624,
               0.0,
-              -0.2225,
-              0.0095,
+              -0.3298,
+              0.0126,
               0.0
             ],
             "post_burn_state": [
-              -69.8161,
-              1171.1009,
+              -103.0236,
+              207.0624,
               0.0,
-              -0.2621,
-              -0.047,
+              -0.3924,
+              -0.0769,
               0.0
             ],
             "dv_excessive": 0,
@@ -1835,14 +1817,14 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 683.458,
-            "min_sep_post_m": 1172.47
+            "min_koz_value_post": 4.8916,
+            "min_sep_post_m": 88.05
           }
         ],
         "n_burns": 3,
         "first_burn_t_s": 351.1,
-        "total_dv_m_s": 0.25026,
-        "max_dv_m_s": 0.09109,
+        "total_dv_m_s": 0.37848,
+        "max_dv_m_s": 0.13608,
         "expected_intervention": 0,
         "intervention_reasons": [],
         "first_unsafe_step": null
@@ -1850,7 +1832,7 @@
     },
     {
       "plan_id": "safe_multi_oblique_017",
-      "prompt": "Cautious oblique R/V approach from 1.2 km: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
+      "prompt": "Cautious oblique R/V approach from 250 m: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
       "tags": {
         "category": "safe_multi",
         "approach_angle": "oblique",
@@ -1861,16 +1843,16 @@
         {
           "t_s": 445.0,
           "dv_m_s": [
-            -0.0109,
-            -0.01557,
+            -0.02376,
+            -0.03394,
             0.0
           ]
         },
         {
           "t_s": 660.2,
           "dv_m_s": [
-            -0.01454,
-            -0.02078,
+            -0.02857,
+            -0.04081,
             0.0
           ]
         }
@@ -1883,8 +1865,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.0109,
-            -0.01557,
+            -0.02376,
+            -0.03394,
             0.0
           ]
         },
@@ -1895,8 +1877,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.01454,
-            -0.02078,
+            -0.02857,
+            -0.04081,
             0.0
           ]
         }
@@ -1905,10 +1887,10 @@
         "steps": [
           {
             "t_s": 445.0,
-            "dv_mag_m_s": 0.01901,
+            "dv_mag_m_s": 0.04143,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -1916,10 +1898,10 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              -0.0109,
-              -0.0156,
+              -0.0238,
+              -0.0339,
               0.0
             ],
             "dv_excessive": 0,
@@ -1927,26 +1909,26 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 707.0905,
-            "min_sep_post_m": 1196.57
+            "min_koz_value_post": 4.4102,
+            "min_sep_post_m": 79.38
           },
           {
             "t_s": 660.2,
-            "dv_mag_m_s": 0.02536,
+            "dv_mag_m_s": 0.04982,
             "pre_burn_state": [
-              -3.1343,
-              1197.3496,
+              -6.8323,
+              244.2227,
               0.0,
-              -0.0181,
-              -0.0085,
+              -0.0394,
+              -0.0185,
               0.0
             ],
             "post_burn_state": [
-              -3.1343,
-              1197.3496,
+              -6.8323,
+              244.2227,
               0.0,
-              -0.0326,
-              -0.0293,
+              -0.068,
+              -0.0593,
               0.0
             ],
             "dv_excessive": 0,
@@ -1954,14 +1936,14 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 702.7448,
-            "min_sep_post_m": 1192.76
+            "min_koz_value_post": 4.3089,
+            "min_sep_post_m": 77.56
           }
         ],
         "n_burns": 2,
         "first_burn_t_s": 445.0,
-        "total_dv_m_s": 0.04437,
-        "max_dv_m_s": 0.02536,
+        "total_dv_m_s": 0.09125,
+        "max_dv_m_s": 0.04982,
         "expected_intervention": 0,
         "intervention_reasons": [],
         "first_unsafe_step": null
@@ -1969,7 +1951,7 @@
     },
     {
       "plan_id": "safe_multi_oblique_018",
-      "prompt": "Cautious oblique R/V approach from 1.2 km: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
+      "prompt": "Cautious oblique R/V approach from 250 m: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
       "tags": {
         "category": "safe_multi",
         "approach_angle": "oblique",
@@ -1980,16 +1962,16 @@
         {
           "t_s": 370.7,
           "dv_m_s": [
-            -0.01945,
-            -0.02778,
+            -0.03507,
+            -0.0501,
             0.0
           ]
         },
         {
           "t_s": 535.0,
           "dv_m_s": [
-            -0.03937,
-            -0.05624,
+            -0.06415,
+            -0.09164,
             0.0
           ]
         }
@@ -2002,8 +1984,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.01945,
-            -0.02778,
+            -0.03507,
+            -0.0501,
             0.0
           ]
         },
@@ -2014,8 +1996,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.03937,
-            -0.05624,
+            -0.06415,
+            -0.09164,
             0.0
           ]
         }
@@ -2024,10 +2006,10 @@
         "steps": [
           {
             "t_s": 370.7,
-            "dv_mag_m_s": 0.03391,
+            "dv_mag_m_s": 0.06115,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -2035,10 +2017,10 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              -0.0194,
-              -0.0278,
+              -0.0351,
+              -0.0501,
               0.0
             ],
             "dv_excessive": 0,
@@ -2046,26 +2028,26 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 704.0258,
-            "min_sep_post_m": 1193.91
+            "min_koz_value_post": 4.3529,
+            "min_sep_post_m": 78.35
           },
           {
             "t_s": 535.0,
-            "dv_mag_m_s": 0.06865,
+            "dv_mag_m_s": 0.11186,
             "pre_burn_state": [
-              -4.0232,
-              1196.133,
+              -7.2546,
+              243.0258,
               0.0,
-              -0.0294,
-              -0.0187,
+              -0.053,
+              -0.0337,
               0.0
             ],
             "post_burn_state": [
-              -4.0232,
-              1196.133,
+              -7.2546,
+              243.0258,
               0.0,
-              -0.0688,
-              -0.0749,
+              -0.1171,
+              -0.1253,
               0.0
             ],
             "dv_excessive": 0,
@@ -2073,14 +2055,14 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 691.8196,
-            "min_sep_post_m": 1182.82
+            "min_koz_value_post": 4.1481,
+            "min_sep_post_m": 74.67
           }
         ],
         "n_burns": 2,
         "first_burn_t_s": 370.7,
-        "total_dv_m_s": 0.10256,
-        "max_dv_m_s": 0.06865,
+        "total_dv_m_s": 0.17302,
+        "max_dv_m_s": 0.11186,
         "expected_intervention": 0,
         "intervention_reasons": [],
         "first_unsafe_step": null
@@ -2088,7 +2070,7 @@
     },
     {
       "plan_id": "safe_multi_oblique_019",
-      "prompt": "Cautious oblique R/V approach from 1.2 km: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
+      "prompt": "Cautious oblique R/V approach from 250 m: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
       "tags": {
         "category": "safe_multi",
         "approach_angle": "oblique",
@@ -2099,16 +2081,16 @@
         {
           "t_s": 517.2,
           "dv_m_s": [
-            -0.04728,
-            -0.06754,
+            -0.07361,
+            -0.10516,
             0.0
           ]
         },
         {
           "t_s": 675.4,
           "dv_m_s": [
-            -0.04814,
-            -0.06878,
+            -0.07173,
+            -0.10247,
             0.0
           ]
         }
@@ -2121,8 +2103,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.04728,
-            -0.06754,
+            -0.07361,
+            -0.10516,
             0.0
           ]
         },
@@ -2133,8 +2115,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.04814,
-            -0.06878,
+            -0.07173,
+            -0.10247,
             0.0
           ]
         }
@@ -2143,10 +2125,10 @@
         "steps": [
           {
             "t_s": 517.2,
-            "dv_mag_m_s": 0.08244,
+            "dv_mag_m_s": 0.12836,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -2154,10 +2136,10 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              -0.0473,
-              -0.0675,
+              -0.0736,
+              -0.1052,
               0.0
             ],
             "dv_excessive": 0,
@@ -2165,26 +2147,26 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 694.536,
-            "min_sep_post_m": 1185.41
+            "min_koz_value_post": 4.1959,
+            "min_sep_post_m": 75.53
           },
           {
             "t_s": 675.4,
-            "dv_mag_m_s": 0.08395,
+            "dv_mag_m_s": 0.12508,
             "pre_burn_state": [
-              -9.3471,
-              1190.8782,
+              -14.5527,
+              235.7971,
               0.0,
-              -0.0706,
-              -0.0464,
+              -0.1099,
+              -0.0722,
               0.0
             ],
             "post_burn_state": [
-              -9.3471,
-              1190.8782,
+              -14.5527,
+              235.7971,
               0.0,
-              -0.1187,
-              -0.1152,
+              -0.1816,
+              -0.1747,
               0.0
             ],
             "dv_excessive": 0,
@@ -2192,14 +2174,14 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 681.3457,
-            "min_sep_post_m": 1172.7
+            "min_koz_value_post": 4.0471,
+            "min_sep_post_m": 72.85
           }
         ],
         "n_burns": 2,
         "first_burn_t_s": 517.2,
-        "total_dv_m_s": 0.1664,
-        "max_dv_m_s": 0.08395,
+        "total_dv_m_s": 0.25344,
+        "max_dv_m_s": 0.12836,
         "expected_intervention": 0,
         "intervention_reasons": [],
         "first_unsafe_step": null
@@ -2207,7 +2189,7 @@
     },
     {
       "plan_id": "safe_multi_oblique_020",
-      "prompt": "Cautious oblique R/V approach from 1.2 km: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
+      "prompt": "Cautious oblique R/V approach from 250 m: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
       "tags": {
         "category": "safe_multi",
         "approach_angle": "oblique",
@@ -2218,24 +2200,24 @@
         {
           "t_s": 371.5,
           "dv_m_s": [
-            -0.05974,
-            -0.08534,
+            -0.08763,
+            -0.12519,
             0.0
           ]
         },
         {
           "t_s": 706.2,
           "dv_m_s": [
-            -0.05795,
-            -0.08278,
+            -0.08646,
+            -0.12351,
             0.0
           ]
         },
         {
           "t_s": 930.8,
           "dv_m_s": [
-            -0.03031,
-            -0.0433,
+            -0.05042,
+            -0.07203,
             0.0
           ]
         }
@@ -2248,8 +2230,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.05974,
-            -0.08534,
+            -0.08763,
+            -0.12519,
             0.0
           ]
         },
@@ -2260,8 +2242,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.05795,
-            -0.08278,
+            -0.08646,
+            -0.12351,
             0.0
           ]
         },
@@ -2272,8 +2254,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.03031,
-            -0.0433,
+            -0.05042,
+            -0.07203,
             0.0
           ]
         }
@@ -2282,10 +2264,10 @@
         "steps": [
           {
             "t_s": 371.5,
-            "dv_mag_m_s": 0.10417,
+            "dv_mag_m_s": 0.15281,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -2293,10 +2275,10 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              -0.0597,
-              -0.0853,
+              -0.0876,
+              -0.1252,
               0.0
             ],
             "dv_excessive": 0,
@@ -2304,26 +2286,26 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 690.5129,
-            "min_sep_post_m": 1181.68
+            "min_koz_value_post": 4.1495,
+            "min_sep_post_m": 74.69
           },
           {
             "t_s": 706.2,
-            "dv_mag_m_s": 0.10105,
+            "dv_mag_m_s": 0.15076,
             "pre_burn_state": [
-              -30.2079,
-              1181.6291,
+              -44.3118,
+              223.0499,
               0.0,
-              -0.1186,
-              -0.017,
+              -0.174,
+              -0.0249,
               0.0
             ],
             "post_burn_state": [
-              -30.2079,
-              1181.6291,
+              -44.3118,
+              223.0499,
               0.0,
-              -0.1766,
-              -0.0998,
+              -0.2604,
+              -0.1484,
               0.0
             ],
             "dv_excessive": 0,
@@ -2331,26 +2313,26 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 682.4805,
-            "min_sep_post_m": 1172.8
+            "min_koz_value_post": 4.2019,
+            "min_sep_post_m": 75.63
           },
           {
             "t_s": 930.8,
-            "dv_mag_m_s": 0.05285,
+            "dv_mag_m_s": 0.08792,
             "pre_burn_state": [
-              -78.0103,
-              1170.6991,
+              -114.8746,
+              206.651,
               0.0,
-              -0.2468,
-              0.0084,
+              -0.3645,
+              0.0112,
               0.0
             ],
             "post_burn_state": [
-              -78.0103,
-              1170.6991,
+              -114.8746,
+              206.651,
               0.0,
-              -0.2771,
-              -0.0349,
+              -0.4149,
+              -0.0608,
               0.0
             ],
             "dv_excessive": 0,
@@ -2358,14 +2340,14 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 684.5703,
-            "min_sep_post_m": 1173.11
+            "min_koz_value_post": 5.158,
+            "min_sep_post_m": 92.84
           }
         ],
         "n_burns": 3,
         "first_burn_t_s": 371.5,
-        "total_dv_m_s": 0.25807,
-        "max_dv_m_s": 0.10417,
+        "total_dv_m_s": 0.3915,
+        "max_dv_m_s": 0.15281,
         "expected_intervention": 0,
         "intervention_reasons": [],
         "first_unsafe_step": null
@@ -2411,7 +2393,7 @@
             "dv_mag_m_s": 0.07702,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -2419,7 +2401,7 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               -0.0442,
               -0.0631,
@@ -2430,8 +2412,8 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 695.56,
-            "min_sep_post_m": 1186.35
+            "min_koz_value_post": 4.3111,
+            "min_sep_post_m": 77.6
           }
         ],
         "n_burns": 1,
@@ -2483,7 +2465,7 @@
             "dv_mag_m_s": 0.07817,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -2491,7 +2473,7 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               -0.0448,
               -0.064,
@@ -2502,8 +2484,8 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 695.3428,
-            "min_sep_post_m": 1186.15
+            "min_koz_value_post": 4.3082,
+            "min_sep_post_m": 77.55
           }
         ],
         "n_burns": 1,
@@ -2555,7 +2537,7 @@
             "dv_mag_m_s": 0.09923,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -2563,7 +2545,7 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               -0.0569,
               -0.0813,
@@ -2574,8 +2556,8 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 691.4158,
-            "min_sep_post_m": 1182.52
+            "min_koz_value_post": 4.2579,
+            "min_sep_post_m": 76.64
           }
         ],
         "n_burns": 1,
@@ -2600,9 +2582,9 @@
         {
           "t_s": 536.5,
           "dv_m_s": [
-            0.72593,
-            -0.28617,
-            0.0
+            0.14728,
+            -0.05659,
+            -0.0
           ]
         }
       ],
@@ -2614,9 +2596,9 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            0.72593,
-            -0.28617,
-            0.0
+            0.14728,
+            -0.05659,
+            -0.0
           ]
         }
       ],
@@ -2624,10 +2606,10 @@
         "steps": [
           {
             "t_s": 536.5,
-            "dv_mag_m_s": 0.7803,
+            "dv_mag_m_s": 0.15778,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -2635,31 +2617,28 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              0.7259,
-              -0.2862,
+              0.1473,
+              -0.0566,
               0.0
             ],
-            "dv_excessive": 1,
-            "post_burn_V_le_0": 1,
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
             "passive_preburn_unsafe": 0,
-            "requires_intervention": 1,
-            "koz_reach_time_post_s": 1560.0,
-            "min_koz_value_post": 0.008,
-            "min_sep_post_m": 3.85
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": 1435.0,
+            "min_koz_value_post": -0.9112,
+            "min_sep_post_m": 0.0
           }
         ],
         "n_burns": 1,
         "first_burn_t_s": 536.5,
-        "total_dv_m_s": 0.7803,
-        "max_dv_m_s": 0.7803,
-        "expected_intervention": 1,
-        "intervention_reasons": [
-          "dv_cap",
-          "post_V"
-        ],
-        "first_unsafe_step": 0
+        "total_dv_m_s": 0.15778,
+        "max_dv_m_s": 0.15778,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
       }
     },
     {
@@ -2675,9 +2654,9 @@
         {
           "t_s": 394.4,
           "dv_m_s": [
-            0.93003,
-            -0.59292,
-            0.0
+            0.19006,
+            -0.11878,
+            -0.0
           ]
         }
       ],
@@ -2689,9 +2668,9 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            0.93003,
-            -0.59292,
-            0.0
+            0.19006,
+            -0.11878,
+            -0.0
           ]
         }
       ],
@@ -2699,10 +2678,10 @@
         "steps": [
           {
             "t_s": 394.4,
-            "dv_mag_m_s": 1.10296,
+            "dv_mag_m_s": 0.22412,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -2710,31 +2689,28 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              0.93,
-              -0.5929,
+              0.1901,
+              -0.1188,
               0.0
             ],
-            "dv_excessive": 1,
-            "post_burn_V_le_0": 1,
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
             "passive_preburn_unsafe": 0,
-            "requires_intervention": 1,
-            "koz_reach_time_post_s": 1149.0,
-            "min_koz_value_post": 0.0045,
-            "min_sep_post_m": 2.67
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": 1055.0,
+            "min_koz_value_post": -0.9353,
+            "min_sep_post_m": 0.0
           }
         ],
         "n_burns": 1,
         "first_burn_t_s": 394.4,
-        "total_dv_m_s": 1.10296,
-        "max_dv_m_s": 1.10296,
-        "expected_intervention": 1,
-        "intervention_reasons": [
-          "dv_cap",
-          "post_V"
-        ],
-        "first_unsafe_step": 0
+        "total_dv_m_s": 0.22412,
+        "max_dv_m_s": 0.22412,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
       }
     },
     {
@@ -2750,9 +2726,9 @@
         {
           "t_s": 535.9,
           "dv_m_s": [
-            0.75884,
-            -0.32517,
-            0.0
+            0.15415,
+            -0.06447,
+            -0.0
           ]
         }
       ],
@@ -2764,9 +2740,9 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            0.75884,
-            -0.32517,
-            0.0
+            0.15415,
+            -0.06447,
+            -0.0
           ]
         }
       ],
@@ -2774,10 +2750,10 @@
         "steps": [
           {
             "t_s": 535.9,
-            "dv_mag_m_s": 0.82557,
+            "dv_mag_m_s": 0.16709,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -2785,31 +2761,28 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              0.7588,
-              -0.3252,
+              0.1542,
+              -0.0645,
               0.0
             ],
-            "dv_excessive": 1,
-            "post_burn_V_le_0": 1,
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
             "passive_preburn_unsafe": 0,
-            "requires_intervention": 1,
-            "koz_reach_time_post_s": 1490.0,
-            "min_koz_value_post": 0.0074,
-            "min_sep_post_m": 3.69
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": 1370.0,
+            "min_koz_value_post": -0.916,
+            "min_sep_post_m": 0.0
           }
         ],
         "n_burns": 1,
         "first_burn_t_s": 535.9,
-        "total_dv_m_s": 0.82557,
-        "max_dv_m_s": 0.82557,
-        "expected_intervention": 1,
-        "intervention_reasons": [
-          "dv_cap",
-          "post_V"
-        ],
-        "first_unsafe_step": 0
+        "total_dv_m_s": 0.16709,
+        "max_dv_m_s": 0.16709,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
       }
     },
     {
@@ -2833,8 +2806,8 @@
         {
           "t_s": 626.0,
           "dv_m_s": [
-            0.84639,
-            -0.38273,
+            0.19897,
+            -0.06509,
             0.0
           ]
         }
@@ -2859,8 +2832,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            0.84639,
-            -0.38273,
+            0.19897,
+            -0.06509,
             0.0
           ]
         }
@@ -2872,7 +2845,7 @@
             "dv_mag_m_s": 0.02497,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -2880,7 +2853,7 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               -0.0143,
               -0.0204,
@@ -2891,15 +2864,15 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 705.8572,
-            "min_sep_post_m": 1195.51
+            "min_koz_value_post": 4.4633,
+            "min_sep_post_m": 80.34
           },
           {
             "t_s": 626.0,
-            "dv_mag_m_s": 0.9289,
+            "dv_mag_m_s": 0.20935,
             "pre_burn_state": [
               -4.692,
-              1196.2706,
+              246.2706,
               0.0,
               -0.0247,
               -0.0098,
@@ -2907,31 +2880,28 @@
             ],
             "post_burn_state": [
               -4.692,
-              1196.2706,
+              246.2706,
               0.0,
-              0.8217,
-              -0.3926,
+              0.1742,
+              -0.0749,
               0.0
             ],
-            "dv_excessive": 1,
-            "post_burn_V_le_0": 1,
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
             "passive_preburn_unsafe": 0,
-            "requires_intervention": 1,
-            "koz_reach_time_post_s": 1373.0,
-            "min_koz_value_post": 0.0,
-            "min_sep_post_m": 0.12
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": 1240.0,
+            "min_koz_value_post": -0.9991,
+            "min_sep_post_m": 0.0
           }
         ],
         "n_burns": 2,
         "first_burn_t_s": 387.1,
-        "total_dv_m_s": 0.95387,
-        "max_dv_m_s": 0.9289,
-        "expected_intervention": 1,
-        "intervention_reasons": [
-          "dv_cap",
-          "post_V"
-        ],
-        "first_unsafe_step": 1
+        "total_dv_m_s": 0.23431,
+        "max_dv_m_s": 0.20935,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
       }
     },
     {
@@ -2955,8 +2925,8 @@
         {
           "t_s": 619.1,
           "dv_m_s": [
-            1.09906,
-            -0.78195,
+            0.28501,
+            -0.13267,
             0.0
           ]
         }
@@ -2981,8 +2951,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            1.09906,
-            -0.78195,
+            0.28501,
+            -0.13267,
             0.0
           ]
         }
@@ -2994,7 +2964,7 @@
             "dv_mag_m_s": 0.05289,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -3002,7 +2972,7 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               -0.0303,
               -0.0433,
@@ -3013,15 +2983,15 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 700.2267,
-            "min_sep_post_m": 1190.56
+            "min_koz_value_post": 4.3762,
+            "min_sep_post_m": 78.77
           },
           {
             "t_s": 619.1,
-            "dv_mag_m_s": 1.34884,
+            "dv_mag_m_s": 0.31438,
             "pre_burn_state": [
               -13.0945,
-              1191.0995,
+              241.0995,
               0.0,
               -0.0572,
               -0.0137,
@@ -3029,36 +2999,33 @@
             ],
             "post_burn_state": [
               -13.0945,
-              1191.0995,
+              241.0995,
               0.0,
-              1.0419,
-              -0.7957,
+              0.2278,
+              -0.1464,
               0.0
             ],
-            "dv_excessive": 1,
-            "post_burn_V_le_0": 1,
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
             "passive_preburn_unsafe": 0,
-            "requires_intervention": 1,
-            "koz_reach_time_post_s": 966.0,
-            "min_koz_value_post": 0.0,
-            "min_sep_post_m": 0.16
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": 865.0,
+            "min_koz_value_post": -0.999,
+            "min_sep_post_m": 0.0
           }
         ],
         "n_burns": 2,
         "first_burn_t_s": 322.6,
-        "total_dv_m_s": 1.40173,
-        "max_dv_m_s": 1.34884,
-        "expected_intervention": 1,
-        "intervention_reasons": [
-          "dv_cap",
-          "post_V"
-        ],
-        "first_unsafe_step": 1
+        "total_dv_m_s": 0.36727,
+        "max_dv_m_s": 0.31438,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
       }
     },
     {
       "plan_id": "aggr_highbrake_oblique_029",
-      "prompt": "Aggressive oblique R/V braking after the coast to kill the 1.2 km gap.",
+      "prompt": "Aggressive oblique R/V braking after the coast to kill the 250 m gap.",
       "tags": {
         "category": "aggr_highbrake",
         "approach_angle": "oblique",
@@ -3069,8 +3036,8 @@
         {
           "t_s": 325.4,
           "dv_m_s": [
-            -1.06919,
-            -1.52741,
+            -0.34192,
+            -0.48845,
             0.0
           ]
         }
@@ -3083,8 +3050,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -1.06919,
-            -1.52741,
+            -0.34192,
+            -0.48845,
             0.0
           ]
         }
@@ -3093,10 +3060,10 @@
         "steps": [
           {
             "t_s": 325.4,
-            "dv_mag_m_s": 1.86444,
+            "dv_mag_m_s": 0.59623,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -3104,10 +3071,10 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              -1.0692,
-              -1.5274,
+              -0.3419,
+              -0.4884,
               0.0
             ],
             "dv_excessive": 1,
@@ -3115,14 +3082,14 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 1,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 543.5242,
-            "min_sep_post_m": 985.74
+            "min_koz_value_post": 3.7151,
+            "min_sep_post_m": 66.87
           }
         ],
         "n_burns": 1,
         "first_burn_t_s": 325.4,
-        "total_dv_m_s": 1.86444,
-        "max_dv_m_s": 1.86444,
+        "total_dv_m_s": 0.59623,
+        "max_dv_m_s": 0.59623,
         "expected_intervention": 1,
         "intervention_reasons": [
           "dv_cap"
@@ -3132,7 +3099,7 @@
     },
     {
       "plan_id": "aggr_highbrake_oblique_030",
-      "prompt": "Aggressive oblique R/V braking after the coast to kill the 1.2 km gap.",
+      "prompt": "Aggressive oblique R/V braking after the coast to kill the 250 m gap.",
       "tags": {
         "category": "aggr_highbrake",
         "approach_angle": "oblique",
@@ -3143,8 +3110,8 @@
         {
           "t_s": 517.4,
           "dv_m_s": [
-            -0.88049,
-            -1.25785,
+            -0.30517,
+            -0.43596,
             0.0
           ]
         }
@@ -3157,8 +3124,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.88049,
-            -1.25785,
+            -0.30517,
+            -0.43596,
             0.0
           ]
         }
@@ -3167,10 +3134,10 @@
         "steps": [
           {
             "t_s": 517.4,
-            "dv_mag_m_s": 1.5354,
+            "dv_mag_m_s": 0.53216,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -3178,10 +3145,10 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              -0.8805,
-              -1.2578,
+              -0.3052,
+              -0.436,
               0.0
             ],
             "dv_excessive": 1,
@@ -3189,14 +3156,14 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 1,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 558.1164,
-            "min_sep_post_m": 1010.96
+            "min_koz_value_post": 3.7522,
+            "min_sep_post_m": 67.54
           }
         ],
         "n_burns": 1,
         "first_burn_t_s": 517.4,
-        "total_dv_m_s": 1.5354,
-        "max_dv_m_s": 1.5354,
+        "total_dv_m_s": 0.53216,
+        "max_dv_m_s": 0.53216,
         "expected_intervention": 1,
         "intervention_reasons": [
           "dv_cap"
@@ -3217,8 +3184,8 @@
         {
           "t_s": 396.1,
           "dv_m_s": [
-            -2.09067,
-            -2.98667,
+            -0.43742,
+            -0.62489,
             0.0
           ]
         }
@@ -3231,8 +3198,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -2.09067,
-            -2.98667,
+            -0.43742,
+            -0.62489,
             0.0
           ]
         }
@@ -3241,10 +3208,10 @@
         "steps": [
           {
             "t_s": 396.1,
-            "dv_mag_m_s": 3.6457,
+            "dv_mag_m_s": 0.76277,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -3252,10 +3219,10 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              -2.0907,
-              -2.9867,
+              -0.4374,
+              -0.6249,
               0.0
             ],
             "dv_excessive": 1,
@@ -3263,14 +3230,14 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 1,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 495.7546,
-            "min_sep_post_m": 894.5
+            "min_koz_value_post": 3.6374,
+            "min_sep_post_m": 65.47
           }
         ],
         "n_burns": 1,
         "first_burn_t_s": 396.1,
-        "total_dv_m_s": 3.6457,
-        "max_dv_m_s": 3.6457,
+        "total_dv_m_s": 0.76277,
+        "max_dv_m_s": 0.76277,
         "expected_intervention": 1,
         "intervention_reasons": [
           "dv_cap"
@@ -3280,7 +3247,7 @@
     },
     {
       "plan_id": "safe_multi_radial_032",
-      "prompt": "Cautious radial approach from 1.2 km: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
+      "prompt": "Cautious radial approach from 250 m: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
       "tags": {
         "category": "safe_multi",
         "approach_angle": "radial",
@@ -3291,16 +3258,16 @@
         {
           "t_s": 360.1,
           "dv_m_s": [
-            -0.08593,
-            -0.02578,
+            -0.13184,
+            -0.03955,
             0.0
           ]
         },
         {
           "t_s": 678.7,
           "dv_m_s": [
-            -0.02756,
-            -0.00827,
+            -0.05203,
+            -0.01561,
             0.0
           ]
         }
@@ -3313,8 +3280,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.08593,
-            -0.02578,
+            -0.13184,
+            -0.03955,
             0.0
           ]
         },
@@ -3325,8 +3292,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.02756,
-            -0.00827,
+            -0.05203,
+            -0.01561,
             0.0
           ]
         }
@@ -3335,10 +3302,10 @@
         "steps": [
           {
             "t_s": 360.1,
-            "dv_mag_m_s": 0.08971,
+            "dv_mag_m_s": 0.13764,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -3346,10 +3313,10 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              -0.0859,
-              -0.0258,
+              -0.1318,
+              -0.0396,
               0.0
             ],
             "dv_excessive": 0,
@@ -3357,26 +3324,26 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 709.2929,
-            "min_sep_post_m": 1198.39
+            "min_koz_value_post": 4.5204,
+            "min_sep_post_m": 81.37
           },
           {
             "t_s": 678.7,
-            "dv_mag_m_s": 0.02877,
+            "dv_mag_m_s": 0.05432,
             "pre_burn_state": [
-              -29.717,
-              1202.2552,
+              -45.5935,
+              253.4611,
               0.0,
-              -0.0986,
-              0.0415,
+              -0.1513,
+              0.0636,
               0.0
             ],
             "post_burn_state": [
-              -29.717,
-              1202.2552,
+              -45.5935,
+              253.4611,
               0.0,
-              -0.1262,
-              0.0332,
+              -0.2033,
+              0.048,
               0.0
             ],
             "dv_excessive": 0,
@@ -3384,14 +3351,14 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 714.9128,
-            "min_sep_post_m": 1202.62
+            "min_koz_value_post": 4.8631,
+            "min_sep_post_m": 87.54
           }
         ],
         "n_burns": 2,
         "first_burn_t_s": 360.1,
-        "total_dv_m_s": 0.11849,
-        "max_dv_m_s": 0.08971,
+        "total_dv_m_s": 0.19197,
+        "max_dv_m_s": 0.13764,
         "expected_intervention": 0,
         "intervention_reasons": [],
         "first_unsafe_step": null
@@ -3399,7 +3366,7 @@
     },
     {
       "plan_id": "safe_multi_radial_033",
-      "prompt": "Cautious radial approach from 1.2 km: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
+      "prompt": "Cautious radial approach from 250 m: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
       "tags": {
         "category": "safe_multi",
         "approach_angle": "radial",
@@ -3410,16 +3377,16 @@
         {
           "t_s": 417.3,
           "dv_m_s": [
-            -0.10363,
-            -0.03109,
+            -0.1513,
+            -0.04539,
             0.0
           ]
         },
         {
           "t_s": 750.0,
           "dv_m_s": [
-            -0.09751,
-            -0.02925,
+            -0.14343,
+            -0.04303,
             0.0
           ]
         }
@@ -3432,8 +3399,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.10363,
-            -0.03109,
+            -0.1513,
+            -0.04539,
             0.0
           ]
         },
@@ -3444,8 +3411,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.09751,
-            -0.02925,
+            -0.14343,
+            -0.04303,
             0.0
           ]
         }
@@ -3454,10 +3421,10 @@
         "steps": [
           {
             "t_s": 417.3,
-            "dv_mag_m_s": 0.10819,
+            "dv_mag_m_s": 0.15796,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -3465,10 +3432,10 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              -0.1036,
-              -0.0311,
+              -0.1513,
+              -0.0454,
               0.0
             ],
             "dv_excessive": 0,
@@ -3476,26 +3443,26 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 708.9529,
-            "min_sep_post_m": 1198.07
+            "min_koz_value_post": 4.5173,
+            "min_sep_post_m": 81.31
           },
           {
             "t_s": 750.0,
-            "dv_mag_m_s": 0.1018,
+            "dv_mag_m_s": 0.14975,
             "pre_burn_state": [
-              -37.517,
-              1203.4516,
+              -54.7747,
+              255.0397,
               0.0,
-              -0.1192,
-              0.0538,
+              -0.1741,
+              0.0786,
               0.0
             ],
             "post_burn_state": [
-              -37.517,
-              1203.4516,
+              -54.7747,
+              255.0397,
               0.0,
-              -0.2167,
-              0.0246,
+              -0.3175,
+              0.0355,
               0.0
             ],
             "dv_excessive": 0,
@@ -3503,14 +3470,14 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 717.003,
-            "min_sep_post_m": 1204.04
+            "min_koz_value_post": 4.9957,
+            "min_sep_post_m": 89.92
           }
         ],
         "n_burns": 2,
         "first_burn_t_s": 417.3,
-        "total_dv_m_s": 0.21,
-        "max_dv_m_s": 0.10819,
+        "total_dv_m_s": 0.30771,
+        "max_dv_m_s": 0.15796,
         "expected_intervention": 0,
         "intervention_reasons": [],
         "first_unsafe_step": null
@@ -3518,7 +3485,7 @@
     },
     {
       "plan_id": "safe_multi_radial_034",
-      "prompt": "Cautious radial approach from 1.2 km: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
+      "prompt": "Cautious radial approach from 250 m: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
       "tags": {
         "category": "safe_multi",
         "approach_angle": "radial",
@@ -3529,16 +3496,16 @@
         {
           "t_s": 380.5,
           "dv_m_s": [
-            -0.03342,
-            -0.01003,
+            -0.05954,
+            -0.01786,
             0.0
           ]
         },
         {
           "t_s": 625.0,
           "dv_m_s": [
-            -0.03977,
-            -0.01193,
+            -0.06769,
+            -0.02031,
             0.0
           ]
         }
@@ -3551,8 +3518,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.03342,
-            -0.01003,
+            -0.05954,
+            -0.01786,
             0.0
           ]
         },
@@ -3563,8 +3530,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.03977,
-            -0.01193,
+            -0.06769,
+            -0.02031,
             0.0
           ]
         }
@@ -3573,10 +3540,10 @@
         "steps": [
           {
             "t_s": 380.5,
-            "dv_mag_m_s": 0.03489,
+            "dv_mag_m_s": 0.06216,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -3584,10 +3551,10 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              -0.0334,
-              -0.01,
+              -0.0595,
+              -0.0179,
               0.0
             ],
             "dv_excessive": 0,
@@ -3595,26 +3562,26 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 710.3681,
-            "min_sep_post_m": 1199.36
+            "min_koz_value_post": 4.5355,
+            "min_sep_post_m": 81.64
           },
           {
             "t_s": 625.0,
-            "dv_mag_m_s": 0.04152,
+            "dv_mag_m_s": 0.07067,
             "pre_burn_state": [
-              -8.7414,
-              1199.9182,
+              -15.5728,
+              249.8564,
               0.0,
-              -0.0376,
-              0.0097,
+              -0.067,
+              0.0174,
               0.0
             ],
             "post_burn_state": [
-              -8.7414,
-              1199.9182,
+              -15.5728,
+              249.8564,
               0.0,
-              -0.0774,
-              -0.0022,
+              -0.1347,
+              -0.0029,
               0.0
             ],
             "dv_excessive": 0,
@@ -3622,14 +3589,14 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 711.11,
-            "min_sep_post_m": 1199.94
+            "min_koz_value_post": 4.5802,
+            "min_sep_post_m": 82.44
           }
         ],
         "n_burns": 2,
         "first_burn_t_s": 380.5,
-        "total_dv_m_s": 0.07641,
-        "max_dv_m_s": 0.04152,
+        "total_dv_m_s": 0.13283,
+        "max_dv_m_s": 0.07067,
         "expected_intervention": 0,
         "intervention_reasons": [],
         "first_unsafe_step": null
@@ -3637,7 +3604,7 @@
     },
     {
       "plan_id": "safe_multi_radial_035",
-      "prompt": "Cautious radial approach from 1.2 km: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
+      "prompt": "Cautious radial approach from 250 m: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
       "tags": {
         "category": "safe_multi",
         "approach_angle": "radial",
@@ -3648,16 +3615,16 @@
         {
           "t_s": 523.3,
           "dv_m_s": [
-            -0.05092,
-            -0.01528,
+            -0.08719,
+            -0.02616,
             0.0
           ]
         },
         {
           "t_s": 674.7,
           "dv_m_s": [
-            -0.03295,
-            -0.00989,
+            -0.05898,
+            -0.01769,
             0.0
           ]
         }
@@ -3670,8 +3637,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.05092,
-            -0.01528,
+            -0.08719,
+            -0.02616,
             0.0
           ]
         },
@@ -3682,8 +3649,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.03295,
-            -0.00989,
+            -0.05898,
+            -0.01769,
             0.0
           ]
         }
@@ -3692,10 +3659,10 @@
         "steps": [
           {
             "t_s": 523.3,
-            "dv_mag_m_s": 0.05316,
+            "dv_mag_m_s": 0.09103,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -3703,10 +3670,10 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              -0.0509,
-              -0.0153,
+              -0.0872,
+              -0.0262,
               0.0
             ],
             "dv_excessive": 0,
@@ -3714,26 +3681,26 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 709.9979,
-            "min_sep_post_m": 1199.03
+            "min_koz_value_post": 4.5289,
+            "min_sep_post_m": 81.52
           },
           {
             "t_s": 674.7,
-            "dv_mag_m_s": 0.0344,
+            "dv_mag_m_s": 0.06158,
             "pre_burn_state": [
-              -8.0669,
-              1199.0491,
+              -13.8129,
+              248.3723,
               0.0,
-              -0.0554,
-              0.003,
+              -0.0948,
+              0.0051,
               0.0
             ],
             "post_burn_state": [
-              -8.0669,
-              1199.0491,
+              -13.8129,
+              248.3723,
               0.0,
-              -0.0883,
-              -0.0069,
+              -0.1538,
+              -0.0126,
               0.0
             ],
             "dv_excessive": 0,
@@ -3741,14 +3708,14 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 709.9891,
-            "min_sep_post_m": 1198.98
+            "min_koz_value_post": 4.5414,
+            "min_sep_post_m": 81.74
           }
         ],
         "n_burns": 2,
         "first_burn_t_s": 523.3,
-        "total_dv_m_s": 0.08757,
-        "max_dv_m_s": 0.05316,
+        "total_dv_m_s": 0.15261,
+        "max_dv_m_s": 0.09103,
         "expected_intervention": 0,
         "intervention_reasons": [],
         "first_unsafe_step": null
@@ -3756,7 +3723,7 @@
     },
     {
       "plan_id": "safe_multi_radial_036",
-      "prompt": "Cautious radial approach from 1.2 km: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
+      "prompt": "Cautious radial approach from 250 m: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
       "tags": {
         "category": "safe_multi",
         "approach_angle": "radial",
@@ -3767,16 +3734,16 @@
         {
           "t_s": 443.7,
           "dv_m_s": [
-            -0.07226,
-            -0.02168,
+            -0.11167,
+            -0.0335,
             0.0
           ]
         },
         {
           "t_s": 600.1,
           "dv_m_s": [
-            -0.03646,
-            -0.01094,
+            -0.06362,
+            -0.01909,
             0.0
           ]
         }
@@ -3789,8 +3756,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.07226,
-            -0.02168,
+            -0.11167,
+            -0.0335,
             0.0
           ]
         },
@@ -3801,8 +3768,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.03646,
-            -0.01094,
+            -0.06362,
+            -0.01909,
             0.0
           ]
         }
@@ -3811,10 +3778,10 @@
         "steps": [
           {
             "t_s": 443.7,
-            "dv_mag_m_s": 0.07544,
+            "dv_mag_m_s": 0.11659,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -3822,10 +3789,10 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              -0.0723,
-              -0.0217,
+              -0.1117,
+              -0.0335,
               0.0
             ],
             "dv_excessive": 0,
@@ -3833,26 +3800,26 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 709.5628,
-            "min_sep_post_m": 1198.64
+            "min_koz_value_post": 4.5239,
+            "min_sep_post_m": 81.43
           },
           {
             "t_s": 600.1,
-            "dv_mag_m_s": 0.03807,
+            "dv_mag_m_s": 0.06642,
             "pre_burn_state": [
-              -11.841,
-              1198.6744,
+              -18.2989,
+              247.9521,
               0.0,
-              -0.0788,
-              0.0051,
+              -0.1217,
+              0.0079,
               0.0
             ],
             "post_burn_state": [
-              -11.841,
-              1198.6744,
+              -18.2989,
+              247.9521,
               0.0,
-              -0.1152,
-              -0.0058,
+              -0.1853,
+              -0.0112,
               0.0
             ],
             "dv_excessive": 0,
@@ -3860,14 +3827,14 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 709.7029,
-            "min_sep_post_m": 1198.69
+            "min_koz_value_post": 4.5487,
+            "min_sep_post_m": 81.88
           }
         ],
         "n_burns": 2,
         "first_burn_t_s": 443.7,
-        "total_dv_m_s": 0.11351,
-        "max_dv_m_s": 0.07544,
+        "total_dv_m_s": 0.18301,
+        "max_dv_m_s": 0.11659,
         "expected_intervention": 0,
         "intervention_reasons": [],
         "first_unsafe_step": null
@@ -3913,7 +3880,7 @@
             "dv_mag_m_s": 0.1456,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -3921,7 +3888,7 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               -0.1395,
               -0.0418,
@@ -3932,8 +3899,8 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 708.2962,
-            "min_sep_post_m": 1197.44
+            "min_koz_value_post": 4.5191,
+            "min_sep_post_m": 81.34
           }
         ],
         "n_burns": 1,
@@ -3985,7 +3952,7 @@
             "dv_mag_m_s": 0.04832,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -3993,7 +3960,7 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               -0.0463,
               -0.0139,
@@ -4004,8 +3971,8 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 710.096,
-            "min_sep_post_m": 1199.12
+            "min_koz_value_post": 4.5392,
+            "min_sep_post_m": 81.71
           }
         ],
         "n_burns": 1,
@@ -4057,7 +4024,7 @@
             "dv_mag_m_s": 0.11564,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -4065,7 +4032,7 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               -0.1108,
               -0.0332,
@@ -4076,8 +4043,8 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 708.8188,
-            "min_sep_post_m": 1197.94
+            "min_koz_value_post": 4.5241,
+            "min_sep_post_m": 81.43
           }
         ],
         "n_burns": 1,
@@ -4102,9 +4069,9 @@
         {
           "t_s": 420.5,
           "dv_m_s": [
-            0.99403,
-            -0.72622,
-            0.0
+            0.20626,
+            -0.14592,
+            -0.0
           ]
         }
       ],
@@ -4116,9 +4083,9 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            0.99403,
-            -0.72622,
-            0.0
+            0.20626,
+            -0.14592,
+            -0.0
           ]
         }
       ],
@@ -4126,10 +4093,10 @@
         "steps": [
           {
             "t_s": 420.5,
-            "dv_mag_m_s": 1.23105,
+            "dv_mag_m_s": 0.25266,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -4137,31 +4104,28 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              0.994,
-              -0.7262,
+              0.2063,
+              -0.1459,
               0.0
             ],
-            "dv_excessive": 1,
-            "post_burn_V_le_0": 1,
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
             "passive_preburn_unsafe": 0,
-            "requires_intervention": 1,
-            "koz_reach_time_post_s": 1035.0,
-            "min_koz_value_post": 0.0037,
-            "min_sep_post_m": 2.45
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": 955.0,
+            "min_koz_value_post": -0.9361,
+            "min_sep_post_m": 0.0
           }
         ],
         "n_burns": 1,
         "first_burn_t_s": 420.5,
-        "total_dv_m_s": 1.23105,
-        "max_dv_m_s": 1.23105,
-        "expected_intervention": 1,
-        "intervention_reasons": [
-          "dv_cap",
-          "post_V"
-        ],
-        "first_unsafe_step": 0
+        "total_dv_m_s": 0.25266,
+        "max_dv_m_s": 0.25266,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
       }
     },
     {
@@ -4177,9 +4141,9 @@
         {
           "t_s": 496.8,
           "dv_m_s": [
-            1.00041,
-            -0.74181,
-            0.0
+            0.20766,
+            -0.14912,
+            -0.0
           ]
         }
       ],
@@ -4191,9 +4155,9 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            1.00041,
-            -0.74181,
-            0.0
+            0.20766,
+            -0.14912,
+            -0.0
           ]
         }
       ],
@@ -4201,10 +4165,10 @@
         "steps": [
           {
             "t_s": 496.8,
-            "dv_mag_m_s": 1.24543,
+            "dv_mag_m_s": 0.25565,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -4212,31 +4176,28 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              1.0004,
-              -0.7418,
+              0.2077,
+              -0.1491,
               0.0
             ],
-            "dv_excessive": 1,
-            "post_burn_V_le_0": 1,
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
             "passive_preburn_unsafe": 0,
-            "requires_intervention": 1,
-            "koz_reach_time_post_s": 1023.0,
-            "min_koz_value_post": 0.0038,
-            "min_sep_post_m": 2.47
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": 945.0,
+            "min_koz_value_post": -0.9342,
+            "min_sep_post_m": 0.0
           }
         ],
         "n_burns": 1,
         "first_burn_t_s": 496.8,
-        "total_dv_m_s": 1.24543,
-        "max_dv_m_s": 1.24543,
-        "expected_intervention": 1,
-        "intervention_reasons": [
-          "dv_cap",
-          "post_V"
-        ],
-        "first_unsafe_step": 0
+        "total_dv_m_s": 0.25565,
+        "max_dv_m_s": 0.25565,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
       }
     },
     {
@@ -4252,9 +4213,9 @@
         {
           "t_s": 342.0,
           "dv_m_s": [
-            1.10725,
-            -1.07192,
-            0.0
+            0.2316,
+            -0.21699,
+            -0.0
           ]
         }
       ],
@@ -4266,9 +4227,9 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            1.10725,
-            -1.07192,
-            0.0
+            0.2316,
+            -0.21699,
+            -0.0
           ]
         }
       ],
@@ -4276,10 +4237,10 @@
         "steps": [
           {
             "t_s": 342.0,
-            "dv_mag_m_s": 1.54111,
+            "dv_mag_m_s": 0.31737,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -4287,31 +4248,28 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              1.1073,
-              -1.0719,
+              0.2316,
+              -0.217,
               0.0
             ],
-            "dv_excessive": 1,
-            "post_burn_V_le_0": 1,
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
             "passive_preburn_unsafe": 0,
-            "requires_intervention": 1,
-            "koz_reach_time_post_s": 820.0,
-            "min_koz_value_post": 0.0078,
-            "min_sep_post_m": 3.31
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": 750.0,
+            "min_koz_value_post": -0.9094,
+            "min_sep_post_m": 0.0
           }
         ],
         "n_burns": 1,
         "first_burn_t_s": 342.0,
-        "total_dv_m_s": 1.54111,
-        "max_dv_m_s": 1.54111,
-        "expected_intervention": 1,
-        "intervention_reasons": [
-          "dv_cap",
-          "post_V"
-        ],
-        "first_unsafe_step": 0
+        "total_dv_m_s": 0.31737,
+        "max_dv_m_s": 0.31737,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
       }
     },
     {
@@ -4335,8 +4293,8 @@
         {
           "t_s": 549.6,
           "dv_m_s": [
-            1.01697,
-            -0.61329,
+            0.26763,
+            -0.12001,
             0.0
           ]
         }
@@ -4361,8 +4319,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            1.01697,
-            -0.61329,
+            0.26763,
+            -0.12001,
             0.0
           ]
         }
@@ -4374,7 +4332,7 @@
             "dv_mag_m_s": 0.05586,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -4382,7 +4340,7 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               -0.0535,
               -0.016,
@@ -4393,15 +4351,15 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 709.9449,
-            "min_sep_post_m": 1198.98
+            "min_koz_value_post": 4.5371,
+            "min_sep_post_m": 81.67
           },
           {
             "t_s": 549.6,
-            "dv_mag_m_s": 1.18758,
+            "dv_mag_m_s": 0.29331,
             "pre_burn_state": [
               -8.5803,
-              1199.0074,
+              249.0074,
               0.0,
               -0.0582,
               0.0034,
@@ -4409,31 +4367,28 @@
             ],
             "post_burn_state": [
               -8.5803,
-              1199.0074,
+              249.0074,
               0.0,
-              0.9587,
-              -0.6099,
+              0.2094,
+              -0.1166,
               0.0
             ],
-            "dv_excessive": 1,
-            "post_burn_V_le_0": 1,
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
             "passive_preburn_unsafe": 0,
-            "requires_intervention": 1,
-            "koz_reach_time_post_s": 1121.0,
-            "min_koz_value_post": 0.0001,
-            "min_sep_post_m": 0.36
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": 1010.0,
+            "min_koz_value_post": -0.9872,
+            "min_sep_post_m": 0.0
           }
         ],
         "n_burns": 2,
         "first_burn_t_s": 396.4,
-        "total_dv_m_s": 1.24344,
-        "max_dv_m_s": 1.18758,
-        "expected_intervention": 1,
-        "intervention_reasons": [
-          "dv_cap",
-          "post_V"
-        ],
-        "first_unsafe_step": 1
+        "total_dv_m_s": 0.34916,
+        "max_dv_m_s": 0.29331,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
       }
     },
     {
@@ -4457,8 +4412,8 @@
         {
           "t_s": 569.6,
           "dv_m_s": [
-            1.14193,
-            -1.07038,
+            0.26759,
+            -0.22066,
             0.0
           ]
         }
@@ -4483,8 +4438,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            1.14193,
-            -1.07038,
+            0.26759,
+            -0.22066,
             0.0
           ]
         }
@@ -4496,7 +4451,7 @@
             "dv_mag_m_s": 0.02662,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -4504,7 +4459,7 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               -0.0255,
               -0.0076,
@@ -4515,15 +4470,15 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 710.5403,
-            "min_sep_post_m": 1199.51
+            "min_koz_value_post": 4.5458,
+            "min_sep_post_m": 81.82
           },
           {
             "t_s": 569.6,
-            "dv_mag_m_s": 1.56516,
+            "dv_mag_m_s": 0.34684,
             "pre_burn_state": [
               -5.4155,
-              1199.6735,
+              249.6735,
               0.0,
               -0.0283,
               0.0046,
@@ -4531,36 +4486,33 @@
             ],
             "post_burn_state": [
               -5.4155,
-              1199.6735,
+              249.6735,
               0.0,
-              1.1136,
-              -1.0658,
+              0.2393,
+              -0.2161,
               0.0
             ],
-            "dv_excessive": 1,
-            "post_burn_V_le_0": 1,
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
             "passive_preburn_unsafe": 0,
-            "requires_intervention": 1,
-            "koz_reach_time_post_s": 819.0,
-            "min_koz_value_post": 0.0,
-            "min_sep_post_m": 0.01
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": 730.0,
+            "min_koz_value_post": -0.9998,
+            "min_sep_post_m": 0.0
           }
         ],
         "n_burns": 2,
         "first_burn_t_s": 369.1,
-        "total_dv_m_s": 1.59178,
-        "max_dv_m_s": 1.56516,
-        "expected_intervention": 1,
-        "intervention_reasons": [
-          "dv_cap",
-          "post_V"
-        ],
-        "first_unsafe_step": 1
+        "total_dv_m_s": 0.37346,
+        "max_dv_m_s": 0.34684,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
       }
     },
     {
       "plan_id": "aggr_highbrake_radial_045",
-      "prompt": "Aggressive radial braking after the coast to kill the 1.2 km gap.",
+      "prompt": "Aggressive radial braking after the coast to kill the 250 m gap.",
       "tags": {
         "category": "aggr_highbrake",
         "approach_angle": "radial",
@@ -4571,8 +4523,8 @@
         {
           "t_s": 418.8,
           "dv_m_s": [
-            -2.06636,
-            -0.61991,
+            -0.62572,
+            -0.18772,
             0.0
           ]
         }
@@ -4585,8 +4537,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -2.06636,
-            -0.61991,
+            -0.62572,
+            -0.18772,
             0.0
           ]
         }
@@ -4595,10 +4547,10 @@
         "steps": [
           {
             "t_s": 418.8,
-            "dv_mag_m_s": 2.15734,
+            "dv_mag_m_s": 0.65327,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -4606,10 +4558,10 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              -2.0664,
-              -0.6199,
+              -0.6257,
+              -0.1877,
               0.0
             ],
             "dv_excessive": 1,
@@ -4617,14 +4569,14 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 1,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 695.294,
-            "min_sep_post_m": 1177.56
+            "min_koz_value_post": 4.4863,
+            "min_sep_post_m": 80.75
           }
         ],
         "n_burns": 1,
         "first_burn_t_s": 418.8,
-        "total_dv_m_s": 2.15734,
-        "max_dv_m_s": 2.15734,
+        "total_dv_m_s": 0.65327,
+        "max_dv_m_s": 0.65327,
         "expected_intervention": 1,
         "intervention_reasons": [
           "dv_cap"
@@ -4634,7 +4586,7 @@
     },
     {
       "plan_id": "aggr_highbrake_radial_046",
-      "prompt": "Aggressive radial braking after the coast to kill the 1.2 km gap.",
+      "prompt": "Aggressive radial braking after the coast to kill the 250 m gap.",
       "tags": {
         "category": "aggr_highbrake",
         "approach_angle": "radial",
@@ -4645,8 +4597,8 @@
         {
           "t_s": 382.2,
           "dv_m_s": [
-            -1.39193,
-            -0.41758,
+            -0.49439,
+            -0.14832,
             0.0
           ]
         }
@@ -4659,8 +4611,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -1.39193,
-            -0.41758,
+            -0.49439,
+            -0.14832,
             0.0
           ]
         }
@@ -4669,10 +4621,10 @@
         "steps": [
           {
             "t_s": 382.2,
-            "dv_mag_m_s": 1.45322,
+            "dv_mag_m_s": 0.51616,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -4680,10 +4632,10 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              -1.3919,
-              -0.4176,
+              -0.4944,
+              -0.1483,
               0.0
             ],
             "dv_excessive": 1,
@@ -4691,14 +4643,14 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 1,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 697.5151,
-            "min_sep_post_m": 1182.35
+            "min_koz_value_post": 4.4906,
+            "min_sep_post_m": 80.83
           }
         ],
         "n_burns": 1,
         "first_burn_t_s": 382.2,
-        "total_dv_m_s": 1.45322,
-        "max_dv_m_s": 1.45322,
+        "total_dv_m_s": 0.51616,
+        "max_dv_m_s": 0.51616,
         "expected_intervention": 1,
         "intervention_reasons": [
           "dv_cap"
@@ -4719,8 +4671,8 @@
         {
           "t_s": 452.7,
           "dv_m_s": [
-            -3.85387,
-            -1.15616,
+            -0.79782,
+            -0.23935,
             0.0
           ]
         }
@@ -4733,8 +4685,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -3.85387,
-            -1.15616,
+            -0.79782,
+            -0.23935,
             0.0
           ]
         }
@@ -4743,10 +4695,10 @@
         "steps": [
           {
             "t_s": 452.7,
-            "dv_mag_m_s": 4.02356,
+            "dv_mag_m_s": 0.83295,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -4754,10 +4706,10 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              -3.8539,
-              -1.1562,
+              -0.7978,
+              -0.2394,
               0.0
             ],
             "dv_excessive": 1,
@@ -4765,14 +4717,14 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 1,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 692.3519,
-            "min_sep_post_m": 1169.7
+            "min_koz_value_post": 4.4824,
+            "min_sep_post_m": 80.68
           }
         ],
         "n_burns": 1,
         "first_burn_t_s": 452.7,
-        "total_dv_m_s": 4.02356,
-        "max_dv_m_s": 4.02356,
+        "total_dv_m_s": 0.83295,
+        "max_dv_m_s": 0.83295,
         "expected_intervention": 1,
         "intervention_reasons": [
           "dv_cap"
@@ -4782,7 +4734,7 @@
     },
     {
       "plan_id": "safe_multi_out_of_plane_048",
-      "prompt": "Cautious out-of-plane approach from 1.2 km: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
+      "prompt": "Cautious out-of-plane approach from 250 m: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
       "tags": {
         "category": "safe_multi",
         "approach_angle": "out_of_plane",
@@ -4793,25 +4745,25 @@
         {
           "t_s": 428.8,
           "dv_m_s": [
-            -0.00359,
-            -0.03593,
-            0.02156
+            -0.00627,
+            -0.06273,
+            0.03764
           ]
         },
         {
           "t_s": 631.4,
           "dv_m_s": [
-            -0.00298,
-            -0.02983,
-            0.0179
+            -0.00534,
+            -0.0534,
+            0.03204
           ]
         },
         {
           "t_s": 813.1,
           "dv_m_s": [
-            -0.00414,
-            -0.04136,
-            0.02482
+            -0.00706,
+            -0.07062,
+            0.04237
           ]
         }
       ],
@@ -4823,9 +4775,9 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.00359,
-            -0.03593,
-            0.02156
+            -0.00627,
+            -0.06273,
+            0.03764
           ]
         },
         {
@@ -4835,9 +4787,9 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.00298,
-            -0.02983,
-            0.0179
+            -0.00534,
+            -0.0534,
+            0.03204
           ]
         },
         {
@@ -4847,9 +4799,9 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.00414,
-            -0.04136,
-            0.02482
+            -0.00706,
+            -0.07062,
+            0.04237
           ]
         }
       ],
@@ -4857,10 +4809,10 @@
         "steps": [
           {
             "t_s": 428.8,
-            "dv_mag_m_s": 0.04206,
+            "dv_mag_m_s": 0.07342,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -4868,79 +4820,79 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              -0.0036,
-              -0.0359,
-              0.0216
+              -0.0063,
+              -0.0627,
+              0.0376
             ],
             "dv_excessive": 0,
             "post_burn_V_le_0": 0,
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 695.7108,
-            "min_sep_post_m": 1186.48
+            "min_koz_value_post": 4.1804,
+            "min_sep_post_m": 75.25
           },
           {
             "t_s": 631.4,
-            "dv_mag_m_s": 0.03492,
+            "dv_mag_m_s": 0.0625,
             "pre_burn_state": [
-              -2.3822,
-              1193.1409,
-              4.3299,
-              -0.0198,
-              -0.0305,
-              0.021
+              -4.1596,
+              238.0248,
+              7.5593,
+              -0.0346,
+              -0.0533,
+              0.0367
             ],
             "post_burn_state": [
-              -2.3822,
-              1193.1409,
-              4.3299,
-              -0.0228,
-              -0.0604,
-              0.0389
+              -4.1596,
+              238.0248,
+              7.5593,
+              -0.04,
+              -0.1067,
+              0.0687
             ],
             "dv_excessive": 0,
             "post_burn_V_le_0": 0,
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 685.1729,
-            "min_sep_post_m": 1176.49
+            "min_koz_value_post": 4.0387,
+            "min_sep_post_m": 72.7
           },
           {
             "t_s": 813.1,
-            "dv_mag_m_s": 0.04841,
+            "dv_mag_m_s": 0.08266,
             "pre_burn_state": [
-              -8.894,
-              1183.3495,
-              11.2565,
-              -0.0486,
-              -0.0456,
-              0.0371
+              -15.6027,
+              220.7024,
+              19.7944,
+              -0.0856,
+              -0.0808,
+              0.0655
             ],
             "post_burn_state": [
-              -8.894,
-              1183.3495,
-              11.2565,
-              -0.0528,
-              -0.087,
-              0.0619
+              -15.6027,
+              220.7024,
+              19.7944,
+              -0.0926,
+              -0.1514,
+              0.1079
             ],
             "dv_excessive": 0,
             "post_burn_V_le_0": 0,
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 674.017,
-            "min_sep_post_m": 1164.84
+            "min_koz_value_post": 3.9867,
+            "min_sep_post_m": 71.76
           }
         ],
         "n_burns": 3,
         "first_burn_t_s": 428.8,
-        "total_dv_m_s": 0.12538,
-        "max_dv_m_s": 0.04841,
+        "total_dv_m_s": 0.21858,
+        "max_dv_m_s": 0.08266,
         "expected_intervention": 0,
         "intervention_reasons": [],
         "first_unsafe_step": null
@@ -4948,7 +4900,7 @@
     },
     {
       "plan_id": "safe_multi_out_of_plane_049",
-      "prompt": "Cautious out-of-plane approach from 1.2 km: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
+      "prompt": "Cautious out-of-plane approach from 250 m: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
       "tags": {
         "category": "safe_multi",
         "approach_angle": "out_of_plane",
@@ -4959,17 +4911,17 @@
         {
           "t_s": 416.8,
           "dv_m_s": [
-            -0.00703,
-            -0.07033,
-            0.0422
+            -0.0108,
+            -0.10799,
+            0.06479
           ]
         },
         {
           "t_s": 610.4,
           "dv_m_s": [
-            -0.00728,
-            -0.07282,
-            0.04369
+            -0.01171,
+            -0.11714,
+            0.07028
           ]
         }
       ],
@@ -4981,9 +4933,9 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.00703,
-            -0.07033,
-            0.0422
+            -0.0108,
+            -0.10799,
+            0.06479
           ]
         },
         {
@@ -4993,9 +4945,9 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.00728,
-            -0.07282,
-            0.04369
+            -0.01171,
+            -0.11714,
+            0.07028
           ]
         }
       ],
@@ -5003,10 +4955,10 @@
         "steps": [
           {
             "t_s": 416.8,
-            "dv_mag_m_s": 0.08232,
+            "dv_mag_m_s": 0.1264,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -5014,52 +4966,52 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              -0.007,
-              -0.0703,
-              0.0422
+              -0.0108,
+              -0.108,
+              0.0648
             ],
             "dv_excessive": 0,
             "post_burn_V_le_0": 0,
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 682.3657,
-            "min_sep_post_m": 1173.84
+            "min_koz_value_post": 4.0308,
+            "min_sep_post_m": 72.55
           },
           {
             "t_s": 610.4,
-            "dv_mag_m_s": 0.08523,
+            "dv_mag_m_s": 0.13711,
             "pre_burn_state": [
-              -4.3206,
-              1187.1155,
-              8.1048,
-              -0.0374,
-              -0.0606,
-              0.0412
+              -6.6352,
+              230.2164,
+              12.4433,
+              -0.0575,
+              -0.093,
+              0.0632
             ],
             "post_burn_state": [
-              -4.3206,
-              1187.1155,
-              8.1048,
-              -0.0447,
-              -0.1334,
-              0.0849
+              -6.6352,
+              230.2164,
+              12.4433,
+              -0.0692,
+              -0.2101,
+              0.1335
             ],
             "dv_excessive": 0,
             "post_burn_V_le_0": 0,
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 660.0319,
-            "min_sep_post_m": 1150.01
+            "min_koz_value_post": 3.8805,
+            "min_sep_post_m": 69.85
           }
         ],
         "n_burns": 2,
         "first_burn_t_s": 416.8,
-        "total_dv_m_s": 0.16755,
-        "max_dv_m_s": 0.08523,
+        "total_dv_m_s": 0.2635,
+        "max_dv_m_s": 0.13711,
         "expected_intervention": 0,
         "intervention_reasons": [],
         "first_unsafe_step": null
@@ -5067,7 +5019,7 @@
     },
     {
       "plan_id": "safe_multi_out_of_plane_050",
-      "prompt": "Cautious out-of-plane approach from 1.2 km: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
+      "prompt": "Cautious out-of-plane approach from 250 m: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
       "tags": {
         "category": "safe_multi",
         "approach_angle": "out_of_plane",
@@ -5078,17 +5030,17 @@
         {
           "t_s": 390.5,
           "dv_m_s": [
-            -0.00452,
-            -0.04523,
-            0.02714
+            -0.00761,
+            -0.07606,
+            0.04564
           ]
         },
         {
           "t_s": 599.5,
           "dv_m_s": [
-            -0.01042,
-            -0.10415,
-            0.06249
+            -0.01467,
+            -0.14665,
+            0.08799
           ]
         }
       ],
@@ -5100,9 +5052,9 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.00452,
-            -0.04523,
-            0.02714
+            -0.00761,
+            -0.07606,
+            0.04564
           ]
         },
         {
@@ -5112,9 +5064,9 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.01042,
-            -0.10415,
-            0.06249
+            -0.01467,
+            -0.14665,
+            0.08799
           ]
         }
       ],
@@ -5122,10 +5074,10 @@
         "steps": [
           {
             "t_s": 390.5,
-            "dv_mag_m_s": 0.05294,
+            "dv_mag_m_s": 0.08903,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -5133,52 +5085,52 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              -0.0045,
-              -0.0452,
-              0.0271
+              -0.0076,
+              -0.0761,
+              0.0456
             ],
             "dv_excessive": 0,
             "post_burn_V_le_0": 0,
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 691.9754,
-            "min_sep_post_m": 1183.04
+            "min_koz_value_post": 4.1291,
+            "min_sep_post_m": 74.32
           },
           {
             "t_s": 599.5,
-            "dv_mag_m_s": 0.1219,
+            "dv_mag_m_s": 0.17165,
             "pre_burn_state": [
-              -3.1607,
-              1191.1206,
-              5.6196,
-              -0.0256,
-              -0.0381,
-              0.0264
+              -5.3171,
+              235.0687,
+              9.4501,
+              -0.043,
+              -0.064,
+              0.0444
             ],
             "post_burn_state": [
-              -3.1607,
-              1191.1206,
-              5.6196,
-              -0.036,
-              -0.1422,
-              0.0889
+              -5.3171,
+              235.0687,
+              9.4501,
+              -0.0577,
+              -0.2107,
+              0.1324
             ],
             "dv_excessive": 0,
             "post_burn_V_le_0": 0,
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 658.2786,
-            "min_sep_post_m": 1147.99
+            "min_koz_value_post": 3.8864,
+            "min_sep_post_m": 69.95
           }
         ],
         "n_burns": 2,
         "first_burn_t_s": 390.5,
-        "total_dv_m_s": 0.17485,
-        "max_dv_m_s": 0.1219,
+        "total_dv_m_s": 0.26068,
+        "max_dv_m_s": 0.17165,
         "expected_intervention": 0,
         "intervention_reasons": [],
         "first_unsafe_step": null
@@ -5186,7 +5138,7 @@
     },
     {
       "plan_id": "safe_multi_out_of_plane_051",
-      "prompt": "Cautious out-of-plane approach from 1.2 km: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
+      "prompt": "Cautious out-of-plane approach from 250 m: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
       "tags": {
         "category": "safe_multi",
         "approach_angle": "out_of_plane",
@@ -5197,17 +5149,17 @@
         {
           "t_s": 345.3,
           "dv_m_s": [
-            -0.00319,
-            -0.0319,
-            0.01914
+            -0.00561,
+            -0.05615,
+            0.03369
           ]
         },
         {
           "t_s": 498.6,
           "dv_m_s": [
-            -0.00303,
-            -0.03026,
-            0.01815
+            -0.00538,
+            -0.0538,
+            0.03228
           ]
         }
       ],
@@ -5219,9 +5171,9 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.00319,
-            -0.0319,
-            0.01914
+            -0.00561,
+            -0.05615,
+            0.03369
           ]
         },
         {
@@ -5231,9 +5183,9 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.00303,
-            -0.03026,
-            0.01815
+            -0.00538,
+            -0.0538,
+            0.03228
           ]
         }
       ],
@@ -5241,10 +5193,10 @@
         "steps": [
           {
             "t_s": 345.3,
-            "dv_mag_m_s": 0.03734,
+            "dv_mag_m_s": 0.06572,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -5252,52 +5204,52 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              -0.0032,
-              -0.0319,
-              0.0191
+              -0.0056,
+              -0.0561,
+              0.0337
             ],
             "dv_excessive": 0,
             "post_burn_V_le_0": 0,
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 697.3614,
-            "min_sep_post_m": 1187.98
+            "min_koz_value_post": 4.2086,
+            "min_sep_post_m": 75.75
           },
           {
             "t_s": 498.6,
-            "dv_mag_m_s": 0.03542,
+            "dv_mag_m_s": 0.06297,
             "pre_burn_state": [
-              -1.3326,
-              1195.2923,
-              2.9195,
-              -0.0142,
-              -0.0289,
-              0.0189
+              -2.3449,
+              241.7134,
+              5.1388,
+              -0.0249,
+              -0.0508,
+              0.0332
             ],
             "post_burn_state": [
-              -1.3326,
-              1195.2923,
-              2.9195,
-              -0.0172,
-              -0.0591,
-              0.037
+              -2.3449,
+              241.7134,
+              5.1388,
+              -0.0303,
+              -0.1046,
+              0.0655
             ],
             "dv_excessive": 0,
             "post_burn_V_le_0": 0,
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 686.0342,
-            "min_sep_post_m": 1177.36
+            "min_koz_value_post": 4.0416,
+            "min_sep_post_m": 72.75
           }
         ],
         "n_burns": 2,
         "first_burn_t_s": 345.3,
-        "total_dv_m_s": 0.07275,
-        "max_dv_m_s": 0.03734,
+        "total_dv_m_s": 0.12869,
+        "max_dv_m_s": 0.06572,
         "expected_intervention": 0,
         "intervention_reasons": [],
         "first_unsafe_step": null
@@ -5305,7 +5257,7 @@
     },
     {
       "plan_id": "safe_multi_out_of_plane_052",
-      "prompt": "Cautious out-of-plane approach from 1.2 km: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
+      "prompt": "Cautious out-of-plane approach from 250 m: two or three small burns after an initial coast; stay passively safe and outside the keep-out zone.",
       "tags": {
         "category": "safe_multi",
         "approach_angle": "out_of_plane",
@@ -5316,17 +5268,17 @@
         {
           "t_s": 442.4,
           "dv_m_s": [
-            -0.00209,
-            -0.02091,
-            0.01255
+            -0.00415,
+            -0.04155,
+            0.02493
           ]
         },
         {
           "t_s": 656.4,
           "dv_m_s": [
-            -0.00292,
-            -0.02923,
-            0.01754
+            -0.00537,
+            -0.05367,
+            0.0322
           ]
         }
       ],
@@ -5338,9 +5290,9 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.00209,
-            -0.02091,
-            0.01255
+            -0.00415,
+            -0.04155,
+            0.02493
           ]
         },
         {
@@ -5350,9 +5302,9 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.00292,
-            -0.02923,
-            0.01754
+            -0.00537,
+            -0.05367,
+            0.0322
           ]
         }
       ],
@@ -5360,10 +5312,10 @@
         "steps": [
           {
             "t_s": 442.4,
-            "dv_mag_m_s": 0.02448,
+            "dv_mag_m_s": 0.04863,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -5371,52 +5323,52 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              -0.0021,
-              -0.0209,
-              0.0126
+              -0.0042,
+              -0.0415,
+              0.0249
             ],
             "dv_excessive": 0,
             "post_burn_V_le_0": 0,
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 701.9563,
-            "min_sep_post_m": 1192.09
+            "min_koz_value_post": 4.2786,
+            "min_sep_post_m": 77.02
           },
           {
             "t_s": 656.4,
-            "dv_mag_m_s": 0.03421,
+            "dv_mag_m_s": 0.06282,
             "pre_burn_state": [
-              -1.521,
-              1195.8074,
-              2.6595,
-              -0.0121,
-              -0.0175,
-              0.0122
+              -3.0217,
+              241.6687,
+              5.2831,
+              -0.024,
+              -0.0347,
+              0.0242
             ],
             "post_burn_state": [
-              -1.521,
-              1195.8074,
-              2.6595,
-              -0.015,
-              -0.0467,
-              0.0297
+              -3.0217,
+              241.6687,
+              5.2831,
+              -0.0293,
+              -0.0884,
+              0.0564
             ],
             "dv_excessive": 0,
             "post_burn_V_le_0": 0,
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 691.0017,
-            "min_sep_post_m": 1182.07
+            "min_koz_value_post": 4.0942,
+            "min_sep_post_m": 73.7
           }
         ],
         "n_burns": 2,
         "first_burn_t_s": 442.4,
-        "total_dv_m_s": 0.05869,
-        "max_dv_m_s": 0.03421,
+        "total_dv_m_s": 0.11145,
+        "max_dv_m_s": 0.06282,
         "expected_intervention": 0,
         "intervention_reasons": [],
         "first_unsafe_step": null
@@ -5462,7 +5414,7 @@
             "dv_mag_m_s": 0.05034,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -5470,7 +5422,7 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               -0.0043,
               -0.043,
@@ -5481,8 +5433,8 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 692.8587,
-            "min_sep_post_m": 1183.86
+            "min_koz_value_post": 4.2711,
+            "min_sep_post_m": 76.88
           }
         ],
         "n_burns": 1,
@@ -5534,7 +5486,7 @@
             "dv_mag_m_s": 0.06523,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -5542,7 +5494,7 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               -0.0056,
               -0.0557,
@@ -5553,8 +5505,8 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 687.8736,
-            "min_sep_post_m": 1179.17
+            "min_koz_value_post": 4.2104,
+            "min_sep_post_m": 75.79
           }
         ],
         "n_burns": 1,
@@ -5606,7 +5558,7 @@
             "dv_mag_m_s": 0.14303,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -5614,7 +5566,7 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               -0.0122,
               -0.1222,
@@ -5625,8 +5577,8 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 664.4804,
-            "min_sep_post_m": 1155.33
+            "min_koz_value_post": 3.996,
+            "min_sep_post_m": 71.93
           }
         ],
         "n_burns": 1,
@@ -5651,8 +5603,8 @@
         {
           "t_s": 390.1,
           "dv_m_s": [
-            0.88065,
-            -0.50391,
+            0.17991,
+            -0.10263,
             -0.0041
           ]
         }
@@ -5665,8 +5617,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            0.88065,
-            -0.50391,
+            0.17991,
+            -0.10263,
             -0.0041
           ]
         }
@@ -5675,10 +5627,10 @@
         "steps": [
           {
             "t_s": 390.1,
-            "dv_mag_m_s": 1.01464,
+            "dv_mag_m_s": 0.20716,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -5686,31 +5638,28 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              0.8807,
-              -0.5039,
+              0.1799,
+              -0.1026,
               -0.0041
             ],
-            "dv_excessive": 1,
-            "post_burn_V_le_0": 1,
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
             "passive_preburn_unsafe": 0,
-            "requires_intervention": 1,
-            "koz_reach_time_post_s": 1242.0,
-            "min_koz_value_post": 0.0538,
-            "min_sep_post_m": 6.08
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": 1135.0,
+            "min_koz_value_post": -0.7676,
+            "min_sep_post_m": 0.0
           }
         ],
         "n_burns": 1,
         "first_burn_t_s": 390.1,
-        "total_dv_m_s": 1.01464,
-        "max_dv_m_s": 1.01464,
-        "expected_intervention": 1,
-        "intervention_reasons": [
-          "dv_cap",
-          "post_V"
-        ],
-        "first_unsafe_step": 0
+        "total_dv_m_s": 0.20716,
+        "max_dv_m_s": 0.20716,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
       }
     },
     {
@@ -5726,8 +5675,8 @@
         {
           "t_s": 486.2,
           "dv_m_s": [
-            0.84157,
-            -0.44033,
+            0.17189,
+            -0.08965,
             -0.00406
           ]
         }
@@ -5740,8 +5689,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            0.84157,
-            -0.44033,
+            0.17189,
+            -0.08965,
             -0.00406
           ]
         }
@@ -5750,10 +5699,10 @@
         "steps": [
           {
             "t_s": 486.2,
-            "dv_mag_m_s": 0.94981,
+            "dv_mag_m_s": 0.19391,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -5761,31 +5710,28 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              0.8416,
-              -0.4403,
+              0.1719,
+              -0.0896,
               -0.0041
             ],
-            "dv_excessive": 1,
-            "post_burn_V_le_0": 1,
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
             "passive_preburn_unsafe": 0,
-            "requires_intervention": 1,
-            "koz_reach_time_post_s": 1319.0,
-            "min_koz_value_post": 0.0543,
-            "min_sep_post_m": 6.18
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": 1205.0,
+            "min_koz_value_post": -0.7672,
+            "min_sep_post_m": 0.0
           }
         ],
         "n_burns": 1,
         "first_burn_t_s": 486.2,
-        "total_dv_m_s": 0.94981,
-        "max_dv_m_s": 0.94981,
-        "expected_intervention": 1,
-        "intervention_reasons": [
-          "dv_cap",
-          "post_V"
-        ],
-        "first_unsafe_step": 0
+        "total_dv_m_s": 0.19391,
+        "max_dv_m_s": 0.19391,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
       }
     },
     {
@@ -5801,8 +5747,8 @@
         {
           "t_s": 348.6,
           "dv_m_s": [
-            1.15714,
-            -1.33956,
+            0.23683,
+            -0.2733,
             -0.00558
           ]
         }
@@ -5815,8 +5761,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            1.15714,
-            -1.33956,
+            0.23683,
+            -0.2733,
             -0.00558
           ]
         }
@@ -5825,10 +5771,10 @@
         "steps": [
           {
             "t_s": 348.6,
-            "dv_mag_m_s": 1.77015,
+            "dv_mag_m_s": 0.36168,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -5836,31 +5782,28 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              1.1571,
-              -1.3396,
+              0.2368,
+              -0.2733,
               -0.0056
             ],
-            "dv_excessive": 1,
-            "post_burn_V_le_0": 1,
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
             "passive_preburn_unsafe": 0,
-            "requires_intervention": 1,
-            "koz_reach_time_post_s": 703.0,
-            "min_koz_value_post": 0.049,
-            "min_sep_post_m": 5.0
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": 635.0,
+            "min_koz_value_post": -0.7768,
+            "min_sep_post_m": 0.0
           }
         ],
         "n_burns": 1,
         "first_burn_t_s": 348.6,
-        "total_dv_m_s": 1.77015,
-        "max_dv_m_s": 1.77015,
-        "expected_intervention": 1,
-        "intervention_reasons": [
-          "dv_cap",
-          "post_V"
-        ],
-        "first_unsafe_step": 0
+        "total_dv_m_s": 0.36168,
+        "max_dv_m_s": 0.36168,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
       }
     },
     {
@@ -5884,8 +5827,8 @@
         {
           "t_s": 533.1,
           "dv_m_s": [
-            1.12397,
-            -1.08851,
+            0.24254,
+            -0.20999,
             -0.01315
           ]
         }
@@ -5910,8 +5853,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            1.12397,
-            -1.08851,
+            0.24254,
+            -0.20999,
             -0.01315
           ]
         }
@@ -5923,7 +5866,7 @@
             "dv_mag_m_s": 0.02214,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -5931,7 +5874,7 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               -0.0019,
               -0.0189,
@@ -5942,15 +5885,15 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 702.8082,
-            "min_sep_post_m": 1192.85
+            "min_koz_value_post": 4.4127,
+            "min_sep_post_m": 79.43
           },
           {
             "t_s": 533.1,
-            "dv_mag_m_s": 1.56472,
+            "dv_mag_m_s": 0.32108,
             "pre_burn_state": [
               -1.5598,
-              1195.9527,
+              245.9527,
               2.5855,
               -0.0116,
               -0.0154,
@@ -5958,31 +5901,28 @@
             ],
             "post_burn_state": [
               -1.5598,
-              1195.9527,
+              245.9527,
               2.5855,
-              1.1124,
-              -1.1039,
+              0.231,
+              -0.2254,
               -0.0022
             ],
-            "dv_excessive": 1,
-            "post_burn_V_le_0": 1,
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
             "passive_preburn_unsafe": 0,
-            "requires_intervention": 1,
-            "koz_reach_time_post_s": 801.0,
-            "min_koz_value_post": 0.0,
-            "min_sep_post_m": 0.06
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": 715.0,
+            "min_koz_value_post": -0.9814,
+            "min_sep_post_m": 0.0
           }
         ],
         "n_burns": 2,
         "first_burn_t_s": 302.7,
-        "total_dv_m_s": 1.58685,
-        "max_dv_m_s": 1.56472,
-        "expected_intervention": 1,
-        "intervention_reasons": [
-          "dv_cap",
-          "post_V"
-        ],
-        "first_unsafe_step": 1
+        "total_dv_m_s": 0.34322,
+        "max_dv_m_s": 0.32108,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
       }
     },
     {
@@ -6006,8 +5946,8 @@
         {
           "t_s": 591.4,
           "dv_m_s": [
-            0.80982,
-            -0.29357,
+            0.19634,
+            -0.0218,
             -0.0273
           ]
         }
@@ -6032,8 +5972,8 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            0.80982,
-            -0.29357,
+            0.19634,
+            -0.0218,
             -0.0273
           ]
         }
@@ -6045,7 +5985,7 @@
             "dv_mag_m_s": 0.05829,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -6053,7 +5993,7 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               -0.005,
               -0.0498,
@@ -6064,15 +6004,15 @@
             "passive_preburn_unsafe": 0,
             "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 690.1766,
-            "min_sep_post_m": 1181.35
+            "min_koz_value_post": 4.2377,
+            "min_sep_post_m": 76.28
           },
           {
             "t_s": 591.4,
-            "dv_mag_m_s": 0.86182,
+            "dv_mag_m_s": 0.19942,
             "pre_burn_state": [
               -5.659,
-              1187.5182,
+              237.5182,
               8.1533,
               -0.0355,
               -0.037,
@@ -6080,36 +6020,33 @@
             ],
             "post_burn_state": [
               -5.659,
-              1187.5182,
+              237.5182,
               8.1533,
-              0.7743,
-              -0.3306,
+              0.1609,
+              -0.0588,
               0.0011
             ],
-            "dv_excessive": 1,
-            "post_burn_V_le_0": 1,
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
             "passive_preburn_unsafe": 0,
-            "requires_intervention": 1,
-            "koz_reach_time_post_s": 1460.0,
-            "min_koz_value_post": 0.0,
-            "min_sep_post_m": 0.12
+            "requires_intervention": 0,
+            "koz_reach_time_post_s": 1315.0,
+            "min_koz_value_post": -0.999,
+            "min_sep_post_m": 0.0
           }
         ],
         "n_burns": 2,
         "first_burn_t_s": 314.0,
-        "total_dv_m_s": 0.92011,
-        "max_dv_m_s": 0.86182,
-        "expected_intervention": 1,
-        "intervention_reasons": [
-          "dv_cap",
-          "post_V"
-        ],
-        "first_unsafe_step": 1
+        "total_dv_m_s": 0.25771,
+        "max_dv_m_s": 0.19942,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
       }
     },
     {
       "plan_id": "aggr_highbrake_out_of_plane_061",
-      "prompt": "Aggressive out-of-plane braking after the coast to kill the 1.2 km gap.",
+      "prompt": "Aggressive out-of-plane braking after the coast to kill the 250 m gap.",
       "tags": {
         "category": "aggr_highbrake",
         "approach_angle": "out_of_plane",
@@ -6120,9 +6057,9 @@
         {
           "t_s": 443.8,
           "dv_m_s": [
-            -0.07702,
-            -0.77017,
-            0.4621
+            -0.03492,
+            -0.34918,
+            0.20951
           ]
         }
       ],
@@ -6134,9 +6071,9 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.07702,
-            -0.77017,
-            0.4621
+            -0.03492,
+            -0.34918,
+            0.20951
           ]
         }
       ],
@@ -6144,10 +6081,10 @@
         "steps": [
           {
             "t_s": 443.8,
-            "dv_mag_m_s": 0.90146,
+            "dv_mag_m_s": 0.40871,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -6155,35 +6092,33 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              -0.077,
-              -0.7702,
-              0.4621
+              -0.0349,
+              -0.3492,
+              0.2095
             ],
-            "dv_excessive": 1,
+            "dv_excessive": 0,
             "post_burn_V_le_0": 0,
             "passive_preburn_unsafe": 0,
-            "requires_intervention": 1,
+            "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 558.1452,
-            "min_sep_post_m": 972.7
+            "min_koz_value_post": 3.7587,
+            "min_sep_post_m": 67.66
           }
         ],
         "n_burns": 1,
         "first_burn_t_s": 443.8,
-        "total_dv_m_s": 0.90146,
-        "max_dv_m_s": 0.90146,
-        "expected_intervention": 1,
-        "intervention_reasons": [
-          "dv_cap"
-        ],
-        "first_unsafe_step": 0
+        "total_dv_m_s": 0.40871,
+        "max_dv_m_s": 0.40871,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
       }
     },
     {
       "plan_id": "aggr_highbrake_out_of_plane_062",
-      "prompt": "Aggressive out-of-plane braking after the coast to kill the 1.2 km gap.",
+      "prompt": "Aggressive out-of-plane braking after the coast to kill the 250 m gap.",
       "tags": {
         "category": "aggr_highbrake",
         "approach_angle": "out_of_plane",
@@ -6194,9 +6129,9 @@
         {
           "t_s": 355.0,
           "dv_m_s": [
-            -0.07141,
-            -0.7141,
-            0.42846
+            -0.03383,
+            -0.33826,
+            0.20296
           ]
         }
       ],
@@ -6208,9 +6143,9 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.07141,
-            -0.7141,
-            0.42846
+            -0.03383,
+            -0.33826,
+            0.20296
           ]
         }
       ],
@@ -6218,10 +6153,10 @@
         "steps": [
           {
             "t_s": 355.0,
-            "dv_mag_m_s": 0.83583,
+            "dv_mag_m_s": 0.39593,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -6229,30 +6164,28 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              -0.0714,
-              -0.7141,
-              0.4285
+              -0.0338,
+              -0.3383,
+              0.203
             ],
-            "dv_excessive": 1,
+            "dv_excessive": 0,
             "post_burn_V_le_0": 0,
             "passive_preburn_unsafe": 0,
-            "requires_intervention": 1,
+            "requires_intervention": 0,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 562.6962,
-            "min_sep_post_m": 985.35
+            "min_koz_value_post": 3.7636,
+            "min_sep_post_m": 67.75
           }
         ],
         "n_burns": 1,
         "first_burn_t_s": 355.0,
-        "total_dv_m_s": 0.83583,
-        "max_dv_m_s": 0.83583,
-        "expected_intervention": 1,
-        "intervention_reasons": [
-          "dv_cap"
-        ],
-        "first_unsafe_step": 0
+        "total_dv_m_s": 0.39593,
+        "max_dv_m_s": 0.39593,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "first_unsafe_step": null
       }
     },
     {
@@ -6268,9 +6201,9 @@
         {
           "t_s": 322.7,
           "dv_m_s": [
-            -0.23129,
-            -2.31287,
-            1.38772
+            -0.05028,
+            -0.50276,
+            0.30166
           ]
         }
       ],
@@ -6282,9 +6215,9 @@
         {
           "coast_s": 0.0,
           "dv_m_s": [
-            -0.23129,
-            -2.31287,
-            1.38772
+            -0.05028,
+            -0.50276,
+            0.30166
           ]
         }
       ],
@@ -6292,10 +6225,10 @@
         "steps": [
           {
             "t_s": 322.7,
-            "dv_mag_m_s": 2.70714,
+            "dv_mag_m_s": 0.58847,
             "pre_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
               0.0,
               0.0,
@@ -6303,25 +6236,25 @@
             ],
             "post_burn_state": [
               0.0,
-              1200.0,
+              250.0,
               0.0,
-              -0.2313,
-              -2.3129,
-              1.3877
+              -0.0503,
+              -0.5028,
+              0.3017
             ],
             "dv_excessive": 1,
             "post_burn_V_le_0": 0,
             "passive_preburn_unsafe": 0,
             "requires_intervention": 1,
             "koz_reach_time_post_s": null,
-            "min_koz_value_post": 512.6813,
-            "min_sep_post_m": 771.76
+            "min_koz_value_post": 3.7128,
+            "min_sep_post_m": 66.83
           }
         ],
         "n_burns": 1,
         "first_burn_t_s": 322.7,
-        "total_dv_m_s": 2.70714,
-        "max_dv_m_s": 2.70714,
+        "total_dv_m_s": 0.58847,
+        "max_dv_m_s": 0.58847,
         "expected_intervention": 1,
         "intervention_reasons": [
           "dv_cap"

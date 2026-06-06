@@ -7,7 +7,7 @@
   "orbital_period_s": 5553.624271252229,
   "start_state_m_m_s": [
     0.0,
-    1200.0,
+    250.0,
     0.0,
     0.0,
     0.0,
@@ -32,8 +32,9 @@
   "label_criteria": {
     "requires_intervention": "OR of the three below",
     "dv_excessive": "|dv| > 0.5 m/s",
-    "post_burn_V_le_0": "free drift from post-burn state reaches KOZ within 1800 s (V<=0)",
-    "passive_preburn_unsafe": "free drift from pre-burn state reaches KOZ within 1800 s"
+    "post_burn_V_le_0": "learned V(x\u207a, t) \u2264 0 when BRT loaded (hybrid mode); else free drift to KOZ within 1800 s",
+    "passive_preburn_unsafe": "free drift from pre-burn state reaches KOZ within 1800 s",
+    "label_mode": "hybrid"
   },
-  "note": "At this start range (1.2 km) and horizon (1800 s), the minimum dv that reaches the KOZ is ~0.65 m/s (> the 0.5 cap), so every V<=0 plan also trips dv_cap; the criteria overlap by construction here."
+  "note": "Start y=250 m (learned BRT unsafe tube ~45\u201380 m passive; KOZ y semi-axis 45 m). Closer than the old 1.2 km bundle so intercept burns are smaller and post_V / dv_cap / passive labels are less degenerate."
 }

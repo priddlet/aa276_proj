@@ -11,8 +11,8 @@ import numpy as np
 def choose_contour_level(z: np.ndarray, preferred: float = 0.0) -> tuple[float, str]:
     """Pick an isovalue for plotting when ``preferred`` may not be bracketed on the slice.
 
-    Coarse HJ grids often never hit ``V=0`` even though the KOZ terminal set is ``s-1``; then we
-    draw a low-``V`` envelope (``min_envelope``) so the boundary is still visible.
+    Coarse HJ grids often never hit 'V=0' even though the KOZ terminal set is 's-1'; then we
+    draw a low-'V' envelope ('min_envelope') so the boundary is still visible.
     """
     finite = np.asarray(z, dtype=np.float64)[np.isfinite(z)]
     if finite.size == 0:
@@ -40,7 +40,7 @@ def sample_v_on_position_grid(
     ny: int,
     nz: int,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-    """Return ``(xs, ys, zs, X, Y, Z, vol)`` with ``vol`` shape ``(nx, ny, nz)``."""
+    """Return '(xs, ys, zs, X, Y, Z, vol)' with 'vol' shape '(nx, ny, nz)'."""
     xs = np.linspace(float(x_lo), float(x_hi), int(nx), dtype=np.float64)
     ys = np.linspace(float(y_lo), float(y_hi), int(ny), dtype=np.float64)
     zs = np.linspace(float(z_lo), float(z_hi), int(nz), dtype=np.float64)
@@ -74,9 +74,9 @@ def position_box_brackets_level(
     domain_hi: np.ndarray | None = None,
     probe_n: int = 9,
 ) -> tuple[float, float, float] | None:
-    """Expand a cube around ``center_m`` until ``V`` on the probe grid brackets ``level``.
+    """Expand a cube around 'center_m' until 'V' on the probe grid brackets 'level'.
 
-    Returns ``(x_lo, x_hi, half_used)`` for a symmetric cube, or ``None`` if no bracket by ``max_half_m``.
+    Returns '(x_lo, x_hi, half_used)' for a symmetric cube, or 'None' if no bracket by 'max_half_m'.
     """
     c = np.asarray(center_m, dtype=np.float64).reshape(3)
     half = float(max(initial_half_m, 1.0))
@@ -378,9 +378,9 @@ def unsafe_set_mesh_lvlh(
     box_half_xyz: tuple[float, float, float] | None = None,
     unsafe_level: float = 0.0,
 ) -> tuple[np.ndarray, np.ndarray] | None:
-    """Marching-cubes mesh of the **physical BRT**: ``{ x : V(x) <= unsafe_level }`` in position at fixed ``v``.
+    """Marching-cubes mesh of the **physical BRT**: '{ x : V(x) <= unsafe_level }' in position at fixed 'v'.
 
-    Unlike an isosurface at ``V=0`` when the whole local box is negative, this always produces a
+    Unlike an isosurface at 'V=0' when the whole local box is negative, this always produces a
     boundary when both safe and unsafe cells exist.
     """
     c = np.asarray(center_m, dtype=np.float64).reshape(3)
@@ -440,7 +440,7 @@ def xy_unsafe_footprint_at_z(
     half_xy_m: tuple[float, float] | None = None,
     unsafe_level: float = 0.0,
 ) -> list[np.ndarray]:
-    """Closed polygons (N,3) in LVLH for the x–y slice of ``{V <= unsafe_level}`` at ``z=z_m``."""
+    """Closed polygons (N,3) in LVLH for the x–y slice of '{V <= unsafe_level}' at 'z=z_m'."""
     lo6 = np.asarray(domain_lo, dtype=np.float64).reshape(6)
     hi6 = np.asarray(domain_hi, dtype=np.float64).reshape(6)
     if center_m is not None and half_xy_m is not None:
@@ -504,7 +504,7 @@ def marching_cubes_v0_lvlh(
     *,
     level: float = 0.0,
 ) -> tuple[np.ndarray, np.ndarray] | None:
-    """``(verts_m, faces)`` for ``V=level`` via marching cubes, or ``None`` if no bracket / library failure."""
+    """'(verts_m, faces)' for 'V=level' via marching cubes, or 'None' if no bracket / library failure."""
     nx, ny, nz = max(4, int(nx)), max(4, int(ny)), max(4, int(nz))
     xs, ys, zs, _, _, _, vol = sample_v_on_position_grid(
         value_on_grid, vx, vy, vz, x_lo, x_hi, y_lo, y_hi, z_lo, z_hi, nx, ny, nz
@@ -532,7 +532,7 @@ def filter_mesh_in_lvhl_box(
     center_m: np.ndarray,
     half_xyz: tuple[float, float, float],
 ) -> tuple[np.ndarray, np.ndarray]:
-    """Keep triangles whose centroid lies inside ``center ± half_xyz`` (LVLH m)."""
+    """Keep triangles whose centroid lies inside 'center ± half_xyz' (LVLH m)."""
     c = np.asarray(center_m, dtype=np.float64).reshape(3)
     hx, hy, hz = (float(x) for x in half_xyz)
     verts = np.asarray(verts, dtype=np.float64)
@@ -554,7 +554,7 @@ def filter_mesh_by_radius(
     center_m: np.ndarray,
     max_radius_m: float,
 ) -> tuple[np.ndarray, np.ndarray]:
-    """Drop triangles whose centroid is farther than ``max_radius_m`` from ``center_m``."""
+    """Drop triangles whose centroid is farther than 'max_radius_m' from 'center_m'."""
     c = np.asarray(center_m, dtype=np.float64).reshape(3)
     verts = np.asarray(verts, dtype=np.float64)
     faces = np.asarray(faces, dtype=np.int64)
@@ -574,7 +574,7 @@ def _polylines_from_contour_set(
     normal_axis: int,
     fixed_coord: float,
 ) -> list[np.ndarray]:
-    """Extract 3D LVLH polylines from a matplotlib ``ContourSet`` (mpl 3.7–3.9+)."""
+    """Extract 3D LVLH polylines from a matplotlib 'ContourSet' (mpl 3.7–3.9+)."""
     segs: list[np.ndarray] = []
     # Matplotlib 3.8+: QuadContourSet exposes allsegs instead of collections.
     if hasattr(cs, "allsegs"):
@@ -610,7 +610,7 @@ def polylines_within_radius(
     *,
     min_points: int = 2,
 ) -> list[np.ndarray]:
-    """Keep polyline vertices inside ``radius_m`` of ``center_m`` (split into contiguous runs)."""
+    """Keep polyline vertices inside 'radius_m' of 'center_m' (split into contiguous runs)."""
     c = np.asarray(center_m, dtype=np.float64).reshape(3)
     r = float(radius_m)
     out: list[np.ndarray] = []
@@ -640,7 +640,7 @@ def polylines_within_radius(
 
 
 def nearest_contour_distance(lines: list[np.ndarray], center_m: np.ndarray) -> float | None:
-    """Minimum distance from ``center_m`` to any point on the given polylines."""
+    """Minimum distance from 'center_m' to any point on the given polylines."""
     c = np.asarray(center_m, dtype=np.float64).reshape(3)
     best: float | None = None
     for line in lines:
@@ -666,7 +666,7 @@ def contour_segments_on_domain_plane(
     *,
     level: float = 0.0,
 ) -> list[np.ndarray]:
-    """``V=level`` contours on a plane using the full HJ position bounds for the two free axes."""
+    """'V=level' contours on a plane using the full HJ position bounds for the two free axes."""
     import matplotlib.pyplot as plt
 
     lo6 = np.asarray(domain_lo, dtype=np.float64).reshape(6)
@@ -717,9 +717,9 @@ def contour_segments_3d_from_plane(
     domain_lo: np.ndarray | None = None,
     domain_hi: np.ndarray | None = None,
 ) -> list[np.ndarray]:
-    """Plane contours of ``V=level`` as polylines ``(N, 3)`` in LVLH meters (for ``plot3D``).
+    """Plane contours of 'V=level' as polylines '(N, 3)' in LVLH meters (for 'plot3D').
 
-    ``normal_axis``: 0 fixes ``x``, 1 fixes ``y``, 2 fixes ``z`` to ``fixed_coord``.
+    'normal_axis': 0 fixes 'x', 1 fixes 'y', 2 fixes 'z' to 'fixed_coord'.
     """
     import matplotlib.pyplot as plt
 
@@ -769,7 +769,7 @@ def _box_unsafe_fraction(
     domain_hi: np.ndarray,
     n: int = 9,
 ) -> float | None:
-    """Fraction of grid nodes with ``V <= 0`` in a position cube (quick probe)."""
+    """Fraction of grid nodes with 'V <= 0' in a position cube (quick probe)."""
     c = np.asarray(center_m, dtype=np.float64).reshape(3)
     lo6 = np.asarray(domain_lo, dtype=np.float64).reshape(6)
     hi6 = np.asarray(domain_hi, dtype=np.float64).reshape(6)

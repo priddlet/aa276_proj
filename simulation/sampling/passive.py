@@ -16,7 +16,7 @@ def natural_coast_hits_inner_koz(
     *,
     n_samples: int = 256,
 ) -> bool:
-    """True if free drift from ``x_lvlh_m`` enters ``inner`` within ``horizon_s``."""
+    """True if free drift from 'x_lvlh_m' enters 'inner' within 'horizon_s'."""
     if horizon_s <= 0:
         return inner.is_inside(np.asarray(x_lvlh_m, dtype=np.float64).reshape(6)[:3])
     times = np.linspace(0.0, float(horizon_s), int(n_samples), dtype=np.float64)

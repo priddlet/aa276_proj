@@ -19,7 +19,7 @@ def _log(msg: str) -> None:
 
 
 def _axis_cube_3d(ax, center: np.ndarray, half: float) -> None:
-    """Equal square axis limits: ``center ± half`` on each axis."""
+    """Equal square axis limits: 'center ± half' on each axis."""
     c = np.asarray(center, dtype=np.float64).reshape(3)
     h = float(max(half, 1.0))
     ax.set_xlim(c[0] - h, c[0] + h)
@@ -128,7 +128,7 @@ def render_brt_lvlh_snapshot(
     gif_frames: int = 16,
     gif_fps: float = 8.0,
 ) -> tuple[str | None, str | None]:
-    """LVLH plot (meters): inner KOZ (terminal) + **physical BRT** ``{V ≤ 0}`` near the chief."""
+    """LVLH plot (meters): inner KOZ (terminal) + **physical BRT** '{V <= 0}' near the chief."""
     import matplotlib
 
     if os.environ.get("MPLBACKEND", "").lower() == "agg" or os.environ.get("CI"):
@@ -191,7 +191,7 @@ def render_brt_lvlh_snapshot(
                     )
                     ax.add_collection3d(coll_fp)
                     if not brt_label_added:
-                        coll_fp.set_label("BRT (V≤0 footprint)")
+                        coll_fp.set_label("Unsafe region (V ≤ 0)")
                         brt_label_added = True
         if surf.get("mesh_verts") is not None and surf.get("mesh_faces") is not None:
             verts_m = np.asarray(surf["mesh_verts"], dtype=np.float64)
@@ -205,7 +205,7 @@ def render_brt_lvlh_snapshot(
                     linewidths=0.22,
                 )
                 if not brt_label_added:
-                    coll.set_label("BRT (V≤0 shell)")
+                    coll.set_label("Unsafe shell (V ≤ 0)")
                     brt_label_added = True
                 try:
                     coll.set_zsort("average")
@@ -250,7 +250,7 @@ def render_brt_lvlh_snapshot(
             alpha=0.96,
             rstride=1,
             cstride=1,
-            label="KOZ",
+            label="Keep-out zone",
         )
         _draw_brt(ax)
         I = np.eye(3, dtype=np.float64)
@@ -260,7 +260,7 @@ def render_brt_lvlh_snapshot(
         ax.set_xlabel("x (m)")
         ax.set_ylabel("y (m)")
         ax.set_zlabel("z (m)")
-        ax.set_title("BRT unsafe set {V≤0} @ horizon + KOZ" + title_suffix, fontsize=10)
+        ax.set_title("Unsafe set at end of horizon" + title_suffix, fontsize=10)
         ax.legend(loc="upper right", fontsize=7)
         try:
             ax.view_init(elev=float(os.environ.get("BRT_SNAPSHOT_ELEV", "22")), azim=float(os.environ.get("BRT_SNAPSHOT_AZIM", "-58")))

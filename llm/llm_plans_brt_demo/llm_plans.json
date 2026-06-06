@@ -3,11 +3,11 @@
     "id": "scenario_brt_filter_demo_v1",
     "frame": "LVLH (x=radial, y=along-track, z=cross-track), chief at origin",
     "dynamics": "Clohessy-Wiltshire (linearized Hill)",
-    "mean_motion_rad_s": 0.0011313666536110225,
+    "mean_motion_rad_s": 0.0011313666536110223,
     "orbital_period_s": 5553.624271252228,
     "start_state_m_m_s": [
       0.0,
-      1200.0,
+      250.0,
       0.0,
       0.0,
       0.0,
@@ -33,18 +33,18 @@
   "plans": [
     {
       "plan_id": "brt_demo_safe_00",
-      "prompt": "Small along-track trim at t=550s from y=1200 m (should pass filter at \u03b1=1).",
+      "prompt": "Small along-track trim at t=448s from y=250 m (should pass filter at \u03b1=1).",
       "tags": {
         "category": "brt_demo_safe",
         "approach_angle": "along_track",
         "urgency": "low",
-        "range_framing": "mid_1200m",
-        "burn_time_s": 550.0
+        "range_framing": "mid_250m",
+        "burn_time_s": 448.3
       },
       "scenario_ref": "scenario_brt_filter_demo_v1",
       "maneuvers": [
         {
-          "t_s": 550.0,
+          "t_s": 448.3,
           "dv_m_s": [
             -0.008,
             -0.04,
@@ -55,27 +55,28 @@
       "label": {
         "expected_intervention": 0,
         "intervention_reasons": [],
-        "nominal_post_burn_V": 0.14237594604492188,
+        "nominal_post_burn_V": 4.379449367523193,
         "filter_alphas": [
           1.0
         ],
-        "n_burns": 1
+        "n_burns": 1,
+        "source_plan": ""
       }
     },
     {
       "plan_id": "brt_demo_safe_01",
-      "prompt": "Small along-track trim at t=550s from y=1200 m (should pass filter at \u03b1=1).",
+      "prompt": "Small along-track trim at t=448s from y=250 m (should pass filter at \u03b1=1).",
       "tags": {
         "category": "brt_demo_safe",
         "approach_angle": "along_track",
         "urgency": "low",
-        "range_framing": "mid_1200m",
-        "burn_time_s": 550.0
+        "range_framing": "mid_250m",
+        "burn_time_s": 448.3
       },
       "scenario_ref": "scenario_brt_filter_demo_v1",
       "maneuvers": [
         {
-          "t_s": 550.0,
+          "t_s": 448.3,
           "dv_m_s": [
             -0.015,
             -0.06,
@@ -86,27 +87,28 @@
       "label": {
         "expected_intervention": 0,
         "intervention_reasons": [],
-        "nominal_post_burn_V": 0.12639236450195312,
+        "nominal_post_burn_V": 4.379282474517822,
         "filter_alphas": [
           1.0
         ],
-        "n_burns": 1
+        "n_burns": 1,
+        "source_plan": ""
       }
     },
     {
       "plan_id": "brt_demo_safe_02",
-      "prompt": "Small along-track trim at t=550s from y=1200 m (should pass filter at \u03b1=1).",
+      "prompt": "Small along-track trim at t=448s from y=250 m (should pass filter at \u03b1=1).",
       "tags": {
         "category": "brt_demo_safe",
         "approach_angle": "along_track",
         "urgency": "low",
-        "range_framing": "mid_1200m",
-        "burn_time_s": 550.0
+        "range_framing": "mid_250m",
+        "burn_time_s": 448.3
       },
       "scenario_ref": "scenario_brt_filter_demo_v1",
       "maneuvers": [
         {
-          "t_s": 550.0,
+          "t_s": 448.3,
           "dv_m_s": [
             -0.02,
             -0.05,
@@ -117,27 +119,28 @@
       "label": {
         "expected_intervention": 0,
         "intervention_reasons": [],
-        "nominal_post_burn_V": 0.1519031524658203,
+        "nominal_post_burn_V": 4.379449367523193,
         "filter_alphas": [
           1.0
         ],
-        "n_burns": 1
+        "n_burns": 1,
+        "source_plan": ""
       }
     },
     {
       "plan_id": "brt_demo_safe_03",
-      "prompt": "Small along-track trim at t=550s from y=1200 m (should pass filter at \u03b1=1).",
+      "prompt": "Small along-track trim at t=448s from y=250 m (should pass filter at \u03b1=1).",
       "tags": {
         "category": "brt_demo_safe",
         "approach_angle": "along_track",
         "urgency": "low",
-        "range_framing": "mid_1200m",
-        "burn_time_s": 550.0
+        "range_framing": "mid_250m",
+        "burn_time_s": 448.3
       },
       "scenario_ref": "scenario_brt_filter_demo_v1",
       "maneuvers": [
         {
-          "t_s": 550.0,
+          "t_s": 448.3,
           "dv_m_s": [
             -0.01,
             -0.08,
@@ -148,27 +151,28 @@
       "label": {
         "expected_intervention": 0,
         "intervention_reasons": [],
-        "nominal_post_burn_V": 0.10078048706054688,
+        "nominal_post_burn_V": 4.379115104675293,
         "filter_alphas": [
           1.0
         ],
-        "n_burns": 1
+        "n_burns": 1,
+        "source_plan": ""
       }
     },
     {
       "plan_id": "brt_demo_safe_04",
-      "prompt": "Small along-track trim at t=550s from y=1200 m (should pass filter at \u03b1=1).",
+      "prompt": "Small along-track trim at t=448s from y=250 m (should pass filter at \u03b1=1).",
       "tags": {
         "category": "brt_demo_safe",
         "approach_angle": "along_track",
         "urgency": "low",
-        "range_framing": "mid_1200m",
-        "burn_time_s": 550.0
+        "range_framing": "mid_250m",
+        "burn_time_s": 448.3
       },
       "scenario_ref": "scenario_brt_filter_demo_v1",
       "maneuvers": [
         {
-          "t_s": 550.0,
+          "t_s": 448.3,
           "dv_m_s": [
             -0.025,
             -0.03,
@@ -179,27 +183,28 @@
       "label": {
         "expected_intervention": 0,
         "intervention_reasons": [],
-        "nominal_post_burn_V": 0.1530303955078125,
+        "nominal_post_burn_V": 4.379449367523193,
         "filter_alphas": [
           1.0
         ],
-        "n_burns": 1
+        "n_burns": 1,
+        "source_plan": ""
       }
     },
     {
       "plan_id": "brt_demo_safe_05",
-      "prompt": "Small along-track trim at t=550s from y=1200 m (should pass filter at \u03b1=1).",
+      "prompt": "Small along-track trim at t=448s from y=250 m (should pass filter at \u03b1=1).",
       "tags": {
         "category": "brt_demo_safe",
         "approach_angle": "along_track",
         "urgency": "low",
-        "range_framing": "mid_1200m",
-        "burn_time_s": 550.0
+        "range_framing": "mid_250m",
+        "burn_time_s": 448.3
       },
       "scenario_ref": "scenario_brt_filter_demo_v1",
       "maneuvers": [
         {
-          "t_s": 550.0,
+          "t_s": 448.3,
           "dv_m_s": [
             -0.005,
             -0.03,
@@ -210,621 +215,602 @@
       "label": {
         "expected_intervention": 0,
         "intervention_reasons": [],
-        "nominal_post_burn_V": 0.16460609436035156,
+        "nominal_post_burn_V": 4.379532814025879,
         "filter_alphas": [
           1.0
         ],
-        "n_burns": 1
+        "n_burns": 1,
+        "source_plan": ""
       }
     },
     {
       "plan_id": "brt_demo_unsafe_00",
-      "prompt": "Aggressive burn at t=550s from y=1200 m (nominal V=-0.25; filter expected \u03b1\u22480.64).",
+      "prompt": "Aggressive burn at t=448s from y=250 m (filter expected \u03b1\u22480.84; source=aggr_intercept_along_track_008).",
       "tags": {
         "category": "brt_demo_unsafe",
         "approach_angle": "along_track",
         "urgency": "med",
-        "range_framing": "mid_1200m",
-        "burn_time_s": 550.0
+        "range_framing": "mid_250m",
+        "burn_time_s": 448.3
       },
       "scenario_ref": "scenario_brt_filter_demo_v1",
       "maneuvers": [
         {
-          "t_s": 550.0,
+          "t_s": 448.3,
           "dv_m_s": [
-            0.7670769359566973,
-            -0.1711403686942535,
-            0.1506111263627806
+            0.15941,
+            -0.07255,
+            -0.0
           ]
         }
       ],
       "label": {
-        "expected_intervention": 1,
-        "intervention_reasons": [
-          "dv_cap",
-          "brt_unsafe"
-        ],
-        "nominal_post_burn_V": -0.2530651092529297,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "nominal_post_burn_V": 4.378781318664551,
         "filter_alphas": [
-          0.6389530301094055
+          0.8369673639535904
         ],
-        "n_burns": 1
+        "n_burns": 1,
+        "source_plan": "aggr_intercept_along_track_008"
       }
     },
     {
       "plan_id": "brt_demo_unsafe_01",
-      "prompt": "Aggressive burn at t=550s from y=1200 m (nominal V=-0.30; filter expected \u03b1\u22480.19).",
+      "prompt": "Aggressive burn at t=336s from y=250 m (filter expected \u03b1\u22480.84; source=aggr_intercept_along_track_010).",
       "tags": {
         "category": "brt_demo_unsafe",
         "approach_angle": "along_track",
         "urgency": "high",
-        "range_framing": "mid_1200m",
-        "burn_time_s": 550.0
+        "range_framing": "mid_250m",
+        "burn_time_s": 448.3
       },
       "scenario_ref": "scenario_brt_filter_demo_v1",
       "maneuvers": [
         {
-          "t_s": 550.0,
+          "t_s": 336.3,
           "dv_m_s": [
-            0.5526304813662188,
-            -1.1363034259145812,
-            0.19976138768743748
+            0.16401,
+            -0.07876,
+            -0.0
           ]
         }
       ],
       "label": {
-        "expected_intervention": 1,
-        "intervention_reasons": [
-          "dv_cap",
-          "brt_unsafe"
-        ],
-        "nominal_post_burn_V": -0.29609107971191406,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "nominal_post_burn_V": 4.414050579071045,
         "filter_alphas": [
-          0.19438928365707397
+          0.836323693394661
         ],
-        "n_burns": 1
+        "n_burns": 1,
+        "source_plan": "aggr_intercept_along_track_010"
       }
     },
     {
       "plan_id": "brt_demo_unsafe_02",
-      "prompt": "Aggressive burn at t=550s from y=1200 m (nominal V=-0.00; filter expected \u03b1\u22480.85).",
+      "prompt": "Aggressive burn at t=533s from y=250 m (filter expected \u03b1\u22480.81; source=aggr_delayed_along_track_011).",
       "tags": {
         "category": "brt_demo_unsafe",
         "approach_angle": "along_track",
         "urgency": "med",
-        "range_framing": "mid_1200m",
-        "burn_time_s": 550.0
+        "range_framing": "mid_250m",
+        "burn_time_s": 448.3
       },
       "scenario_ref": "scenario_brt_filter_demo_v1",
       "maneuvers": [
         {
-          "t_s": 550.0,
+          "t_s": 533.4,
           "dv_m_s": [
-            -0.7637315790026247,
-            0.15283740364433743,
-            -0.18319675243624636
+            0.24988,
+            -0.22914,
+            0.0
           ]
         }
       ],
       "label": {
-        "expected_intervention": 1,
-        "intervention_reasons": [
-          "dv_cap",
-          "brt_unsafe"
-        ],
-        "nominal_post_burn_V": -0.0020732879638671875,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "nominal_post_burn_V": 4.30826473236084,
         "filter_alphas": [
-          0.8517168164253235
+          0.7218773290514946
         ],
-        "n_burns": 1
+        "n_burns": 1,
+        "source_plan": "aggr_delayed_along_track_011"
       }
     },
     {
       "plan_id": "brt_demo_unsafe_03",
-      "prompt": "Aggressive burn at t=550s from y=1200 m (nominal V=-0.95; filter expected \u03b1\u22480.15).",
+      "prompt": "Aggressive burn at t=404s from y=250 m (filter expected \u03b1\u22480.53; source=aggr_reckless_along_track_015).",
       "tags": {
         "category": "brt_demo_unsafe",
         "approach_angle": "along_track",
         "urgency": "high",
-        "range_framing": "mid_1200m",
-        "burn_time_s": 550.0
+        "range_framing": "mid_250m",
+        "burn_time_s": 448.3
       },
       "scenario_ref": "scenario_brt_filter_demo_v1",
       "maneuvers": [
         {
-          "t_s": 550.0,
+          "t_s": 404.4,
           "dv_m_s": [
-            0.7794737918065332,
-            -0.8550116180144908,
-            -0.013977178434645644
+            -0.09325,
+            -0.9325,
+            0.0
           ]
         }
       ],
       "label": {
         "expected_intervention": 1,
         "intervention_reasons": [
-          "dv_cap",
-          "brt_unsafe"
+          "dv_cap"
         ],
-        "nominal_post_burn_V": -0.9536876678466797,
+        "nominal_post_burn_V": 4.403323173522949,
         "filter_alphas": [
-          0.15148931741714478
+          0.533532005474525
         ],
-        "n_burns": 1
+        "n_burns": 1,
+        "source_plan": "aggr_reckless_along_track_015"
       }
     },
     {
       "plan_id": "brt_demo_unsafe_04",
-      "prompt": "Aggressive burn at t=550s from y=1200 m (nominal V=-0.03; filter expected \u03b1\u22480.72).",
+      "prompt": "Aggressive burn at t=394s from y=250 m (filter expected \u03b1\u22480.82; source=aggr_intercept_oblique_025).",
       "tags": {
         "category": "brt_demo_unsafe",
         "approach_angle": "along_track",
         "urgency": "med",
-        "range_framing": "mid_1200m",
-        "burn_time_s": 550.0
+        "range_framing": "mid_250m",
+        "burn_time_s": 448.3
       },
       "scenario_ref": "scenario_brt_filter_demo_v1",
       "maneuvers": [
         {
-          "t_s": 550.0,
+          "t_s": 394.4,
           "dv_m_s": [
-            -1.0362197850606794,
-            -0.0680262065673855,
-            -0.11469807339862867
+            0.19006,
+            -0.11878,
+            -0.0
           ]
         }
       ],
       "label": {
-        "expected_intervention": 1,
-        "intervention_reasons": [
-          "dv_cap",
-          "brt_unsafe"
-        ],
-        "nominal_post_burn_V": -0.0260467529296875,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "nominal_post_burn_V": 4.398933410644531,
         "filter_alphas": [
-          0.7177790403366089
+          0.8202080354094505
         ],
-        "n_burns": 1
+        "n_burns": 1,
+        "source_plan": "aggr_intercept_oblique_025"
       }
     },
     {
       "plan_id": "brt_demo_unsafe_05",
-      "prompt": "Aggressive burn at t=550s from y=1200 m (nominal V=-0.64; filter expected \u03b1\u22480.34).",
+      "prompt": "Aggressive burn at t=626s from y=250 m (filter expected \u03b1\u22480.86; source=aggr_delayed_oblique_027).",
       "tags": {
         "category": "brt_demo_unsafe",
         "approach_angle": "along_track",
         "urgency": "high",
-        "range_framing": "mid_1200m",
-        "burn_time_s": 550.0
+        "range_framing": "mid_250m",
+        "burn_time_s": 448.3
       },
       "scenario_ref": "scenario_brt_filter_demo_v1",
       "maneuvers": [
         {
-          "t_s": 550.0,
+          "t_s": 626.0,
           "dv_m_s": [
-            0.5607422856062975,
-            -0.525373404130285,
-            0.13954911658598443
+            0.19897,
+            -0.06509,
+            0.0
           ]
         }
       ],
       "label": {
-        "expected_intervention": 1,
-        "intervention_reasons": [
-          "dv_cap",
-          "brt_unsafe"
-        ],
-        "nominal_post_burn_V": -0.6352882385253906,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "nominal_post_burn_V": 4.324801445007324,
         "filter_alphas": [
-          0.3367357850074768
+          1.0
         ],
-        "n_burns": 1
+        "n_burns": 1,
+        "source_plan": "aggr_delayed_oblique_027"
       }
     },
     {
       "plan_id": "brt_demo_unsafe_06",
-      "prompt": "Aggressive burn at t=550s from y=1200 m (nominal V=-1.29; filter expected \u03b1\u22480.22).",
+      "prompt": "Aggressive burn at t=325s from y=250 m (filter expected \u03b1\u22480.84; source=aggr_highbrake_oblique_029).",
       "tags": {
         "category": "brt_demo_unsafe",
         "approach_angle": "along_track",
         "urgency": "med",
-        "range_framing": "mid_1200m",
-        "burn_time_s": 550.0
+        "range_framing": "mid_250m",
+        "burn_time_s": 448.3
       },
       "scenario_ref": "scenario_brt_filter_demo_v1",
       "maneuvers": [
         {
-          "t_s": 550.0,
+          "t_s": 325.4,
           "dv_m_s": [
-            0.8533402009910451,
-            -0.3150605387155115,
-            -0.08890219634929747
+            -0.34192,
+            -0.48845,
+            0.0
           ]
         }
       ],
       "label": {
         "expected_intervention": 1,
         "intervention_reasons": [
-          "dv_cap",
-          "brt_unsafe"
+          "dv_cap"
         ],
-        "nominal_post_burn_V": -1.2877635955810547,
+        "nominal_post_burn_V": 4.42233419418335,
         "filter_alphas": [
-          0.21579551696777344
+          0.8385996322754544
         ],
-        "n_burns": 1
+        "n_burns": 1,
+        "source_plan": "aggr_highbrake_oblique_029"
       }
     },
     {
       "plan_id": "brt_demo_unsafe_07",
-      "prompt": "Aggressive burn at t=550s from y=1200 m (nominal V=-0.55; filter expected \u03b1\u22480.13).",
+      "prompt": "Aggressive burn at t=517s from y=250 m (filter expected \u03b1\u22480.94; source=aggr_highbrake_oblique_030).",
       "tags": {
         "category": "brt_demo_unsafe",
         "approach_angle": "along_track",
         "urgency": "high",
-        "range_framing": "mid_1200m",
-        "burn_time_s": 550.0
+        "range_framing": "mid_250m",
+        "burn_time_s": 448.3
       },
       "scenario_ref": "scenario_brt_filter_demo_v1",
       "maneuvers": [
         {
-          "t_s": 550.0,
+          "t_s": 517.4,
           "dv_m_s": [
-            0.5109874111299314,
-            -1.0086930458939325,
-            -0.1260385549604545
+            -0.30517,
+            -0.43596,
+            0.0
           ]
         }
       ],
       "label": {
         "expected_intervention": 1,
         "intervention_reasons": [
-          "dv_cap",
-          "brt_unsafe"
+          "dv_cap"
         ],
-        "nominal_post_burn_V": -0.5539455413818359,
+        "nominal_post_burn_V": 4.310478687286377,
         "filter_alphas": [
-          0.13126760721206665
+          0.9395743716834939
         ],
-        "n_burns": 1
+        "n_burns": 1,
+        "source_plan": "aggr_highbrake_oblique_030"
       }
     },
     {
       "plan_id": "brt_demo_unsafe_08",
-      "prompt": "Aggressive burn at t=550s from y=1200 m (nominal V=-0.26; filter expected \u03b1\u22480.14).",
+      "prompt": "Aggressive burn at t=396s from y=250 m (filter expected \u03b1\u22480.66; source=aggr_reckless_oblique_031).",
       "tags": {
         "category": "brt_demo_unsafe",
         "approach_angle": "along_track",
         "urgency": "med",
-        "range_framing": "mid_1200m",
-        "burn_time_s": 550.0
+        "range_framing": "mid_250m",
+        "burn_time_s": 448.3
       },
       "scenario_ref": "scenario_brt_filter_demo_v1",
       "maneuvers": [
         {
-          "t_s": 550.0,
+          "t_s": 396.1,
           "dv_m_s": [
-            0.19247534866810245,
-            -1.0085684052425592,
-            -0.16189736911489114
+            -0.43742,
+            -0.62489,
+            0.0
           ]
         }
       ],
       "label": {
         "expected_intervention": 1,
         "intervention_reasons": [
-          "dv_cap",
-          "brt_unsafe"
+          "dv_cap"
         ],
-        "nominal_post_burn_V": -0.2558307647705078,
+        "nominal_post_burn_V": 4.391544342041016,
         "filter_alphas": [
-          0.14427274465560913
+          0.6555023830111109
         ],
-        "n_burns": 1
+        "n_burns": 1,
+        "source_plan": "aggr_reckless_oblique_031"
       }
     },
     {
       "plan_id": "brt_demo_unsafe_09",
-      "prompt": "Aggressive burn at t=550s from y=1200 m (nominal V=-0.12; filter expected \u03b1\u22480.74).",
+      "prompt": "Aggressive burn at t=420s from y=250 m (filter expected \u03b1\u22480.80; source=aggr_intercept_radial_040).",
       "tags": {
         "category": "brt_demo_unsafe",
         "approach_angle": "along_track",
         "urgency": "high",
-        "range_framing": "mid_1200m",
-        "burn_time_s": 550.0
+        "range_framing": "mid_250m",
+        "burn_time_s": 448.3
       },
       "scenario_ref": "scenario_brt_filter_demo_v1",
       "maneuvers": [
         {
-          "t_s": 550.0,
+          "t_s": 420.5,
           "dv_m_s": [
-            0.4715282930133206,
-            -0.08093062279922893,
-            0.027399164722099304
+            0.20626,
+            -0.14592,
+            -0.0
           ]
         }
       ],
       "label": {
-        "expected_intervention": 1,
-        "intervention_reasons": [
-          "brt_unsafe"
-        ],
-        "nominal_post_burn_V": -0.12254905700683594,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "nominal_post_burn_V": 4.405721664428711,
         "filter_alphas": [
-          0.7449144124984741
+          0.7974161431193352
         ],
-        "n_burns": 1
+        "n_burns": 1,
+        "source_plan": "aggr_intercept_radial_040"
       }
     },
     {
       "plan_id": "brt_demo_unsafe_10",
-      "prompt": "Aggressive burn at t=550s from y=1200 m (nominal V=-0.63; filter expected \u03b1\u22480.20).",
+      "prompt": "Aggressive burn at t=497s from y=250 m (filter expected \u03b1\u22480.80; source=aggr_intercept_radial_041).",
       "tags": {
         "category": "brt_demo_unsafe",
         "approach_angle": "along_track",
         "urgency": "med",
-        "range_framing": "mid_1200m",
-        "burn_time_s": 550.0
+        "range_framing": "mid_250m",
+        "burn_time_s": 448.3
       },
       "scenario_ref": "scenario_brt_filter_demo_v1",
       "maneuvers": [
         {
-          "t_s": 550.0,
+          "t_s": 496.8,
           "dv_m_s": [
-            0.1657800500871579,
-            -0.5489397254246858,
-            -0.19705650948146544
+            0.20766,
+            -0.14912,
+            -0.0
           ]
         }
       ],
       "label": {
-        "expected_intervention": 1,
-        "intervention_reasons": [
-          "dv_cap",
-          "brt_unsafe"
-        ],
-        "nominal_post_burn_V": -0.6302700042724609,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "nominal_post_burn_V": 4.317275047302246,
         "filter_alphas": [
-          0.19734424352645874
+          0.7968932911753654
         ],
-        "n_burns": 1
+        "n_burns": 1,
+        "source_plan": "aggr_intercept_radial_041"
       }
     },
     {
       "plan_id": "brt_demo_unsafe_11",
-      "prompt": "Aggressive burn at t=550s from y=1200 m (nominal V=-1.28; filter expected \u03b1\u22480.12).",
+      "prompt": "Aggressive burn at t=342s from y=250 m (filter expected \u03b1\u22480.78; source=aggr_intercept_radial_042).",
       "tags": {
         "category": "brt_demo_unsafe",
         "approach_angle": "along_track",
         "urgency": "high",
-        "range_framing": "mid_1200m",
-        "burn_time_s": 550.0
+        "range_framing": "mid_250m",
+        "burn_time_s": 448.3
       },
       "scenario_ref": "scenario_brt_filter_demo_v1",
       "maneuvers": [
         {
-          "t_s": 550.0,
+          "t_s": 342.0,
           "dv_m_s": [
-            0.989528605150865,
-            -0.7449694395770459,
-            -0.18551284849059224
+            0.2316,
+            -0.21699,
+            -0.0
           ]
         }
       ],
       "label": {
-        "expected_intervention": 1,
-        "intervention_reasons": [
-          "dv_cap",
-          "brt_unsafe"
-        ],
-        "nominal_post_burn_V": -1.277109146118164,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "nominal_post_burn_V": 4.414327621459961,
         "filter_alphas": [
-          0.12205874919891357
+          0.7837140634655952
         ],
-        "n_burns": 1
+        "n_burns": 1,
+        "source_plan": "aggr_intercept_radial_042"
       }
     },
     {
       "plan_id": "brt_demo_unsafe_12",
-      "prompt": "Aggressive burn at t=550s from y=1200 m (nominal V=-0.05; filter expected \u03b1\u22480.57).",
+      "prompt": "Aggressive burn at t=550s from y=250 m (filter expected \u03b1\u22480.88; source=aggr_delayed_radial_043).",
       "tags": {
         "category": "brt_demo_unsafe",
         "approach_angle": "along_track",
         "urgency": "med",
-        "range_framing": "mid_1200m",
-        "burn_time_s": 550.0
+        "range_framing": "mid_250m",
+        "burn_time_s": 448.3
       },
       "scenario_ref": "scenario_brt_filter_demo_v1",
       "maneuvers": [
         {
-          "t_s": 550.0,
+          "t_s": 549.5999999999999,
           "dv_m_s": [
-            -0.9735261124031284,
-            0.5496970502176608,
-            -0.022614364258907105
+            0.26763,
+            -0.12001,
+            0.0
           ]
         }
       ],
       "label": {
-        "expected_intervention": 1,
-        "intervention_reasons": [
-          "dv_cap",
-          "brt_unsafe"
-        ],
-        "nominal_post_burn_V": -0.04571533203125,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "nominal_post_burn_V": 4.308125019073486,
         "filter_alphas": [
-          0.5665814280509949
+          1.0
         ],
-        "n_burns": 1
+        "n_burns": 1,
+        "source_plan": "aggr_delayed_radial_043"
       }
     },
     {
       "plan_id": "brt_demo_unsafe_13",
-      "prompt": "Aggressive burn at t=550s from y=1200 m (nominal V=-0.76; filter expected \u03b1\u22480.32).",
+      "prompt": "Aggressive burn at t=570s from y=250 m (filter expected \u03b1\u22480.98; source=aggr_delayed_radial_044).",
       "tags": {
         "category": "brt_demo_unsafe",
         "approach_angle": "along_track",
         "urgency": "high",
-        "range_framing": "mid_1200m",
-        "burn_time_s": 550.0
+        "range_framing": "mid_250m",
+        "burn_time_s": 448.3
       },
       "scenario_ref": "scenario_brt_filter_demo_v1",
       "maneuvers": [
         {
-          "t_s": 550.0,
+          "t_s": 569.6,
           "dv_m_s": [
-            0.6072925296451877,
-            -0.14178779399739172,
-            -0.0956585440250332
+            0.26759,
+            -0.22066,
+            0.0
           ]
         }
       ],
       "label": {
-        "expected_intervention": 1,
-        "intervention_reasons": [
-          "dv_cap",
-          "brt_unsafe"
-        ],
-        "nominal_post_burn_V": -0.7596569061279297,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "nominal_post_burn_V": 4.306123733520508,
         "filter_alphas": [
-          0.32168567180633545
+          1.0
         ],
-        "n_burns": 1
+        "n_burns": 1,
+        "source_plan": "aggr_delayed_radial_044"
       }
     },
     {
       "plan_id": "brt_demo_unsafe_14",
-      "prompt": "Aggressive burn at t=550s from y=1200 m (nominal V=-0.43; filter expected \u03b1\u22480.48).",
+      "prompt": "Aggressive burn at t=419s from y=250 m (filter expected \u03b1\u22480.77; source=aggr_highbrake_radial_045).",
       "tags": {
         "category": "brt_demo_unsafe",
         "approach_angle": "along_track",
         "urgency": "med",
-        "range_framing": "mid_1200m",
-        "burn_time_s": 550.0
+        "range_framing": "mid_250m",
+        "burn_time_s": 448.3
       },
       "scenario_ref": "scenario_brt_filter_demo_v1",
       "maneuvers": [
         {
-          "t_s": 550.0,
+          "t_s": 418.8,
           "dv_m_s": [
-            0.614496276662623,
-            -0.19013948862970959,
-            0.053469713095026135
+            -0.62572,
+            -0.18772,
+            0.0
           ]
         }
       ],
       "label": {
         "expected_intervention": 1,
         "intervention_reasons": [
-          "dv_cap",
-          "brt_unsafe"
+          "dv_cap"
         ],
-        "nominal_post_burn_V": -0.43183135986328125,
+        "nominal_post_burn_V": 4.404922962188721,
         "filter_alphas": [
-          0.4758685827255249
+          0.7653779645598618
         ],
-        "n_burns": 1
+        "n_burns": 1,
+        "source_plan": "aggr_highbrake_radial_045"
       }
     },
     {
       "plan_id": "brt_demo_unsafe_15",
-      "prompt": "Aggressive burn at t=550s from y=1200 m (nominal V=-0.17; filter expected \u03b1\u22480.33).",
+      "prompt": "Aggressive burn at t=382s from y=250 m (filter expected \u03b1\u22480.97; source=aggr_highbrake_radial_046).",
       "tags": {
         "category": "brt_demo_unsafe",
         "approach_angle": "along_track",
         "urgency": "high",
-        "range_framing": "mid_1200m",
-        "burn_time_s": 550.0
+        "range_framing": "mid_250m",
+        "burn_time_s": 448.3
       },
       "scenario_ref": "scenario_brt_filter_demo_v1",
       "maneuvers": [
         {
-          "t_s": 550.0,
+          "t_s": 382.2,
           "dv_m_s": [
-            0.24540480209759372,
-            -0.9223396880967188,
-            0.17855044971825482
+            -0.49439,
+            -0.14832,
+            0.0
           ]
         }
       ],
       "label": {
         "expected_intervention": 1,
         "intervention_reasons": [
-          "dv_cap",
-          "brt_unsafe"
+          "dv_cap"
         ],
-        "nominal_post_burn_V": -0.1678295135498047,
+        "nominal_post_burn_V": 4.399649143218994,
         "filter_alphas": [
-          0.329468309879303
+          0.9686934257661887
         ],
-        "n_burns": 1
+        "n_burns": 1,
+        "source_plan": "aggr_highbrake_radial_046"
       }
     },
     {
       "plan_id": "brt_demo_unsafe_16",
-      "prompt": "Aggressive burn at t=550s from y=1200 m (nominal V=-0.30; filter expected \u03b1\u22480.42).",
+      "prompt": "Aggressive burn at t=453s from y=250 m (filter expected \u03b1\u22480.60; source=aggr_reckless_radial_047).",
       "tags": {
         "category": "brt_demo_unsafe",
         "approach_angle": "along_track",
         "urgency": "med",
-        "range_framing": "mid_1200m",
-        "burn_time_s": 550.0
+        "range_framing": "mid_250m",
+        "burn_time_s": 448.3
       },
       "scenario_ref": "scenario_brt_filter_demo_v1",
       "maneuvers": [
         {
-          "t_s": 550.0,
+          "t_s": 452.7,
           "dv_m_s": [
-            0.2269711911611059,
-            -0.42876454730245617,
-            0.038184506422195036
+            -0.79782,
+            -0.23935,
+            0.0
           ]
         }
       ],
       "label": {
         "expected_intervention": 1,
         "intervention_reasons": [
-          "brt_unsafe"
+          "dv_cap"
         ],
-        "nominal_post_burn_V": -0.29588890075683594,
+        "nominal_post_burn_V": 4.366843223571777,
         "filter_alphas": [
-          0.4212632179260254
+          0.6002763552565823
         ],
-        "n_burns": 1
+        "n_burns": 1,
+        "source_plan": "aggr_reckless_radial_047"
       }
     },
     {
       "plan_id": "brt_demo_unsafe_17",
-      "prompt": "Aggressive burn at t=550s from y=1200 m (nominal V=-0.25; filter expected \u03b1\u22480.12).",
+      "prompt": "Aggressive burn at t=486s from y=250 m (filter expected \u03b1\u22480.83; source=aggr_intercept_out_of_plane_057).",
       "tags": {
         "category": "brt_demo_unsafe",
         "approach_angle": "along_track",
         "urgency": "high",
-        "range_framing": "mid_1200m",
-        "burn_time_s": 550.0
+        "range_framing": "mid_250m",
+        "burn_time_s": 448.3
       },
       "scenario_ref": "scenario_brt_filter_demo_v1",
       "maneuvers": [
         {
-          "t_s": 550.0,
+          "t_s": 486.2,
           "dv_m_s": [
-            0.7916586363008014,
-            -1.168356000217172,
-            -0.005603501047972654
+            0.17189,
+            -0.08965,
+            -0.00406
           ]
         }
       ],
       "label": {
-        "expected_intervention": 1,
-        "intervention_reasons": [
-          "dv_cap",
-          "brt_unsafe"
-        ],
-        "nominal_post_burn_V": -0.25327110290527344,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "nominal_post_burn_V": 4.330690860748291,
         "filter_alphas": [
-          0.1237105131149292
+          0.8346307836472988
         ],
-        "n_burns": 1
+        "n_burns": 1,
+        "source_plan": "aggr_intercept_out_of_plane_057"
       }
     }
   ]

@@ -12,7 +12,7 @@ def bus_and_panel_edges(
     panel_length: float,
     panel_half_width: float,
 ) -> list[tuple[np.ndarray, np.ndarray]]:
-    """Closed segments in body frame: +x ram, panels extend along ±y from bus."""
+    """Closed segments in body frame: +x ram, panels extend along +-y from bus."""
     hx, hy, hz = bus_half
     edges: list[tuple[np.ndarray, np.ndarray]] = []
 

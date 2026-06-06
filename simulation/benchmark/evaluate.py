@@ -13,6 +13,7 @@ import numpy as np
 
 from simulation.benchmark.label_metrics import (
     InterventionAssessment,
+    assess_corpus_intervention,
     assess_requires_intervention,
     default_outer_corridor,
     with_label_match,
@@ -21,7 +22,13 @@ from simulation.benchmark.metrics import RolloutMetrics, compute_rollout_metrics
 from simulation.cw_dynamics import CWDynamics
 from simulation.keepout import EllipsoidKeepOut, EllipsoidMaxSeparation
 from simulation.llm_plans import LLMPlan, LLMScenario
-from simulation.sampling.safety_filter import FilterMode, FilterResult, default_brt_margin, filter_maneuver_plan
+from simulation.sampling.safety_filter import (
+    FilterMode,
+    FilterResult,
+    default_brt_margin,
+    default_check_passive_post,
+    filter_maneuver_plan,
+)
 
 
 class EvalCondition(str, Enum):
@@ -153,6 +160,7 @@ def evaluate_plan(
     progress_min_m: float = 50.0,
     target_pos_m: np.ndarray | None = None,
     outer_corridor: EllipsoidMaxSeparation | None = None,
+    check_passive_from_post: bool | None = None,
 ) -> PlanEvalResult:
     """Roll out one plan under ``condition``; compute paper-style metrics."""
     nominal = plan.segments
@@ -170,7 +178,7 @@ def evaluate_plan(
     outer = outer_corridor if outer_corridor is not None else default_outer_corridor()
     eval_margin = 0.0
 
-    nominal_assessment = assess_requires_intervention(
+    nominal_assessment = assess_corpus_intervention(
         plant,
         x0,
         nominal,
@@ -178,7 +186,10 @@ def evaluate_plan(
         brt,
         passive_horizon_s=float(passive_horizon_s or 1800.0),
         brt_margin=eval_margin,
-        outer=outer,
+    )
+
+    passive_post = (
+        default_check_passive_post() if check_passive_from_post is None else bool(check_passive_from_post)
     )
 
     if condition == EvalCondition.BRT_FILTER:
@@ -196,6 +207,7 @@ def evaluate_plan(
             brt_margin=filter_margin,
             inner_koz=inner_koz,
             passive_horizon_s=passive_horizon_s,
+            check_passive_from_post=passive_post,
             dv_cap_m_s=dv_cap_m_s,
             omit_zero_burns=omit_zero_burns,
         )
@@ -306,6 +318,7 @@ def run_llm_benchmark(
     capture_radius_m: float = 100.0,
     progress_min_m: float = 50.0,
     use_outer_corridor: bool = True,
+    check_passive_from_post: bool | None = None,
 ) -> list[PlanEvalResult]:
     x0 = scenario.start_state_lvlh_m
     tgt = np.zeros(3, dtype=np.float64)
@@ -322,6 +335,7 @@ def run_llm_benchmark(
                     brt_margin=brt_margin, capture_radius_m=capture_radius_m, target_pos_m=tgt,
                     progress_min_m=progress_min_m,
                     outer_corridor=outer, dv_cap_m_s=cap, omit_zero_burns=omit_zero_burns,
+                    check_passive_from_post=check_passive_from_post,
                 )
             )
         if EvalCondition.BRT_FILTER in conditions:
@@ -333,6 +347,7 @@ def run_llm_benchmark(
                     brt_margin=brt_margin, capture_radius_m=capture_radius_m, target_pos_m=tgt,
                     progress_min_m=progress_min_m,
                     outer_corridor=outer, dv_cap_m_s=cap, omit_zero_burns=omit_zero_burns,
+                    check_passive_from_post=check_passive_from_post,
                 )
             )
 
@@ -386,6 +401,13 @@ def summarize_results(results: list[PlanEvalResult]) -> dict[str, Any]:
             "mission_success_tier_b_rate": sum(1 for r in rows if r.mission_success_tier_b) / n,
             "post_filter_unsafe_rate": sum(1 for r in rows if r.requires_intervention_rollout) / n,
             "mission_success_safe_rate": sum(1 for r in rows if r.mission_success_safe) / n,
+            "filter_safety_success_rate": sum(1 for r in rows if not r.requires_intervention_rollout) / n,
+            "passive_unsafe_nominal_rate": sum(
+                1 for r in rows if "passive" in r.nominal_intervention_reasons.split(",")
+            ) / n,
+            "brt_unsafe_nominal_rate": sum(
+                1 for r in rows if "brt_unsafe" in r.nominal_intervention_reasons.split(",")
+            ) / n,
             "label_match_rate": sum(1 for r in labeled if r.label_match) / nl,
             "requires_intervention_rate": sum(1 for r in rows if r.requires_intervention_rollout) / n,
             "mean_dv_overhead_m_s": float(np.mean([r.mean_dv_overhead_m_s for r in rows])),

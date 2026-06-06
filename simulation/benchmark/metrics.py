@@ -31,7 +31,7 @@ def trajectory_koz_stats(
     *,
     sample_dt_s: float = 5.0,
 ) -> tuple[bool, float]:
-    """Return ``(intercepted, min_shape_value)`` along a dense CW rollout."""
+    """Return '(intercepted, min_shape_value)' along a dense CW rollout."""
     substeps = max(4, int(round(20.0 / max(sample_dt_s, 0.1))))
     times, states = simulate_impulsive_segments_dense(plant, x0, segments, substeps=substeps)
     min_shape = float("inf")
@@ -54,7 +54,7 @@ def mission_success_at_final(
     capture_radius_m: float,
     intercepted: bool,
 ) -> bool:
-    """Chief at ``target_pos_m``; success = captured without KOZ entry."""
+    """Chief at 'target_pos_m'; success = captured without KOZ entry."""
     if intercepted:
         return False
     r = np.asarray(x_final, dtype=np.float64).reshape(6)[:3]

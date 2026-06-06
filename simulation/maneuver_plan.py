@@ -11,11 +11,11 @@ Expected JSON shapes (flexible keys, see :func:`parse_llm_maneuver_json`):
       ]
     }
 
-or a bare list ``[ {...}, ... ]``. Each entry is coast duration ``t_s`` then Δv at segment
+or a bare list '[ {...}, ... ]'. Each entry is coast duration 't_s' then Δv at segment
 start (see :func:`simulation.cw_dynamics.simulate_impulsive_segments`).
 
-Frozen LLM benchmarks in ``llm/`` use **absolute** burn times in ``llm_plans.json``;
-load ``llm/llm_plans_segments.jsonl`` via :mod:`simulation.llm_plans` (or
+Frozen LLM benchmarks in 'llm/' use **absolute** burn times in 'llm_plans.json';
+load 'llm/llm_plans_segments.jsonl' via :mod:`simulation.llm_plans` (or
 :func:`simulation.llm_plans.absolute_burns_to_segments`) for simulation.
 """
 
@@ -30,7 +30,7 @@ import numpy as np
 
 @dataclass
 class ParsedBurn:
-    """One segment: coast ``duration_s`` then impulsive ``dv_m_s`` (LVLH, m/s)."""
+    """One segment: coast 'duration_s' then impulsive 'dv_m_s' (LVLH, m/s)."""
 
     duration_s: float
     dv_m_s: np.ndarray
@@ -60,7 +60,7 @@ def _one_entry(d: dict[str, Any], idx: int) -> ParsedBurn:
 
 
 def parse_llm_maneuver_json(text: str) -> list[ParsedBurn]:
-    """Parse JSON string from an LLM into a list of :class:`ParsedBurn`."""
+    """Parse JSON string from an LLM into a list of 'ParsedBurn'."""
     data = json.loads(text)
     if isinstance(data, dict):
         if "maneuvers" in data:
@@ -80,7 +80,7 @@ def parse_llm_maneuver_json(text: str) -> list[ParsedBurn]:
 
 
 def burns_to_segments(parsed: list[ParsedBurn]) -> tuple[list[tuple[float, np.ndarray | None]], list[str | None]]:
-    """Convert to ``simulate_impulsive_segments`` format ``(dt, dv)`` and kind labels."""
+    """Convert to 'simulate_impulsive_segments' format '(dt, dv)' and kind labels."""
     segs: list[tuple[float, np.ndarray | None]] = []
     kinds: list[str | None] = []
     for b in parsed:

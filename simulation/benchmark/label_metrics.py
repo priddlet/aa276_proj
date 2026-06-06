@@ -52,6 +52,23 @@ def _post_burn_states(
     return out
 
 
+def _pre_burn_states(
+    plant: CWDynamics,
+    x0: np.ndarray,
+    segments: list[tuple[float, np.ndarray | None]],
+) -> list[tuple[float, np.ndarray]]:
+    x = np.asarray(x0, dtype=np.float64).reshape(6).copy()
+    t = 0.0
+    out: list[tuple[float, np.ndarray]] = []
+    for dt, dv in segments:
+        if dv is not None:
+            out.append((t, x.copy()))
+            x = plant.apply_impulsive_dv(x, dv)
+        x = plant.propagate(x, float(dt))
+        t += float(dt)
+    return out
+
+
 def _corridor_far_on_rollout(
     plant: CWDynamics,
     x0: np.ndarray,
@@ -67,6 +84,68 @@ def _corridor_far_on_rollout(
         if outer.is_unsafe_far(x[:3]):
             return True
     return False
+
+
+def assess_corpus_intervention(
+    plant: CWDynamics,
+    x0: np.ndarray,
+    segments: list[tuple[float, np.ndarray | None]],
+    inner: EllipsoidKeepOut,
+    brt: Any | None,
+    *,
+    passive_horizon_s: float,
+    brt_margin: float = 0.0,
+    passive_n_samples: int = 64,
+) -> InterventionAssessment:
+    """Same rules as the corpus generator (BRT post-burn V when loaded)."""
+    reasons: list[str] = []
+    dv_excessive = _max_burn_dv(segments) > float(DV_CAP_M_S) + 1e-9
+    if dv_excessive:
+        reasons.append("dv_cap")
+
+    passive_pre = False
+    for _, pre in _pre_burn_states(plant, x0, segments):
+        if natural_coast_hits_inner_koz(
+            plant, pre, inner, passive_horizon_s, n_samples=passive_n_samples
+        ):
+            passive_pre = True
+            reasons.append("passive")
+            break
+
+    brt_unsafe = False
+    for t_s, post in _post_burn_states(plant, x0, segments):
+        if brt is not None:
+            v = float(brt.value_at_tau(post, t_s)) if hasattr(brt, "value_at_tau") else float(brt.value(post))
+            if v <= float(brt_margin) or not np.isfinite(v):
+                brt_unsafe = True
+                break
+        elif natural_coast_hits_inner_koz(
+            plant, post, inner, passive_horizon_s, n_samples=passive_n_samples
+        ):
+            brt_unsafe = True
+            break
+
+    if brt_unsafe:
+        reasons.append("brt_unsafe" if brt is not None else "post_V")
+
+    passive_unsafe = False
+    for _, post in _post_burn_states(plant, x0, segments):
+        if natural_coast_hits_inner_koz(
+            plant, post, inner, passive_horizon_s, n_samples=passive_n_samples
+        ):
+            passive_unsafe = True
+            break
+
+    req = bool(dv_excessive or brt_unsafe or passive_pre)
+    return InterventionAssessment(
+        requires_intervention=req,
+        dv_excessive=dv_excessive,
+        brt_unsafe_any_post_burn=brt_unsafe,
+        passive_unsafe_any_post_burn=passive_unsafe,
+        corridor_far=False,
+        reasons=tuple(reasons),
+        label_match=False,
+    )
 
 
 def assess_requires_intervention(

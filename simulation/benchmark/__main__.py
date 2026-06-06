@@ -7,10 +7,9 @@ Example (after BRT training)::
         --checkpoint-dir simulation_output/deepreach_mpc_koz_v3 \\
         --conditions no_filter,brt_filter,rule_based
 
-    # Filter demonstration bundle (y=1200 m, timed near-boundary burns):
-    python -m simulation.benchmark.generate_filter_demo_plans
-    LLM_PLANS_DIR=llm/llm_plans_brt_demo python -m simulation.benchmark \\
-        --conditions no_filter,brt_filter
+    # Filter demo bundle (generate first: python -m simulation.benchmark.generate_filter_demo_plans):
+    #   LLM_PLANS_DIR=llm/llm_plans_brt_demo python -m simulation.benchmark \\
+    #       --conditions no_filter,brt_filter
 """
 
 from __future__ import annotations
@@ -40,7 +39,7 @@ from simulation.benchmark.evaluate import (
 from simulation.cw_dynamics import CWDynamics, leo_circular_orbit
 from simulation.keepout import EllipsoidKeepOut
 from simulation.llm_plans import default_llm_dir, load_llm_plans
-from simulation.sampling.safety_filter import default_brt_margin, default_filter_mode
+from simulation.sampling.safety_filter import default_brt_margin, default_check_passive_post, default_filter_mode
 
 
 def _parse_conditions(s: str) -> tuple[EvalCondition, ...]:
@@ -116,6 +115,12 @@ def main() -> None:
     p.add_argument("--filter-max-perturb", type=float, default=float(os.environ.get("FILTER_MAX_PERTURB_M_S", "0.2")))
     p.add_argument("--filter-n-sphere", type=int, default=int(os.environ.get("FILTER_N_SPHERE", "160")))
     p.add_argument("--brt-margin", type=float, default=default_brt_margin())
+    p.add_argument(
+        "--filter-check-passive-post",
+        action=argparse.BooleanOptionalAction,
+        default=default_check_passive_post(),
+        help="Also reject burns whose post-burn passive coast enters the KOZ (default: on).",
+    )
     p.add_argument("--plan-id", type=str, default="")
     args = p.parse_args()
 
@@ -151,7 +156,8 @@ def main() -> None:
     brt = KozDeepReachBRT.load(ck_dir, device=args.device)
     print(
         f"Evaluating {len(plans)} LLM plan(s), conditions={[c.value for c in conditions]}, "
-        f"filter_mode={args.filter_mode}, capture_radius={args.capture_radius_m:.0f} m"
+        f"filter_mode={args.filter_mode}, passive_post={args.filter_check_passive_post}, "
+        f"capture_radius={args.capture_radius_m:.0f} m"
     )
 
     results = run_llm_benchmark(
@@ -170,6 +176,7 @@ def main() -> None:
         dv_cap_m_s=scenario.dv_cap_m_s,
         capture_radius_m=args.capture_radius_m,
         progress_min_m=args.progress_min_m,
+        check_passive_from_post=args.filter_check_passive_post,
     )
 
     out = write_results_csv(args.output, results)
@@ -180,31 +187,26 @@ def main() -> None:
     for cond, stats in summary.get("by_condition", {}).items():
         if cond == EvalCondition.BRT_FILTER.value:
             print(
-                f"  [{cond}] n={stats['n_plans']:.0f}  "
-                f"LLM_unsafe={stats['llm_unsafe_rate']:.1%}  "
-                f"BRT_intervened={stats.get('brt_intervention_rate', 0):.1%}  "
-                f"burns_intervened/plan={stats.get('mean_burns_intervened_per_plan', 0):.2f}  "
-                f"suppressed/plan={stats.get('mean_burns_suppressed_per_plan', 0):.2f}  "
-                f"post_filter_unsafe={stats['post_filter_unsafe_rate']:.1%}  "
-                f"mean_Δv_overhead={stats['mean_dv_overhead_m_s']:.4f} m/s"
+                f"  With filter ({stats['n_plans']:.0f} plans): "
+                f"{stats['llm_unsafe_rate']:.0%} flagged unsafe, "
+                f"{stats.get('brt_intervention_rate', 0):.0%} had burns changed, "
+                f"{stats['post_filter_unsafe_rate']:.0%} still unsafe after filtering"
             )
+        elif cond == EvalCondition.RULE_BASED.value:
+            print(f"  Rule-based baseline ({stats['n_plans']:.0f} plan)")
         else:
             print(
-                f"  [{cond}] n={stats['n_plans']:.0f}  "
-                f"LLM_unsafe={stats['llm_unsafe_rate']:.1%}  "
-                f"reasons=(see CSV nominal_intervention_reasons)  "
-                f"brt_unsafe={stats['brt_unsafe_rate']:.1%}  "
-                f"intercept={stats['interception_rate']:.1%}  "
-                f"tier_b={stats['mission_success_tier_b_rate']:.1%}"
+                f"  No filter ({stats['n_plans']:.0f} plans): "
+                f"{stats['llm_unsafe_rate']:.0%} flagged unsafe, "
+                f"{stats['interception_rate']:.0%} entered keep-out, "
+                f"{stats['mission_success_tier_b_rate']:.0%} made approach progress"
             )
-    print("\n=== Tier-B by category ===")
+    print("\nBy plan type (unfiltered):")
     for cat, stats in summary.get("by_category", {}).items():
-        kind = stats.get("success_kind", "?")
         print(
-            f"  {cat}: kind={kind}  n={stats['n_plans']:.0f}  "
-            f"tier_b={stats['mission_success_tier_b_rate']:.1%}  "
-            f"intercept={stats['interception_rate']:.1%}  "
-            f"mean_Δclosed={stats['mean_range_closed_m']:.1f} m"
+            f"  {cat.replace('_', ' ')}: "
+            f"{stats['mission_success_tier_b_rate']:.0%} progress, "
+            f"{stats['interception_rate']:.0%} keep-out entry"
         )
 
 

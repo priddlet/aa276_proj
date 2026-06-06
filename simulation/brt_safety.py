@@ -5,11 +5,11 @@ package provides:
 
 - :class:`KOZBRTPlaceholder` — fast geometry surrogate (inner KOZ + outer corridor).
 - :func:`simulate_plan_with_brt` — impulsive rollout with optional **passive** drift
-  check (Option 2) via ``passive_inner_koz`` / ``passive_horizon_s``.
+  check via ``passive_inner_koz`` / ``passive_horizon_s``.
 
-HJ collision BRT (Option 1) lives in :mod:`simulation.legacy.hj_koz_brt` (:class:`~simulation.legacy.hj_koz_brt.KozHJTable6D`);
-there ``value(x) <= 0`` means inside the backward reachable tube. :class:`KOZBRTPlaceholder`
-uses the opposite sign convention (positive ``value`` means KOZ/corridor violation).
+Learned DeepReach-MPC BRT (``simulation.brt.deepreach_mpc_brt.KozDeepReachBRT``):
+``value(x) <= 0`` means unsafe. :class:`KOZBRTPlaceholder` uses the opposite sign
+convention (positive ``value`` means KOZ/corridor violation).
 """
 
 from __future__ import annotations
@@ -82,7 +82,7 @@ def simulate_plan_with_brt(
     inner KOZ over that horizon.
     """
     from simulation.cw_dynamics import simulate_impulsive_segments
-    from simulation.passive_safety import is_passively_safe_natural_coast
+    from simulation.sampling.passive import is_passively_safe_natural_coast
 
     times, states = simulate_impulsive_segments(plant, x0_lvlh_m, segments)
     kinds = burn_kinds or [None] * len(segments)

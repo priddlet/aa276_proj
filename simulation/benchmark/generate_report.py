@@ -1,10 +1,4 @@
-"""Generate report figures and tables: scenario orbit, BRT slices, corpus & results tables, case studies.
-
-Example::
-
-    DEEPREACH_AUTO_TRAIN=0 DEEPREACH_CHECKPOINT_DIR=simulation_output/deepreach_mpc_koz_v3 \\
-        python -m simulation.benchmark.generate_report
-"""
+"""Build report figures and tables from benchmark results."""
 
 from __future__ import annotations
 
@@ -106,7 +100,7 @@ def _plot_koz_along_track(
         linewidth=1.2,
         alpha=alpha,
         zorder=1,
-        label="Inner KOZ",
+        label="Keep-out zone",
     )
 
 
@@ -190,13 +184,13 @@ def _plot_koz_xy(
         linewidth=1.2,
         alpha=alpha,
         zorder=1,
-        label="Inner KOZ (chief-fixed LVLH)",
+        label="Keep-out zone",
     )
     if annotate_axes:
         ax.plot([cx, cx + a], [cy, cy], color="#8b0000", linewidth=1.0, zorder=2)
         ax.plot([cx, cx], [cy, cy + b], color="#8b0000", linewidth=1.0, zorder=2)
-        ax.text(cx + 0.55 * a, cy - 0.08 * b, f"a={a:.0f} m\n(radial x)", ha="center", fontsize=7, color="#8b0000")
-        ax.text(cx - 0.12 * a, cy + 0.55 * b, f"b={b:.0f} m\n(along-track y)", ha="center", fontsize=7, color="#8b0000")
+        ax.text(cx + 0.55 * a, cy - 0.08 * b, f"{a:.0f} m\n(radial)", ha="center", fontsize=7, color="#8b0000")
+        ax.text(cx - 0.12 * a, cy + 0.55 * b, f"{b:.0f} m\n(along-track)", ha="center", fontsize=7, color="#8b0000")
 
 
 def _draw_craft_2d(
@@ -303,21 +297,21 @@ def render_scenario_orbit_png(
 
     _plot_koz_along_track(ax_lv, inner)
     hl, vl = _at(xy_llm)
-    ax_lv.plot(hl, vl, color="tab:orange", linewidth=2.0, label="LLM planned trajectory (with burns)", zorder=3)
+    ax_lv.plot(hl, vl, color="tab:orange", linewidth=2.0, label="Planned path (LLM)", zorder=3)
     for t_b, pos, dv in burns:
         if dv is None or np.linalg.norm(dv) < 1e-9:
             continue
         h, v = float(pos[1]), float(pos[0])
         ax_lv.scatter(h, v, s=55, c="tab:red", edgecolors="k", linewidths=0.4, zorder=6)
-        ax_lv.annotate(f"burn t={t_b:.0f}s", (h, v), textcoords="offset points", xytext=(6, 6), fontsize=7)
+        ax_lv.annotate(f"burn @ {t_b:.0f} s", (h, v), textcoords="offset points", xytext=(6, 6), fontsize=7)
 
-    _draw_craft_along_track(ax_lv, np.zeros(3), np.zeros(3), scale_m=50, color="0.15", label="Target (chief)", fixed_along_track=True)
-    _draw_craft_along_track(ax_lv, x0[:3], x0[3:6], scale_m=42, color="tab:blue", label="Chaser (start)")
-    _draw_craft_along_track(ax_lv, states_llm[-1, :3], states_llm[-1, 3:6], scale_m=42, color="tab:orange", label="Chaser (end, LLM plan)")
+    _draw_craft_along_track(ax_lv, np.zeros(3), np.zeros(3), scale_m=50, color="0.15", label="Chief", fixed_along_track=True)
+    _draw_craft_along_track(ax_lv, x0[:3], x0[3:6], scale_m=42, color="tab:blue", label="Deputy (start)")
+    _draw_craft_along_track(ax_lv, states_llm[-1, :3], states_llm[-1, 3:6], scale_m=42, color="tab:orange", label="Deputy (end)")
 
-    ax_lv.set_xlabel("Along-track y (m)")
-    ax_lv.set_ylabel("Radial x (m)")
-    ax_lv.set_title("Relative motion (LVLH, chief at origin)")
+    ax_lv.set_xlabel("Along-track separation (m)")
+    ax_lv.set_ylabel("Radial separation (m)")
+    ax_lv.set_title("Relative motion (LVLH frame)")
     ax_lv.set_aspect("equal", adjustable="box")
     ax_lv.grid(True, alpha=0.25)
     ax_lv.legend(loc="best", fontsize=7)
@@ -326,8 +320,8 @@ def render_scenario_orbit_png(
     ax_eci.plot(a_km * np.cos(th), a_km * np.sin(th), color="0.35", linestyle=":", linewidth=1.0, label="Chief orbit")
     earth = plt.Circle((0, 0), R_EARTH_KM, facecolor="#d4e4f7", edgecolor="0.4", linewidth=0.8, zorder=0)
     ax_eci.add_patch(earth)
-    ax_eci.plot(eci_llm[:, 0], eci_llm[:, 1], color="tab:orange", linewidth=1.8, label="Deputy LLM plan", zorder=3)
-    ax_eci.scatter(eci_llm[0, 0], eci_llm[0, 1], s=40, c="tab:blue", zorder=5, label="Start (1.2 km offset)")
+    ax_eci.plot(eci_llm[:, 0], eci_llm[:, 1], color="tab:orange", linewidth=1.8, label="Deputy path", zorder=3)
+    ax_eci.scatter(eci_llm[0, 0], eci_llm[0, 1], s=40, c="tab:blue", zorder=5, label=f"Start ({float(np.linalg.norm(x0[:3])):.0f} m behind)")
     ax_eci.scatter(eci_llm[-1, 0], eci_llm[-1, 1], s=40, c="tab:orange", zorder=5)
 
     zoom = a_km * 0.012
@@ -336,14 +330,13 @@ def render_scenario_orbit_png(
     ax_eci.set_ylim(cy - zoom, cy + zoom)
     ax_eci.set_xlabel("ECI x (km)")
     ax_eci.set_ylabel("ECI y (km)")
-    ax_eci.set_title(f"Deputy paths on orbit ({altitude_km:.0f} km LEO, zoomed)")
+    ax_eci.set_title(f"Inertial view ({altitude_km:.0f} km orbit, zoomed on formation)")
     ax_eci.set_aspect("equal", adjustable="box")
     ax_eci.grid(True, alpha=0.25)
     ax_eci.legend(loc="best", fontsize=7)
 
     fig.suptitle(
-        f"{scenario.id} — representative plan `{plan.plan_id}`\n"
-        f"Orange = LLM-commanded relative motion (with burns)",
+        f"Example maneuver: {plan.plan_id.replace('_', ' ')}",
         fontsize=10,
         y=1.02,
     )
@@ -352,6 +345,116 @@ def render_scenario_orbit_png(
     fig.savefig(output_path, dpi=160, bbox_inches="tight")
     plt.close(fig)
     return output_path
+
+
+def render_koz_schematic_png(
+    inner: EllipsoidKeepOut,
+    x0: np.ndarray,
+    scenario: LLMScenario,
+    output_path: Path,
+) -> Path:
+    """Standalone KOZ ellipsoid (LVLH x–y slice) with deputy start and axis labels."""
+    import matplotlib.pyplot as plt
+
+    fig, ax = plt.subplots(figsize=(7.5, 6.0))
+    _plot_koz_xy(ax, inner, annotate_axes=True)
+    p0 = np.asarray(x0, dtype=np.float64).reshape(6)
+    ax.scatter(
+        float(p0[0]),
+        float(p0[1]),
+        s=90,
+        c="tab:blue",
+        edgecolors="k",
+        linewidths=0.5,
+        zorder=5,
+        label=f"Deputy start ({p0[1]:.0f} m downrange)",
+    )
+    ax.scatter(0.0, 0.0, s=70, c="0.15", marker="s", zorder=5, label="Chief")
+    ax.annotate(
+        "",
+        xy=(float(p0[0]), float(p0[1])),
+        xytext=(0.0, 0.0),
+        arrowprops=dict(arrowstyle="-|>", color="0.45", lw=1.2, linestyle="--"),
+        zorder=4,
+    )
+    ax.set_xlabel("Radial offset (m)")
+    ax.set_ylabel("Along-track offset (m)")
+    ax.set_title(
+        f"Keep-out zone around the chief\n"
+        f"Ellipsoid semi-axes: {int(inner.semi_axes[0])} × {int(inner.semi_axes[1])} × {int(inner.semi_axes[2])} m"
+    )
+    pad = max(40.0, float(p0[1]) * 0.08)
+    ax.set_xlim(-inner.semi_axes[0] - pad, inner.semi_axes[0] + pad)
+    ax.set_ylim(-pad, float(p0[1]) + pad)
+    ax.set_aspect("equal", adjustable="box")
+    ax.grid(True, alpha=0.25)
+    ax.legend(loc="upper right", fontsize=8)
+    fig.tight_layout()
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(output_path, dpi=160, bbox_inches="tight")
+    plt.close(fig)
+    return output_path
+
+
+def render_benchmark_barchart_png(
+    summary: dict[str, Any],
+    output_path: Path,
+) -> Path | None:
+    """Grouped bar chart: key filter / mission metrics (no_filter vs brt_filter)."""
+    import matplotlib.pyplot as plt
+
+    nf = summary.get("by_condition", {}).get("no_filter", {})
+    bf = summary.get("by_condition", {}).get("brt_filter", {})
+    if not nf and not bf:
+        return None
+
+    specs: list[tuple[str, str, bool]] = [
+        ("llm_unsafe_rate", "Flagged\nunsafe", False),
+        ("post_filter_unsafe_rate", "Still unsafe\nafter filter", False),
+        ("filter_safety_success_rate", "Passes\nsafety checks", False),
+        ("mission_success_tier_b_rate", "Approach\nprogress", False),
+        ("interception_rate", "Entered\nkeep-out", False),
+        ("label_match_rate", "Labels\nagree", False),
+        ("brt_intervention_rate", "Filter\nchanged burns", True),
+    ]
+
+    labels: list[str] = []
+    vals_nf: list[float] = []
+    vals_bf: list[float] = []
+    for key, label, brt_only in specs:
+        if brt_only and key not in bf:
+            continue
+        if key not in nf and key not in bf:
+            continue
+        labels.append(label)
+        vals_nf.append(100.0 * float(nf.get(key, 0.0)) if not brt_only else 0.0)
+        vals_bf.append(100.0 * float(bf.get(key, 0.0)))
+
+    if not labels:
+        return None
+
+    x = np.arange(len(labels))
+    w = 0.36
+    fig, ax = plt.subplots(figsize=(max(8.0, len(labels) * 1.15), 5.0))
+    ax.bar(x - w / 2, vals_nf, width=w, label="No filter", color="tab:gray", alpha=0.85)
+    ax.bar(x + w / 2, vals_bf, width=w, label="With BRT filter", color="tab:blue", alpha=0.85)
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels, fontsize=9)
+    ax.set_ylabel("Share of plans (%)")
+    ax.set_ylim(0, min(105.0, max(max(vals_nf), max(vals_bf), 1.0) * 1.15))
+    n_plans = int(nf.get("n_plans", bf.get("n_plans", 0)))
+    ax.set_title(f"LLM maneuver benchmark ({n_plans} plans, 400 km LEO)")
+    ax.legend(loc="upper right")
+    ax.grid(True, axis="y", alpha=0.3)
+    fig.tight_layout()
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(output_path, dpi=160, bbox_inches="tight")
+    plt.close(fig)
+    return output_path
+
+
+def _category_label(category: str) -> str:
+    return category.replace("_", " ").strip() or "maneuver"
 
 
 def render_case_study_png(
@@ -386,8 +489,8 @@ def render_case_study_png(
 
     ax = axes[0]
     _plot_koz_xy(ax, inner, alpha=0.25)
-    ax.plot(xy_nom[:, 0], xy_nom[:, 1], "r--", linewidth=1.8, label="LLM nominal")
-    ax.plot(xy_filt[:, 0], xy_filt[:, 1], "g-", linewidth=2.0, label="After BRT filter")
+    ax.plot(xy_nom[:, 0], xy_nom[:, 1], "r--", linewidth=1.8, label="LLM plan")
+    ax.plot(xy_filt[:, 0], xy_filt[:, 1], "g-", linewidth=2.0, label="After filter")
     for fr in filt_results:
         pos = np.asarray(x0, dtype=np.float64).reshape(6).copy()
         tb = 0.0
@@ -413,9 +516,9 @@ def render_case_study_png(
             ax.scatter(pos[0], pos[1], s=50, facecolors="none", edgecolors="tab:green", linewidths=1.5, zorder=6)
     _draw_craft_2d(ax, np.zeros(3), np.zeros(3), scale_m=40, color="0.2")
     ax.set_aspect("equal", adjustable="box")
-    ax.set_xlabel("x (m)")
-    ax.set_ylabel("y (m)")
-    ax.set_title("LVLH trajectories")
+    ax.set_xlabel("Radial (m)")
+    ax.set_ylabel("Along-track (m)")
+    ax.set_title("Relative trajectories")
     ax.grid(True, alpha=0.25)
     ax.legend(fontsize=7, loc="best")
 
@@ -425,17 +528,17 @@ def render_case_study_png(
     dv_app = [float(np.linalg.norm(fr.dv_applied)) for fr in filt_results]
     times_b = [fr.time_s for fr in filt_results]
     w = 0.35
-    ax.bar(burn_idx - w / 2, dv_nom, width=w, label="|Δv| nominal", color="tab:red", alpha=0.7)
-    ax.bar(burn_idx + w / 2, dv_app, width=w, label="|Δv| applied", color="tab:green", alpha=0.7)
-    ax.axhline(0.5, color="k", linestyle=":", linewidth=1, label="Δv cap")
+    ax.bar(burn_idx - w / 2, dv_nom, width=w, label="Requested", color="tab:red", alpha=0.7)
+    ax.bar(burn_idx + w / 2, dv_app, width=w, label="Applied", color="tab:green", alpha=0.7)
+    ax.axhline(0.5, color="k", linestyle=":", linewidth=1, label="0.5 m/s cap")
     for i, fr in enumerate(filt_results):
-        tag = "drop" if np.linalg.norm(fr.dv_applied) < 1e-9 else ("scale" if fr.residual_norm > 1e-9 else "pass")
+        tag = "dropped" if np.linalg.norm(fr.dv_applied) < 1e-9 else ("scaled" if fr.residual_norm > 1e-9 else "ok")
         ax.text(i, max(dv_nom[i], dv_app[i]) + 0.03, tag, ha="center", fontsize=7)
     ax.set_xticks(burn_idx)
     ax.set_xticklabels([f"{t:.0f}s" for t in times_b], fontsize=8)
-    ax.set_xlabel("Burn time")
-    ax.set_ylabel("|Δv| (m/s)")
-    ax.set_title("BRT intervention per burn")
+    ax.set_xlabel("Burn time (s)")
+    ax.set_ylabel("Burn size |Δv| (m/s)")
+    ax.set_title("What the filter did to each burn")
     ax.legend(fontsize=7)
     ax.grid(True, axis="y", alpha=0.25)
 
@@ -455,19 +558,19 @@ def render_case_study_png(
         v_nom.append(float(brt.value_at_tau(plant.apply_impulsive_dv(x_pre, fr.dv_nominal), fr.time_s)))
         v_filt.append(float(brt.value_at_tau(plant.apply_impulsive_dv(x_pre, fr.dv_applied), fr.time_s)))
     idx = np.arange(len(v_nom))
-    ax.bar(idx - 0.2, v_nom, width=0.4, label="V(x⁺,t) nominal", color="tab:red", alpha=0.75)
-    ax.bar(idx + 0.2, v_filt, width=0.4, label="V(x⁺,t) filtered", color="tab:green", alpha=0.75)
-    ax.axhline(0.0, color="k", linewidth=1.2, label="V=0 (unsafe)")
+    ax.bar(idx - 0.2, v_nom, width=0.4, label="Before filter", color="tab:red", alpha=0.75)
+    ax.bar(idx + 0.2, v_filt, width=0.4, label="After filter", color="tab:green", alpha=0.75)
+    ax.axhline(0.0, color="k", linewidth=1.2, label="Unsafe (V ≤ 0)")
     ax.set_xticks(idx)
     ax.set_xticklabels(labels, fontsize=8)
-    ax.set_xlabel("Burn")
-    ax.set_ylabel("BRT value V")
-    ax.set_title("Post-burn BRT safety")
+    ax.set_xlabel("Burn time (s)")
+    ax.set_ylabel("Value function V")
+    ax.set_title("Safety margin after each burn")
     ax.legend(fontsize=7)
     ax.grid(True, axis="y", alpha=0.25)
 
-    reasons = plan.tags.get("category", "")
-    fig.suptitle(f"Case study: {plan.plan_id} ({reasons})", fontsize=11, y=1.02)
+    cat = _category_label(str(plan.tags.get("category", "")))
+    fig.suptitle(f"{cat.title()} — {plan.plan_id.replace('_', ' ')}", fontsize=11, y=1.02)
     fig.tight_layout()
     output_path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(output_path, dpi=160, bbox_inches="tight")
@@ -543,30 +646,30 @@ def write_corpus_tables(
 
     md_path = out_dir / "corpus_summary.md"
     lines = [
-        "# LLM plan corpus",
+        "# LLM maneuver corpus",
         "",
-        f"Scenario **{scenario.id}**: start y = {scenario.start_state_lvlh_m[1]:.0f} m, "
-        f"horizon = {scenario.brt_horizon_s:.0f} s, Δv cap = {scenario.dv_cap_m_s or 0.5} m/s.",
+        f"**{scenario.id}** — deputy starts {scenario.start_state_lvlh_m[1]:.0f} m downrange, "
+        f"{scenario.brt_horizon_s:.0f} s horizon, {scenario.dv_cap_m_s or 0.5} m/s burn cap.",
         "",
-        "## Composition",
+        "## Plan types",
         "",
-        "| Category | Count |",
-        "|----------|------:|",
+        "| Type | Count |",
+        "|------|------:|",
     ]
     for cat, n in sorted(by_cat.items()):
-        lines.append(f"| `{cat}` | {n} |")
-    lines.extend(["", "## Approach angle", "", "| Angle | Count |", "|-------|------:|"])
+        lines.append(f"| {_category_label(cat)} | {n} |")
+    lines.extend(["", "## Approach direction", "", "| Direction | Count |", "|-----------|------:|"])
     for ang, n in sorted(by_ang.items()):
-        lines.append(f"| `{ang}` | {n} |")
+        lines.append(f"| {ang.replace('_', ' ')} | {n} |")
     lines.extend(
         [
             "",
-            "## Plan statistics",
+            "## Summary stats",
             "",
-            f"- Burns per plan: {min(n_burns)}–{max(n_burns)} (mean {np.mean(n_burns):.1f})",
-            f"- Max nominal |Δv|: {min(max_dv):.3f}–{max(max_dv):.3f} m/s (mean {np.mean(max_dv):.3f})",
+            f"- Burns per plan: {min(n_burns)}–{max(n_burns)} (avg {np.mean(n_burns):.1f})",
+            f"- Largest burn: {min(max_dv):.3f}–{max(max_dv):.3f} m/s (avg {np.mean(max_dv):.3f})",
             "",
-            f"Full plan list: `{detail_csv.name}`",
+            f"Full listing: `{detail_csv.name}`",
         ]
     )
     md_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
@@ -581,22 +684,26 @@ def write_results_tables(
     """Experiment metrics table for no_filter and brt_filter."""
     metric_rows: list[dict[str, str]] = []
     labels = {
-        "n_plans": "Plans evaluated",
-        "llm_unsafe_rate": "LLM unsafe (nominal rollout)",
-        "brt_intervention_rate": "Plans with ≥1 BRT intervention",
-        "mean_burns_intervened_per_plan": "Mean burns intervened / plan",
-        "mean_burns_suppressed_per_plan": "Mean burns suppressed / plan",
-        "mean_burns_scaled_per_plan": "Mean burns scaled / plan",
-        "mean_dv_overhead_m_s": "Mean |Δv_applied − Δv_nom| (m/s)",
-        "post_filter_unsafe_rate": "Post-filter unsafe rollout",
-        "brt_unsafe_rate": "Any post-burn V≤0",
-        "requires_intervention_rate": "Requires intervention (rollout)",
-        "mission_success_safe_rate": "Mission safe (no intervention flags)",
-        "label_match_rate": "Label match",
-        "interception_rate": "KOZ intercept",
-        "mission_success_tier_b_rate": "Tier-B success",
-        "mean_range_closed_m": "Mean range closed (m)",
+        "n_plans": "Number of plans",
+        "llm_unsafe_rate": "Flagged unsafe (nominal plan)",
+        "brt_intervention_rate": "Plans where filter changed a burn",
+        "mean_burns_intervened_per_plan": "Burns modified per plan (mean)",
+        "mean_burns_suppressed_per_plan": "Burns dropped per plan (mean)",
+        "mean_burns_scaled_per_plan": "Burns scaled per plan (mean)",
+        "mean_dv_overhead_m_s": "Extra Δv from filtering (m/s, mean)",
+        "post_filter_unsafe_rate": "Still fails safety checks",
+        "filter_safety_success_rate": "Passes all safety checks",
+        "passive_unsafe_nominal_rate": "Passive-unsafe before burn (nominal)",
+        "brt_unsafe_nominal_rate": "V ≤ 0 after burn (nominal)",
+        "brt_unsafe_rate": "Any post-burn V ≤ 0",
+        "requires_intervention_rate": "Needs intervention (rollout)",
+        "mission_success_safe_rate": "Safe by intervention criteria",
+        "label_match_rate": "Matches corpus label",
+        "interception_rate": "Entered keep-out zone",
+        "mission_success_tier_b_rate": "Made approach progress (≥50 m)",
+        "mean_range_closed_m": "Range closed (m, mean)",
     }
+    cond_names = {"no_filter": "No filter", "brt_filter": "With filter"}
     for cond in ("no_filter", "brt_filter"):
         stats = summary.get("by_condition", {}).get(cond, {})
         for key, label in labels.items():
@@ -609,7 +716,7 @@ def write_results_tables(
                 disp = f"{val:.4f}"
             else:
                 disp = str(val)
-            metric_rows.append({"condition": cond, "metric": label, "value": disp})
+            metric_rows.append({"condition": cond_names.get(cond, cond), "metric": label, "value": disp})
 
     csv_path = out_dir / "experiment_results.csv"
     with csv_path.open("w", newline="", encoding="utf-8") as f:
@@ -617,22 +724,33 @@ def write_results_tables(
         w.writeheader()
         w.writerows(metric_rows)
 
-    md_lines = ["# Benchmark results", "", "| Metric | no_filter | brt_filter |", "|--------|-----------|------------|"]
+    md_lines = [
+        "# Experiment results",
+        "",
+        "| Metric | No filter | With filter |",
+        "|--------|-----------|-------------|",
+    ]
     pivot: dict[str, dict[str, str]] = defaultdict(dict)
     for row in metric_rows:
         pivot[row["metric"]][row["condition"]] = row["value"]
     for label in labels.values():
         if label not in pivot:
             continue
-        nf = pivot[label].get("no_filter", "—")
-        bf = pivot[label].get("brt_filter", "—")
+        nf = pivot[label].get("No filter", "—")
+        bf = pivot[label].get("With filter", "—")
         md_lines.append(f"| {label} | {nf} | {bf} |")
 
-    cat_lines = ["", "## By category (no_filter LLM unsafe)", "", "| Category | n | LLM unsafe |", "|----------|---:|-----------:|"]
+    cat_lines = [
+        "",
+        "## Breakdown by plan type (unfiltered runs)",
+        "",
+        "| Plan type | Count | Flagged unsafe |",
+        "|-----------|------:|---------------:|",
+    ]
     for cat, stats in summary.get("by_category", {}).items():
         n = stats.get("n_plans", 0)
         u = stats.get("llm_unsafe_rate", 0)
-        cat_lines.append(f"| `{cat}` | {n} | {100*u:.0f}% |")
+        cat_lines.append(f"| {_category_label(cat)} | {n} | {100*u:.0f}% |")
 
     md_path = out_dir / "experiment_results.md"
     md_path.write_text("\n".join(md_lines + cat_lines) + "\n", encoding="utf-8")
@@ -693,6 +811,8 @@ def main() -> None:
     passive_h = float(os.environ.get("PASSIVE_CHECK_HORIZON_S", str(BRT_HORIZON_S)))
 
     rep = next((pl for pl in plans if pl.plan_id == args.representative_plan), plans[0])
+    print("Rendering KOZ schematic…")
+    render_koz_schematic_png(inner, x0, scenario, fig_dir / "koz_schematic_xy.png")
     print(f"Rendering scenario orbit ({rep.plan_id})…")
     render_scenario_orbit_png(plant, scenario, inner, rep, fig_dir / "scenario_orbit_lvlh.png")
 
@@ -754,6 +874,9 @@ def main() -> None:
     write_corpus_tables(scenario, plans, tab_dir)
     print("Writing experiment results tables…")
     write_results_tables(eval_results, summary, tab_dir)
+    if summary.get("by_condition"):
+        print("Rendering benchmark bar chart…")
+        render_benchmark_barchart_png(summary, fig_dir / "benchmark_results_barchart.png")
 
     for pid in [s.strip() for s in args.case_studies.split(",") if s.strip()]:
         plan = next((pl for pl in plans if pl.plan_id == pid), None)
@@ -776,20 +899,25 @@ def main() -> None:
     readme.write_text(
         "\n".join(
             [
-                "# Report assets",
+                "# Report figures and tables",
                 "",
-                "## Figures (`figures/`)",
-                "- `scenario_orbit_lvlh.png` — LVLH x–y chaser/target geometry + representative LLM trajectory",
-                "- `brt_training_slices_xy.png` — learned V(x,t) slices at several horizon times",
-                "- `brt_formation_lvlh.png` — 3D V≤0 BRT surface near chief (optional)",
-                "- `case_study_*.png` — nominal vs filtered trajectory, burn intervention, post-burn V",
+                "## Figures",
+                "- `koz_schematic_xy.png` — keep-out zone and deputy starting position",
+                "- `scenario_orbit_lvlh.png` — relative motion + inertial orbit view",
+                "- `brt_training_slices_xy.png` — learned value function on x–y slices",
+                "- `brt_formation_lvlh.png` — 3D unsafe set near the chief",
+                "- `benchmark_results_barchart.png` — summary of filter and mission metrics",
+                "- `case_study_*.png` — side-by-side examples (safe vs aggressive)",
                 "",
-                "## Tables (`tables/`)",
-                "- `corpus_summary.md` / `.csv` — plan corpus composition",
-                "- `corpus_plans.csv` — per-plan metadata",
-                "- `experiment_results.md` / `.csv` — benchmark metrics (no_filter vs brt_filter)",
+                "## Tables",
+                "- `corpus_summary.md` — what's in the plan bundle",
+                "- `experiment_results.md` — benchmark numbers (no filter vs filtered)",
                 "",
-                "Regenerate: `DEEPREACH_AUTO_TRAIN=0 python -m simulation.benchmark.generate_report`",
+                "Regenerate:",
+                "```",
+                "DEEPREACH_AUTO_TRAIN=0 python -m simulation.benchmark",
+                "DEEPREACH_AUTO_TRAIN=0 python -m simulation.benchmark.generate_report",
+                "```",
             ]
         )
         + "\n",

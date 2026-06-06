@@ -1,7 +1,7 @@
 """Verify a finished DeepReach-MPC KOZ training run (artifacts + optional load tests).
 
-Inference loads best-by-loss checkpoint by default (``DEEPREACH_CHECKPOINT_SELECT=best``),
-not the latest epoch. Use ``--sync-final`` to copy that weights file to ``model_final.pth``.
+Inference loads best-by-loss checkpoint by default ('DEEPREACH_CHECKPOINT_SELECT=best'),
+not the latest epoch. Use '--sync-final' to copy that weights file to 'model_final.pth'.
 
 Usage:
   python -m simulation.brt.verify_training
@@ -148,6 +148,54 @@ def _numeric_checks(brt, semi_axes: tuple[float, float, float], horizon_s: float
 
     if brt.value_at_tau(inside, 0.0) > 0.5:
         lines.append("WARN: V(origin,t=0) not near KOZ boundary (exact BC may be off)")
+    return lines
+
+
+def _passive_rest_unsafe(
+    plant,
+    inner,
+    y_m: float,
+    horizon_s: float,
+) -> bool:
+    from simulation.sampling.passive import natural_coast_hits_inner_koz
+
+    state = np.array([0.0, float(y_m), 0.0, 0.0, 0.0, 0.0], dtype=np.float64)
+    return bool(
+        natural_coast_hits_inner_koz(plant, state, inner, float(horizon_s), n_samples=128)
+    )
+
+
+def _grid_vs_network_report(
+    brt,
+    plant,
+    semi_axes: tuple[float, float, float],
+    horizon_s: float,
+) -> list[str]:
+    """Compare passive KOZ reach vs learned V along along-track rest positions."""
+    from simulation.cw_dynamics import CWDynamics
+    from simulation.keepout import EllipsoidKeepOut
+
+    inner = EllipsoidKeepOut(np.array(semi_axes, dtype=np.float64))
+    if not isinstance(plant, CWDynamics):
+        plant = CWDynamics(float(getattr(brt, "n_rad_s", plant)))
+
+    lines = ["", "=== Passive grid vs learned V (rest states, x=z=v=0) ==="]
+    lines.append(f"{'y_m':>6}  {'passive':>8}  {'V@0':>8}  {'V@T':>8}  {'match':>6}")
+    ys = [35.0, 45.0, 55.0, 70.0, 100.0, 150.0, 200.0, 250.0, 300.0, 400.0]
+    mism = 0
+    for y in ys:
+        state = np.array([0.0, y, 0.0, 0.0, 0.0, 0.0], dtype=np.float64)
+        passive = _passive_rest_unsafe(plant, inner, y, horizon_s)
+        v0 = float(brt.value_at_tau(state, 0.0))
+        vT = float(brt.value_at_tau(state, horizon_s))
+        brt_unsafe = vT <= 0.0
+        ok = passive == brt_unsafe
+        if not ok:
+            mism += 1
+        lines.append(
+            f"{y:6.0f}  {str(passive):>8}  {v0:8.3f}  {vT:8.3f}  {'OK' if ok else 'DIFF':>6}"
+        )
+    lines.append(f"Agreement @ t=T: {len(ys) - mism}/{len(ys)} samples")
     return lines
 
 
@@ -349,6 +397,12 @@ def main() -> None:
     )
     assert was_loaded
     for line in _numeric_checks(brt, semi_axes, brt.horizon_s):
+        print(line)
+
+    from simulation.cw_dynamics import CWDynamics
+
+    plant = CWDynamics(leo.n_rad_s)
+    for line in _grid_vs_network_report(brt, plant, semi_axes, brt.horizon_s):
         print(line)
 
     if args.regenerate_plot:

@@ -1,8 +1,0 @@
-# 6D HJ KOZ BRT (jax + hj_reachability). Also install project requirements.txt.
-#   pip install -r requirements.txt -r requirements-brt.txt
-#   pip install -e hj_reachability   # if vendored at repo root
-
-jax>=0.4.28
-jaxlib>=0.4.28
-flax>=0.8
-tqdm>=4.66

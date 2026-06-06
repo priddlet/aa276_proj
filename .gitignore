@@ -14,5 +14,7 @@ hj_reachability/
 # Local GPU training checkpoints and validation plots (not for GitHub)
 gpu/
 gpuv*/
+gpu_latest/
+.mplconfig/
 
 simulation_output/

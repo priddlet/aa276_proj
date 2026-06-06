@@ -135,7 +135,7 @@ class LLMPlan:
 def segments_record_to_sim_segments(
     segments: list[dict[str, Any]],
 ) -> list[tuple[float, np.ndarray | None]]:
-    """Convert ``llm_plans_segments.jsonl`` entries to ``simulate_impulsive_segments`` format."""
+    """Convert 'llm_plans_segments.jsonl' entries to 'simulate_impulsive_segments' format."""
     out: list[tuple[float, np.ndarray | None]] = []
     for s in segments:
         coast_s = float(s["coast_s"])
@@ -151,7 +151,7 @@ def segments_record_to_sim_segments(
 def absolute_burns_to_segments(
     maneuvers: list[dict[str, Any]],
 ) -> list[tuple[float, np.ndarray | None]]:
-    """Absolute burn times → interleaved coast / burn segments for burn-at-start-then-coast."""
+    """Absolute burn times -> interleaved coast / burn segments for burn-at-start-then-coast."""
     burns = sorted(maneuvers, key=lambda m: float(m["t_s"]))
     segs: list[tuple[float, np.ndarray | None]] = []
     t_prev = 0.0
@@ -170,7 +170,7 @@ def absolute_burns_to_segments(
 
 
 def load_llm_bundle(llm_dir: str | Path | None = None) -> tuple[LLMScenario, list[dict[str, Any]]]:
-    """Load ``llm_plans.json``; returns scenario dict and raw plan records."""
+    """Load 'llm_plans.json'; returns scenario dict and raw plan records."""
     root = Path(llm_dir).resolve() if llm_dir else default_llm_dir()
     path = _bundle_path(root)
     if not path.is_file():
@@ -182,7 +182,7 @@ def load_llm_bundle(llm_dir: str | Path | None = None) -> tuple[LLMScenario, lis
 
 
 def load_llm_segments_index(llm_dir: str | Path | None = None) -> dict[str, dict[str, Any]]:
-    """Load ``llm_plans_segments.jsonl`` keyed by ``plan_id``."""
+    """Load 'llm_plans_segments.jsonl' keyed by 'plan_id'."""
     root = Path(llm_dir).resolve() if llm_dir else default_llm_dir()
     path = _segments_path(root)
     if not path.is_file():

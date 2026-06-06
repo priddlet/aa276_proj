@@ -35,11 +35,11 @@ def default_koz_xy_limits(
 def default_report_koz_xy_limits(
     semi_axes_m: tuple[float, float, float] | np.ndarray,
 ) -> tuple[tuple[float, float], tuple[float, float]]:
-    """Tighter LVLH window for report slices: KOZ + typical along-track approach (y≈1.2 km)."""
+    """Tighter LVLH window for report slices: KOZ + along-track approach (~250 m default)."""
     a, b, _ = (float(x) for x in np.asarray(semi_axes_m, dtype=np.float64).reshape(3))
     x_half = max(5.0 * a, 200.0)
     y_lo = -max(2.0 * b, 100.0)
-    y_hi = max(28.0 * b, 1400.0)
+    y_hi = max(8.0 * b, 350.0)
     return ((-x_half, x_half), (y_lo, y_hi))
 
 
@@ -67,7 +67,7 @@ def parse_xy_limits_from_env(
 def parse_time_slices_s(horizon_s: float, times_s: tuple[float, ...] | None = None) -> tuple[float, ...]:
     """Time panels for the KOZ-centered PNG.
 
-    ``BRT_KOZ_VIZ_TIMES=0,450,900,...`` overrides count; else ``BRT_KOZ_VIZ_N_TIMES`` (default 7).
+    'BRT_KOZ_VIZ_TIMES=0,450,900,...' overrides count; else 'BRT_KOZ_VIZ_N_TIMES' (default 7).
     """
     if times_s is not None:
         return tuple(float(t) for t in times_s)
@@ -352,17 +352,16 @@ def render_brt_koz_centered_png(
             low_v_percentile=low_pct,
         )
         ax.plot(0.0, 0.0, "k+", markersize=8, markeredgewidth=1.2)
-        ax.set_xlabel("x (m)")
+        ax.set_xlabel("Along-track (m)")
         if i == 0:
-            ax.set_ylabel("y (m)")
-        v0_note = "black dashed = V=0" if ctag == "zero" else "no V=0 crossing"
-        ax.set_title(f"τ = {tq:.0f} s  ({v0_note})\nbrown = KOZ; red tint = V≤0")
+            ax.set_ylabel("Radial (m)")
+        v0_note = "dashed = V = 0" if ctag == "zero" else "no zero crossing"
+        ax.set_title(f"t = {tq:.0f} s remaining  ({v0_note})\nbrown = keep-out; red = unsafe")
     scale_note = "shared scale" if color_mode not in ("per_panel", "relative", "training") else "per-panel scale"
-    cbar_label = "unsafe (V≤0)" if color_mode == "unsafe_only" else f"V learned ({scale_note})"
+    cbar_label = "unsafe region" if color_mode == "unsafe_only" else f"V  ({scale_note})"
     fig.colorbar(im, ax=axes_flat.tolist(), fraction=0.035, pad=0.04, label=cbar_label)
     fig.suptitle(
-        f"BRT x–y slices at backward times τ (z={z_m:.1f} m, v=0)  "
-        f"x∈[{xlim[0]:.0f},{xlim[1]:.0f}] m, y∈[{ylim[0]:.0f},{ylim[1]:.0f}] m",
+        f"Learned value function — x–y slices (z = {z_m:.1f} m, coasting)",
         fontsize=11,
         y=1.02,
     )
@@ -394,7 +393,7 @@ def render_brt_xy_value_evolution_gif(
     ylim: tuple[float, float] | None = None,
     koz_centered: bool | None = None,
 ) -> str:
-    """Animate x–y ``V`` from τ=0 to τ=−T. Set ``koz_centered=True`` (default) to zoom on KOZ."""
+    """Animate x–y 'V' from tau=0 to tau=-T. Set 'koz_centered=True' (default) to zoom on KOZ."""
     import matplotlib.pyplot as plt
     from matplotlib import animation
 

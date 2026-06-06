@@ -1,7 +1,7 @@
 """Earth-centered inertial (ECI) kinematics for circular chief + CW deputy.
 
 Assumes a **prograde circular equatorial** chief orbit in the ECI x–y plane, with
-angular rate ``n`` and semi-major axis ``a_km``. LVLH columns match ``cw_dynamics``
+angular rate 'n' and semi-major axis 'a_km'. LVLH columns match 'cw_dynamics'
 (x radial outward from Earth, y along-track, z cross-track = +ECI z).
 """
 
@@ -37,7 +37,7 @@ def chief_circular_eci(
     n_rad_s: float,
     theta0_rad: float = 0.0,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """Chief position (km), velocity (km/s), and LVLH-to-ECI matrix at time ``t_s``."""
+    """Chief position (km), velocity (km/s), and LVLH-to-ECI matrix at time 't_s'."""
     theta = n_rad_s * float(t_s) + float(theta0_rad)
     R = chief_lvlh_to_eci_matrix(theta)
     r_c = a_km * np.array([np.cos(theta), np.sin(theta), 0.0], dtype=np.float64)
@@ -52,7 +52,7 @@ def deputy_eci_from_cw(
     n_rad_s: float,
     theta0_rad: float = 0.0,
 ) -> tuple[np.ndarray, np.ndarray]:
-    """Deputy ECI position (km) and velocity (km/s) from CW LVLH state at the same ``t_s``."""
+    """Deputy ECI position (km) and velocity (km/s) from CW LVLH state at the same 't_s'."""
     r_c, v_c, R = chief_circular_eci(t_s, a_km, n_rad_s, theta0_rad)
     x_lvlh_m = np.asarray(x_lvlh_m, dtype=np.float64).reshape(6)
     r_m = x_lvlh_m[:3]
@@ -69,7 +69,7 @@ def body_triad_velocity_normal(
     v_eci_km_s: np.ndarray,
     orbit_normal: np.ndarray | None = None,
 ) -> np.ndarray:
-    """Right-handed body frame in ECI: +x along ``v``, +z ~ orbit normal."""
+    """Right-handed body frame in ECI: +x along 'v', +z ~ orbit normal."""
     v = np.asarray(v_eci_km_s, dtype=np.float64).reshape(3)
     h = (
         np.array([0.0, 0.0, 1.0], dtype=np.float64)

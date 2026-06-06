@@ -20,8 +20,10 @@ The code is organized as follows:
 * `utils/losses.py` contains loss functions for the different reachability cases.
 * `utils/error_evaluators.py` contains the helper functions for formal verification.
 * `utils/quaternion.py` contains the helper functions for quaternion computation.
-* `run_experiment.py` starts a standard DeepReach experiment run.
-* `run_experiment.sh` contains example commands to train and validate DeepReach with MPC.
+
+**This project (aa276 KOZ):** train via `python -m simulation.brt.train --force` from the repo root
+(see `scripts/train_koz_brt_gpu.sh`). Upstream `run_experiment.py` was removed; training uses
+`experiments/experiments.py` through `simulation/brt/deepreach_mpc_brt.py`.
 
 
 ## Environment Setup
@@ -47,24 +49,22 @@ pip3 install torch torchvision torchaudio --index-url https://download.pytorch.o
 ## External Tutorial
 Follow along these [tutorial slides](https://docs.google.com/presentation/d/1qLU4i1aBQR58G-FiyGb-l9IycMWoJlgq/edit?usp=sharing&ouid=112832011741826436488&rtpof=true&sd=true) to get started, or continue reading below. Currently the tutorial slides include the instruction for writing your own reachability problems, training the network for BRTs, and verifying the BRTs. More tutorials are coming soon.
 
-## Running a DeepReach Experiment
-Here we take the first example from the [tutorial slides](https://docs.google.com/presentation/d/1qLU4i1aBQR58G-FiyGb-l9IycMWoJlgq/edit?usp=sharing&ouid=112832011741826436488&rtpof=true&sd=true), that learns the value function for the avoid Vertical Drone 2D system. Make sure to replace YOUR_WANDB_NAME with your wandb account before running:
-```
-python run_experiment.py --mode train --experiment_name VD --dynamics_class VertDrone2D --tMax 1.2 --pretrain --pretrain_iters 1000 --num_epochs 10000 --counter_end 6000 --num_nl 128 --lr 3e-5 --num_iterative_refinement 10 --MPC_batch_size 100 --num_MPC_batches 10 --num_MPC_data_samples 100 --numpoints 10000 --time_till_refinement 0.24 --use_wandb --wandb_project MPC --wandb_name VD --wandb_group VertDrone2D --wandb_entity YOUR_WANDB_NAME
+## Running a KOZ BRT experiment (aa276)
+
+From the repository root (with CUDA PyTorch installed):
+
+```bash
+./scripts/train_koz_brt_gpu.sh
+# or: python -m simulation.brt.train --force
 ```
 
-Note that the script provides many common training arguments, like `num_epochs` and the option to `pretrain`. Please refer to the [tutorial slides](https://docs.google.com/presentation/d/1qLU4i1aBQR58G-FiyGb-l9IycMWoJlgq/edit?usp=sharing&ouid=112832011741826436488&rtpof=true&sd=true) and `run_experiment.py` for more details.
+Checkpoints default to `simulation_output/deepreach_mpc_koz_v3/`.
 
-For verifying the learned value function, run:
-```
-python run_experiment.py --mode test --experiment_name VD --checkpoint_toload -1 --data_step run_basic_recovery
-```
+## Upstream DeepReach examples (other dynamics)
 
-For visualizing the verification results, run:
-```
-python run_experiment.py --mode test --experiment_name VD --checkpoint_toload -1 --data_step plot_basic_recovery
-```
-The plot will be available at ./runs/VD/basic_BRTs.png.
+The vendored upstream CLI (`run_experiment.py`) was removed from this fork. See the
+[DeepReach-MPC tutorial slides](https://docs.google.com/presentation/d/1qLU4i1aBQR58G-FiyGb-l9IycMWoJlgq/edit?usp=sharing&ouid=112832011741826436488&rtpof=true&sd=true)
+for VertDrone / Dubins / Quadrotor workflows on the original repo.
 
 
 For any question, please feel free to raise an issue. 

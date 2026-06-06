@@ -45,7 +45,7 @@ class LEOCircularOrbit:
 
 
 def leo_circular_orbit(altitude_km: float = 400.0) -> LEOCircularOrbit:
-    """``a = R_Earth + h``, ``n = sqrt(mu/a^3)`` (no optional poliastro dependency)."""
+    """'a = R_Earth + h', 'n = sqrt(mu/a^3)' (no optional poliastro dependency)."""
     h = float(altitude_km)
     a_km = float(R_EARTH_KM + h)
     return LEOCircularOrbit(n_rad_s=cw_mean_motion_circular(a_km), a_km=a_km, altitude_km=h)
@@ -82,7 +82,7 @@ class CWDynamics:
         return expm(self._A * dt)
 
     def propagate(self, x: np.ndarray, dt: float) -> np.ndarray:
-        """x' = Phi(dt) x using closed-form CW (same as exp(A dt); see ``cw_closed_form``)."""
+        """x' = Phi(dt) x using closed-form CW (same as exp(A dt); see 'cw_closed_form')."""
         x = np.asarray(x, dtype=np.float64).reshape(6)
         return cw_state_closed_form(x, self.n, float(dt))
 
@@ -136,12 +136,12 @@ def simulate_impulsive_segments_dense(
     segments: list[tuple[float, np.ndarray | None]],
     substeps: int = 40,
 ) -> tuple[np.ndarray, np.ndarray]:
-    """Same maneuver plan as ``simulate_impulsive_segments`` with uniform CW substeps.
+    """Same maneuver plan as 'simulate_impulsive_segments' with uniform CW substeps.
 
     Impulsive Δv is applied at the start of each segment, then the segment duration
-    is split into ``substeps`` propagations for smooth visualization.
+    is split into 'substeps' propagations for smooth visualization.
 
-    Returns (times, states) with length ``1 + len(segments) * substeps``.
+    Returns (times, states) with length '1 + len(segments) * substeps'.
     """
     if substeps < 1:
         raise ValueError("substeps must be >= 1")
@@ -163,7 +163,7 @@ def simulate_impulsive_segments_dense(
 
 
 def maneuver_total_duration_s(segments: list[tuple[float, np.ndarray | None]]) -> float:
-    """Total elapsed time (sum of segment ``dt``) for an impulsive maneuver list."""
+    """Total elapsed time (sum of segment 'dt') for an impulsive maneuver list."""
     return float(sum(float(dt) for dt, _ in segments))
 
 
@@ -173,9 +173,9 @@ def state_at_maneuver_elapsed_time(
     segments: list[tuple[float, np.ndarray | None]],
     t_elapsed_s: float,
 ) -> np.ndarray:
-    """CW LVLH state at ``t_elapsed_s`` along the same impulsive timing as :func:`simulate_impulsive_segments`.
+    """CW LVLH state at 't_elapsed_s' along the same impulsive timing as 'simulate_impulsive_segments'.
 
-    ``t_elapsed_s <= 0`` returns ``x0_lvlh_m``. Otherwise time advances segment-by-segment: optional
+    't_elapsed_s <= 0' returns 'x0_lvlh_m'. Otherwise time advances segment-by-segment: optional
     impulse at each segment start, then CW coast for the remainder of that segment's ``dt``.
     """
     if t_elapsed_s <= 0.0:
@@ -197,9 +197,9 @@ def propagate_coast_samples(
     x0: np.ndarray,
     sample_times_s: np.ndarray,
 ) -> np.ndarray:
-    """CW coast from ``x0`` at each ``sample_times_s[k]`` (seconds), vectorized loop.
+    """CW coast from 'x0' at each 'sample_times_s[k]' (seconds), vectorized loop.
 
-    Returns ``states`` shaped (N, 6) in LVLH meters / (m/s).
+    Returns 'states' shaped (N, 6) in LVLH meters / (m/s).
     """
     x0 = np.asarray(x0, dtype=np.float64).reshape(6)
     ts = np.asarray(sample_times_s, dtype=np.float64).reshape(-1)
