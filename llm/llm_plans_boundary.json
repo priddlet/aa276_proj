@@ -1,0 +1,6255 @@
+{
+  "scenario": {
+    "id": "scenario_boundary_70_120_v1",
+    "frame": "LVLH (x=radial, y=along-track, z=cross-track), chief at origin",
+    "dynamics": "Clohessy-Wiltshire, 400 km circular LEO",
+    "mean_motion_rad_s": 0.0011313666536110223,
+    "orbital_period_s": 5553.624271252229,
+    "start_states_y_m": [
+      70.0,
+      90.0,
+      110.0
+    ],
+    "inner_koz": {
+      "type": "ellipsoid",
+      "semi_axes_m": [
+        28.0,
+        45.0,
+        18.0
+      ],
+      "inside_rule": "(x/a)^2+(y/b)^2+(z/c)^2 <= 1"
+    },
+    "brt_horizon_s": 1800.0,
+    "dv_cap_m_s": 0.5,
+    "min_coast_before_first_burn_s": 300.0,
+    "purpose": "Stress-test the LEARNED V level set. At these starts the min dv reaching the KOZ within 1800 s is ~0.02-0.05 m/s (<< 0.5 cap), so V-bound unsafe cases are NOT also dv-cap cases.",
+    "label_criteria": {
+      "requires_intervention": "OR of the three",
+      "dv_excessive": "|dv| > 0.5 m/s",
+      "post_burn_V_le_0": "V(x+, t_burn) <= 0 (learned DeepReach-MPC)",
+      "passive_preburn_unsafe": "pre-burn free drift reaches KOZ within 1800s",
+      "binding_constraint": "v_bound | dv_bound | v_and_dv | none -- the report row key"
+    },
+    "ablation": "On this corpus, run the filter with passive checks OFF (FILTER_CHECK_PASSIVE_POST=0 FILTER_CHECK_PASSIVE_PRE=0) to isolate pure V-based filtering; the 'v_bound' plans are the ones that should still be intercepted.",
+    "label_mode": "hybrid_brt",
+    "label_checkpoint": "/Users/tanispriddle/Downloads/276proj/simulation_output/deepreach_mpc_koz_v3"
+  },
+  "plans": [
+    {
+      "plan_id": "safe_near_y70_000",
+      "prompt": "Close-range hold near the chief at ~70 m: a tiny trim burn after a coast, stay outside the keep-out zone.",
+      "tags": {
+        "category": "safe_near",
+        "start_y_m": 70.0,
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        70.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 496.2,
+          "dv_m_s": [
+            0.01498,
+            0.01734,
+            -0.01054
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 496.2,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.01498,
+            0.01734,
+            -0.01054
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 496.2,
+            "dv_mag_m_s": 0.02522,
+            "pre_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.015,
+              0.0173,
+              -0.0105
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 0.3199,
+            "passive_post_unsafe": 0
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 496.2,
+        "total_dv_m_s": 0.02522,
+        "max_dv_m_s": 0.02522,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "safe_near_y70_001",
+      "prompt": "Close-range hold near the chief at ~70 m: a tiny trim burn after a coast, stay outside the keep-out zone.",
+      "tags": {
+        "category": "safe_near",
+        "start_y_m": 70.0,
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        70.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 593.8,
+          "dv_m_s": [
+            0.00162,
+            0.02732,
+            -0.00328
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 593.8,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.00162,
+            0.02732,
+            -0.00328
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 593.8,
+            "dv_mag_m_s": 0.02756,
+            "pre_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.0016,
+              0.0273,
+              -0.0033
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 0.3101,
+            "passive_post_unsafe": 0
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 593.8,
+        "total_dv_m_s": 0.02756,
+        "max_dv_m_s": 0.02756,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "safe_near_y70_002",
+      "prompt": "Close-range hold near the chief at ~70 m: a tiny trim burn after a coast, stay outside the keep-out zone.",
+      "tags": {
+        "category": "safe_near",
+        "start_y_m": 70.0,
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        70.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 358.5,
+          "dv_m_s": [
+            -0.01063,
+            0.0219,
+            -0.00351
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 358.5,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.01063,
+            0.0219,
+            -0.00351
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 358.5,
+            "dv_mag_m_s": 0.0246,
+            "pre_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              -0.0106,
+              0.0219,
+              -0.0035
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 0.4078,
+            "passive_post_unsafe": 0
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 358.5,
+        "total_dv_m_s": 0.0246,
+        "max_dv_m_s": 0.0246,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "safe_near_y70_003",
+      "prompt": "Close-range hold near the chief at ~70 m: a tiny trim burn after a coast, stay outside the keep-out zone.",
+      "tags": {
+        "category": "safe_near",
+        "start_y_m": 70.0,
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        70.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 336.2,
+          "dv_m_s": [
+            -0.00446,
+            0.03271,
+            -0.01333
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 336.2,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00446,
+            0.03271,
+            -0.01333
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 336.2,
+            "dv_mag_m_s": 0.0356,
+            "pre_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              -0.0045,
+              0.0327,
+              -0.0133
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 0.4157,
+            "passive_post_unsafe": 0
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 336.2,
+        "total_dv_m_s": 0.0356,
+        "max_dv_m_s": 0.0356,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "safe_near_y70_004",
+      "prompt": "Close-range hold near the chief at ~70 m: a tiny trim burn after a coast, stay outside the keep-out zone.",
+      "tags": {
+        "category": "safe_near",
+        "start_y_m": 70.0,
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        70.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 365.4,
+          "dv_m_s": [
+            -0.01951,
+            0.03023,
+            -0.00468
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 365.4,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.01951,
+            0.03023,
+            -0.00468
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 365.4,
+            "dv_mag_m_s": 0.03628,
+            "pre_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              -0.0195,
+              0.0302,
+              -0.0047
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 0.4066,
+            "passive_post_unsafe": 0
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 365.4,
+        "total_dv_m_s": 0.03628,
+        "max_dv_m_s": 0.03628,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "safe_near_y70_005",
+      "prompt": "Close-range hold near the chief at ~70 m: a tiny trim burn after a coast, stay outside the keep-out zone.",
+      "tags": {
+        "category": "safe_near",
+        "start_y_m": 70.0,
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        70.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 532.4,
+          "dv_m_s": [
+            0.00163,
+            0.01783,
+            -0.00156
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 532.4,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.00163,
+            0.01783,
+            -0.00156
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 532.4,
+            "dv_mag_m_s": 0.01797,
+            "pre_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.0016,
+              0.0178,
+              -0.0016
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 0.3074,
+            "passive_post_unsafe": 0
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 532.4,
+        "total_dv_m_s": 0.01797,
+        "max_dv_m_s": 0.01797,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "safe_near_y70_006",
+      "prompt": "Close-range hold near the chief at ~70 m: a tiny trim burn after a coast, stay outside the keep-out zone.",
+      "tags": {
+        "category": "safe_near",
+        "start_y_m": 70.0,
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        70.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 390.7,
+          "dv_m_s": [
+            -0.0014,
+            0.00565,
+            0.00063
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 390.7,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.0014,
+            0.00565,
+            0.00063
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 390.7,
+            "dv_mag_m_s": 0.00585,
+            "pre_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              -0.0014,
+              0.0056,
+              0.0006
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 0.3945,
+            "passive_post_unsafe": 0
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 390.7,
+        "total_dv_m_s": 0.00585,
+        "max_dv_m_s": 0.00585,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "safe_near_y70_007",
+      "prompt": "Close-range hold near the chief at ~70 m: a tiny trim burn after a coast, stay outside the keep-out zone.",
+      "tags": {
+        "category": "safe_near",
+        "start_y_m": 70.0,
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        70.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 385.8,
+          "dv_m_s": [
+            -0.00514,
+            0.01221,
+            -0.00352
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 385.8,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00514,
+            0.01221,
+            -0.00352
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 385.8,
+            "dv_mag_m_s": 0.01371,
+            "pre_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              -0.0051,
+              0.0122,
+              -0.0035
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 0.3973,
+            "passive_post_unsafe": 0
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 385.8,
+        "total_dv_m_s": 0.01371,
+        "max_dv_m_s": 0.01371,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "aggr_v_y70_008",
+      "prompt": "From ~70 m, ease onto the chief over the next pass with a small burn. Low delta-v.",
+      "tags": {
+        "category": "aggr_v",
+        "start_y_m": 70.0,
+        "intent": "aggressive_v"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        70.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 354.7,
+          "dv_m_s": [
+            0.03606,
+            -0.03295,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 354.7,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.03606,
+            -0.03295,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 354.7,
+            "dv_mag_m_s": 0.04885,
+            "pre_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.0361,
+              -0.033,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 0.4087,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 354.7,
+        "total_dv_m_s": 0.04885,
+        "max_dv_m_s": 0.04885,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "aggr_v_y70_009",
+      "prompt": "From ~70 m, ease onto the chief over the next pass with a small burn. Low delta-v.",
+      "tags": {
+        "category": "aggr_v",
+        "start_y_m": 70.0,
+        "intent": "aggressive_v"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        70.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 471.4,
+          "dv_m_s": [
+            0.02792,
+            -0.01434,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 471.4,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.02792,
+            -0.01434,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 471.4,
+            "dv_mag_m_s": 0.03139,
+            "pre_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.0279,
+              -0.0143,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 0.3472,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 471.4,
+        "total_dv_m_s": 0.03139,
+        "max_dv_m_s": 0.03139,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "aggr_v_y70_010",
+      "prompt": "From ~70 m, ease onto the chief over the next pass with a small burn. Low delta-v.",
+      "tags": {
+        "category": "aggr_v",
+        "start_y_m": 70.0,
+        "intent": "aggressive_v"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        70.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 567.0,
+          "dv_m_s": [
+            0.02578,
+            -0.01138,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 567.0,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.02578,
+            -0.01138,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 567.0,
+            "dv_mag_m_s": 0.02818,
+            "pre_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.0258,
+              -0.0114,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 0.303,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 567.0,
+        "total_dv_m_s": 0.02818,
+        "max_dv_m_s": 0.02818,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "aggr_v_y70_011",
+      "prompt": "From ~70 m, ease onto the chief over the next pass with a small burn. Low delta-v.",
+      "tags": {
+        "category": "aggr_v",
+        "start_y_m": 70.0,
+        "intent": "aggressive_v"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        70.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 501.2,
+          "dv_m_s": [
+            0.02492,
+            -0.01032,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 501.2,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.02492,
+            -0.01032,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 501.2,
+            "dv_mag_m_s": 0.02697,
+            "pre_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.0249,
+              -0.0103,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 0.314,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 501.2,
+        "total_dv_m_s": 0.02697,
+        "max_dv_m_s": 0.02697,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "aggr_v_y70_012",
+      "prompt": "From ~70 m, ease onto the chief over the next pass with a small burn. Low delta-v.",
+      "tags": {
+        "category": "aggr_v",
+        "start_y_m": 70.0,
+        "intent": "aggressive_v"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        70.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 337.3,
+          "dv_m_s": [
+            0.0232,
+            -0.00839,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 337.3,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.0232,
+            -0.00839,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 337.3,
+            "dv_mag_m_s": 0.02467,
+            "pre_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.0232,
+              -0.0084,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 0.4158,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 337.3,
+        "total_dv_m_s": 0.02467,
+        "max_dv_m_s": 0.02467,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "aggr_v_y70_013",
+      "prompt": "From ~70 m, ease onto the chief over the next pass with a small burn. Low delta-v.",
+      "tags": {
+        "category": "aggr_v",
+        "start_y_m": 70.0,
+        "intent": "aggressive_v"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        70.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 432.0,
+          "dv_m_s": [
+            0.02927,
+            -0.01649,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 432.0,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.02927,
+            -0.01649,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 432.0,
+            "dv_mag_m_s": 0.0336,
+            "pre_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.0293,
+              -0.0165,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 0.3905,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 432.0,
+        "total_dv_m_s": 0.0336,
+        "max_dv_m_s": 0.0336,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "aggr_v_y70_014",
+      "prompt": "From ~70 m, ease onto the chief over the next pass with a small burn. Low delta-v.",
+      "tags": {
+        "category": "aggr_v",
+        "start_y_m": 70.0,
+        "intent": "aggressive_v"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        70.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 595.0,
+          "dv_m_s": [
+            0.0344,
+            -0.02769,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 595.0,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.0344,
+            -0.02769,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 595.0,
+            "dv_mag_m_s": 0.04416,
+            "pre_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.0344,
+              -0.0277,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 0.3099,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 595.0,
+        "total_dv_m_s": 0.04416,
+        "max_dv_m_s": 0.04416,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "aggr_v_y70_015",
+      "prompt": "From ~70 m, ease onto the chief over the next pass with a small burn. Low delta-v.",
+      "tags": {
+        "category": "aggr_v",
+        "start_y_m": 70.0,
+        "intent": "aggressive_v"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        70.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 542.7,
+          "dv_m_s": [
+            0.02861,
+            -0.01541,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 542.7,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.02861,
+            -0.01541,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 542.7,
+            "dv_mag_m_s": 0.0325,
+            "pre_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.0286,
+              -0.0154,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 0.3064,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 542.7,
+        "total_dv_m_s": 0.0325,
+        "max_dv_m_s": 0.0325,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "aggr_v_y70_016",
+      "prompt": "From ~70 m, ease onto the chief over the next pass with a small burn. Low delta-v.",
+      "tags": {
+        "category": "aggr_v",
+        "start_y_m": 70.0,
+        "intent": "aggressive_v"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        70.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 403.3,
+          "dv_m_s": [
+            0.03294,
+            -0.02386,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 403.3,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.03294,
+            -0.02386,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 403.3,
+            "dv_mag_m_s": 0.04067,
+            "pre_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.0329,
+              -0.0239,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 0.4122,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 403.3,
+        "total_dv_m_s": 0.04067,
+        "max_dv_m_s": 0.04067,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "aggr_v_dv_y70_017",
+      "prompt": "From ~70 m, get on the target fast - short time-to-go.",
+      "tags": {
+        "category": "aggr_v_dv",
+        "start_y_m": 70.0,
+        "intent": "aggressive_v_dv"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        70.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 323.0,
+          "dv_m_s": [
+            0.25526,
+            -0.6518,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 323.0,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.25526,
+            -0.6518,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 323.0,
+            "dv_mag_m_s": 0.7,
+            "pre_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.2553,
+              -0.6518,
+              0.0
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_post": 0.4195,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 323.0,
+        "total_dv_m_s": 0.7,
+        "max_dv_m_s": 0.7,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap"
+        ],
+        "binding_constraint": "dv_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "aggr_v_dv_y70_018",
+      "prompt": "From ~70 m, get on the target fast - short time-to-go.",
+      "tags": {
+        "category": "aggr_v_dv",
+        "start_y_m": 70.0,
+        "intent": "aggressive_v_dv"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        70.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 504.9,
+          "dv_m_s": [
+            0.33465,
+            -0.61482,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 504.9,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.33465,
+            -0.61482,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 504.9,
+            "dv_mag_m_s": 0.7,
+            "pre_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.3347,
+              -0.6148,
+              0.0
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_post": 0.3107,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 504.9,
+        "total_dv_m_s": 0.7,
+        "max_dv_m_s": 0.7,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap"
+        ],
+        "binding_constraint": "dv_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "aggr_v_dv_y70_019",
+      "prompt": "From ~70 m, get on the target fast - short time-to-go.",
+      "tags": {
+        "category": "aggr_v_dv",
+        "start_y_m": 70.0,
+        "intent": "aggressive_v_dv"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        70.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 513.1,
+          "dv_m_s": [
+            0.30449,
+            -0.63031,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 513.1,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.30449,
+            -0.63031,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 513.1,
+            "dv_mag_m_s": 0.7,
+            "pre_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.3045,
+              -0.6303,
+              0.0
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_post": 0.3144,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 513.1,
+        "total_dv_m_s": 0.7,
+        "max_dv_m_s": 0.7,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap"
+        ],
+        "binding_constraint": "dv_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "aggr_v_dv_y70_020",
+      "prompt": "From ~70 m, get on the target fast - short time-to-go.",
+      "tags": {
+        "category": "aggr_v_dv",
+        "start_y_m": 70.0,
+        "intent": "aggressive_v_dv"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        70.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 479.5,
+          "dv_m_s": [
+            0.22543,
+            -0.66271,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 479.5,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.22543,
+            -0.66271,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 479.5,
+            "dv_mag_m_s": 0.7,
+            "pre_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.2254,
+              -0.6627,
+              0.0
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_post": 0.3377,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 479.5,
+        "total_dv_m_s": 0.7,
+        "max_dv_m_s": 0.7,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap"
+        ],
+        "binding_constraint": "dv_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "passive_twoburn_y70_021",
+      "prompt": "From ~70 m, commit toward the chief then hold; small burns only.",
+      "tags": {
+        "category": "passive_twoburn",
+        "start_y_m": 70.0,
+        "intent": "aggressive_passive"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        70.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 547.5,
+          "dv_m_s": [
+            0.03434,
+            -0.02108,
+            0.0
+          ]
+        },
+        {
+          "t_s": 788.9,
+          "dv_m_s": [
+            0.0,
+            -0.00469,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 547.5,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.03434,
+            -0.02108,
+            0.0
+          ]
+        },
+        {
+          "coast_s": 241.4,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.0,
+            -0.00469,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 547.5,
+            "dv_mag_m_s": 0.04029,
+            "pre_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.0343,
+              -0.0211,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 0.3093,
+            "passive_post_unsafe": 1
+          },
+          {
+            "t_s": 788.9,
+            "dv_mag_m_s": 0.00469,
+            "pre_burn_state": [
+              6.8058,
+              62.9134,
+              0.0,
+              0.0217,
+              -0.0365,
+              0.0
+            ],
+            "post_burn_state": [
+              6.8058,
+              62.9134,
+              0.0,
+              0.0217,
+              -0.0412,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 1,
+            "requires_intervention": 1,
+            "V_post": 0.0418,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 2,
+        "first_burn_t_s": 547.5,
+        "total_dv_m_s": 0.04498,
+        "max_dv_m_s": 0.04029,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "passive"
+        ],
+        "binding_constraint": "v_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "passive_twoburn_y70_022",
+      "prompt": "From ~70 m, commit toward the chief then hold; small burns only.",
+      "tags": {
+        "category": "passive_twoburn",
+        "start_y_m": 70.0,
+        "intent": "aggressive_passive"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        70.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 390.4,
+          "dv_m_s": [
+            0.03003,
+            -0.01415,
+            0.0
+          ]
+        },
+        {
+          "t_s": 530.1,
+          "dv_m_s": [
+            0.0,
+            -0.01064,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 390.4,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.03003,
+            -0.01415,
+            0.0
+          ]
+        },
+        {
+          "coast_s": 139.7,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.0,
+            -0.01064,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 390.4,
+            "dv_mag_m_s": 0.0332,
+            "pre_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.03,
+              -0.0141,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 0.3947,
+            "passive_post_unsafe": 1
+          },
+          {
+            "t_s": 530.1,
+            "dv_mag_m_s": 0.01064,
+            "pre_burn_state": [
+              3.866,
+              67.3944,
+              0.0,
+              0.0252,
+              -0.0229,
+              0.0
+            ],
+            "post_burn_state": [
+              3.866,
+              67.3944,
+              0.0,
+              0.0252,
+              -0.0335,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 1,
+            "requires_intervention": 1,
+            "V_post": 0.2545,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 2,
+        "first_burn_t_s": 390.4,
+        "total_dv_m_s": 0.04384,
+        "max_dv_m_s": 0.0332,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "passive"
+        ],
+        "binding_constraint": "v_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "passive_twoburn_y70_023",
+      "prompt": "From ~70 m, commit toward the chief then hold; small burns only.",
+      "tags": {
+        "category": "passive_twoburn",
+        "start_y_m": 70.0,
+        "intent": "aggressive_passive"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        70.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 439.2,
+          "dv_m_s": [
+            0.03149,
+            -0.01625,
+            0.0
+          ]
+        },
+        {
+          "t_s": 670.8,
+          "dv_m_s": [
+            0.0,
+            -0.01045,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 439.2,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.03149,
+            -0.01625,
+            0.0
+          ]
+        },
+        {
+          "coast_s": 231.6,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.0,
+            -0.01045,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 439.2,
+            "dv_mag_m_s": 0.03544,
+            "pre_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              70.0,
+              0.0,
+              0.0315,
+              -0.0163,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 0.3845,
+            "passive_post_unsafe": 1
+          },
+          {
+            "t_s": 670.8,
+            "dv_mag_m_s": 0.01045,
+            "pre_burn_state": [
+              6.2294,
+              64.5081,
+              0.0,
+              0.022,
+              -0.0303,
+              0.0
+            ],
+            "post_burn_state": [
+              6.2294,
+              64.5081,
+              0.0,
+              0.022,
+              -0.0408,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 1,
+            "requires_intervention": 1,
+            "V_post": 0.181,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 2,
+        "first_burn_t_s": 439.2,
+        "total_dv_m_s": 0.04589,
+        "max_dv_m_s": 0.03544,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "passive"
+        ],
+        "binding_constraint": "v_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "safe_near_y90_024",
+      "prompt": "Close-range hold near the chief at ~90 m: a tiny trim burn after a coast, stay outside the keep-out zone.",
+      "tags": {
+        "category": "safe_near",
+        "start_y_m": 90.0,
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        90.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 436.9,
+          "dv_m_s": [
+            -0.00174,
+            0.00489,
+            0.00128
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 436.9,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00174,
+            0.00489,
+            0.00128
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 436.9,
+            "dv_mag_m_s": 0.00535,
+            "pre_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              -0.0017,
+              0.0049,
+              0.0013
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 0.8331,
+            "passive_post_unsafe": 0
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 436.9,
+        "total_dv_m_s": 0.00535,
+        "max_dv_m_s": 0.00535,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "safe_near_y90_025",
+      "prompt": "Close-range hold near the chief at ~90 m: a tiny trim burn after a coast, stay outside the keep-out zone.",
+      "tags": {
+        "category": "safe_near",
+        "start_y_m": 90.0,
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        90.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 350.7,
+          "dv_m_s": [
+            -0.01524,
+            0.0117,
+            -0.00812
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 350.7,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.01524,
+            0.0117,
+            -0.00812
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 350.7,
+            "dv_mag_m_s": 0.02086,
+            "pre_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              -0.0152,
+              0.0117,
+              -0.0081
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 0.8537,
+            "passive_post_unsafe": 0
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 350.7,
+        "total_dv_m_s": 0.02086,
+        "max_dv_m_s": 0.02086,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "safe_near_y90_026",
+      "prompt": "Close-range hold near the chief at ~90 m: a tiny trim burn after a coast, stay outside the keep-out zone.",
+      "tags": {
+        "category": "safe_near",
+        "start_y_m": 90.0,
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        90.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 388.5,
+          "dv_m_s": [
+            -0.00262,
+            0.01898,
+            0.00081
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 388.5,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00262,
+            0.01898,
+            0.00081
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 388.5,
+            "dv_mag_m_s": 0.01918,
+            "pre_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              -0.0026,
+              0.019,
+              0.0008
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 0.8398,
+            "passive_post_unsafe": 0
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 388.5,
+        "total_dv_m_s": 0.01918,
+        "max_dv_m_s": 0.01918,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "safe_near_y90_027",
+      "prompt": "Close-range hold near the chief at ~90 m: a tiny trim burn after a coast, stay outside the keep-out zone.",
+      "tags": {
+        "category": "safe_near",
+        "start_y_m": 90.0,
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        90.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 328.9,
+          "dv_m_s": [
+            -0.00502,
+            0.01391,
+            -0.00374
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 328.9,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00502,
+            0.01391,
+            -0.00374
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 328.9,
+            "dv_mag_m_s": 0.01525,
+            "pre_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              -0.005,
+              0.0139,
+              -0.0037
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 0.8688,
+            "passive_post_unsafe": 0
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 328.9,
+        "total_dv_m_s": 0.01525,
+        "max_dv_m_s": 0.01525,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "safe_near_y90_028",
+      "prompt": "Close-range hold near the chief at ~90 m: a tiny trim burn after a coast, stay outside the keep-out zone.",
+      "tags": {
+        "category": "safe_near",
+        "start_y_m": 90.0,
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        90.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 542.4,
+          "dv_m_s": [
+            -0.00366,
+            0.01548,
+            0.00056
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 542.4,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00366,
+            0.01548,
+            0.00056
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 542.4,
+            "dv_mag_m_s": 0.01592,
+            "pre_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              -0.0037,
+              0.0155,
+              0.0006
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 0.7506,
+            "passive_post_unsafe": 0
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 542.4,
+        "total_dv_m_s": 0.01592,
+        "max_dv_m_s": 0.01592,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "safe_near_y90_029",
+      "prompt": "Close-range hold near the chief at ~90 m: a tiny trim burn after a coast, stay outside the keep-out zone.",
+      "tags": {
+        "category": "safe_near",
+        "start_y_m": 90.0,
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        90.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 343.2,
+          "dv_m_s": [
+            -0.00141,
+            0.00567,
+            0.00019
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 343.2,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00141,
+            0.00567,
+            0.00019
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 343.2,
+            "dv_mag_m_s": 0.00585,
+            "pre_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              -0.0014,
+              0.0057,
+              0.0002
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 0.8571,
+            "passive_post_unsafe": 0
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 343.2,
+        "total_dv_m_s": 0.00585,
+        "max_dv_m_s": 0.00585,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "safe_near_y90_030",
+      "prompt": "Close-range hold near the chief at ~90 m: a tiny trim burn after a coast, stay outside the keep-out zone.",
+      "tags": {
+        "category": "safe_near",
+        "start_y_m": 90.0,
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        90.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 358.8,
+          "dv_m_s": [
+            -0.00821,
+            0.01628,
+            0.01119
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 358.8,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00821,
+            0.01628,
+            0.01119
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 358.8,
+            "dv_mag_m_s": 0.02139,
+            "pre_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              -0.0082,
+              0.0163,
+              0.0112
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 0.8518,
+            "passive_post_unsafe": 0
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 358.8,
+        "total_dv_m_s": 0.02139,
+        "max_dv_m_s": 0.02139,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "safe_near_y90_031",
+      "prompt": "Close-range hold near the chief at ~90 m: a tiny trim burn after a coast, stay outside the keep-out zone.",
+      "tags": {
+        "category": "safe_near",
+        "start_y_m": 90.0,
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        90.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 401.5,
+          "dv_m_s": [
+            -0.0018,
+            0.02466,
+            -0.005
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 401.5,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.0018,
+            0.02466,
+            -0.005
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 401.5,
+            "dv_mag_m_s": 0.02523,
+            "pre_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              -0.0018,
+              0.0247,
+              -0.005
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 0.8544,
+            "passive_post_unsafe": 0
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 401.5,
+        "total_dv_m_s": 0.02523,
+        "max_dv_m_s": 0.02523,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "aggr_v_y90_032",
+      "prompt": "From ~90 m, ease onto the chief over the next pass with a small burn. Low delta-v.",
+      "tags": {
+        "category": "aggr_v",
+        "start_y_m": 90.0,
+        "intent": "aggressive_v"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        90.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 346.5,
+          "dv_m_s": [
+            0.0419,
+            -0.02155,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 346.5,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.0419,
+            -0.02155,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 346.5,
+            "dv_mag_m_s": 0.04712,
+            "pre_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              0.0419,
+              -0.0215,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 0.855,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 346.5,
+        "total_dv_m_s": 0.04712,
+        "max_dv_m_s": 0.04712,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "aggr_v_y90_033",
+      "prompt": "From ~90 m, ease onto the chief over the next pass with a small burn. Low delta-v.",
+      "tags": {
+        "category": "aggr_v",
+        "start_y_m": 90.0,
+        "intent": "aggressive_v"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        90.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 439.3,
+          "dv_m_s": [
+            0.0583,
+            -0.06832,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 439.3,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.0583,
+            -0.06832,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 439.3,
+            "dv_mag_m_s": 0.08981,
+            "pre_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              0.0583,
+              -0.0683,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 0.8288,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 439.3,
+        "total_dv_m_s": 0.08981,
+        "max_dv_m_s": 0.08981,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "aggr_v_y90_034",
+      "prompt": "From ~90 m, ease onto the chief over the next pass with a small burn. Low delta-v.",
+      "tags": {
+        "category": "aggr_v",
+        "start_y_m": 90.0,
+        "intent": "aggressive_v"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        90.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 359.4,
+          "dv_m_s": [
+            0.05097,
+            -0.03979,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 359.4,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.05097,
+            -0.03979,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 359.4,
+            "dv_mag_m_s": 0.06466,
+            "pre_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              0.051,
+              -0.0398,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 0.8524,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 359.4,
+        "total_dv_m_s": 0.06466,
+        "max_dv_m_s": 0.06466,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "aggr_v_y90_035",
+      "prompt": "From ~90 m, ease onto the chief over the next pass with a small burn. Low delta-v.",
+      "tags": {
+        "category": "aggr_v",
+        "start_y_m": 90.0,
+        "intent": "aggressive_v"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        90.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 351.9,
+          "dv_m_s": [
+            0.04889,
+            -0.03459,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 351.9,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.04889,
+            -0.03459,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 351.9,
+            "dv_mag_m_s": 0.05989,
+            "pre_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              0.0489,
+              -0.0346,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 0.853,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 351.9,
+        "total_dv_m_s": 0.05989,
+        "max_dv_m_s": 0.05989,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "aggr_v_y90_036",
+      "prompt": "From ~90 m, ease onto the chief over the next pass with a small burn. Low delta-v.",
+      "tags": {
+        "category": "aggr_v",
+        "start_y_m": 90.0,
+        "intent": "aggressive_v"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        90.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 320.6,
+          "dv_m_s": [
+            0.04169,
+            -0.02123,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 320.6,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.04169,
+            -0.02123,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 320.6,
+            "dv_mag_m_s": 0.04678,
+            "pre_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              0.0417,
+              -0.0212,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 0.871,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 320.6,
+        "total_dv_m_s": 0.04678,
+        "max_dv_m_s": 0.04678,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "aggr_v_y90_037",
+      "prompt": "From ~90 m, ease onto the chief over the next pass with a small burn. Low delta-v.",
+      "tags": {
+        "category": "aggr_v",
+        "start_y_m": 90.0,
+        "intent": "aggressive_v"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        90.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 542.0,
+          "dv_m_s": [
+            0.05064,
+            -0.0389,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 542.0,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.05064,
+            -0.0389,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 542.0,
+            "dv_mag_m_s": 0.06386,
+            "pre_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              0.0506,
+              -0.0389,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 0.7501,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 542.0,
+        "total_dv_m_s": 0.06386,
+        "max_dv_m_s": 0.06386,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "aggr_v_y90_038",
+      "prompt": "From ~90 m, ease onto the chief over the next pass with a small burn. Low delta-v.",
+      "tags": {
+        "category": "aggr_v",
+        "start_y_m": 90.0,
+        "intent": "aggressive_v"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        90.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 457.0,
+          "dv_m_s": [
+            0.03984,
+            -0.0186,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 457.0,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.03984,
+            -0.0186,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 457.0,
+            "dv_mag_m_s": 0.04397,
+            "pre_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              0.0398,
+              -0.0186,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 0.808,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 457.0,
+        "total_dv_m_s": 0.04397,
+        "max_dv_m_s": 0.04397,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "aggr_v_y90_039",
+      "prompt": "From ~90 m, ease onto the chief over the next pass with a small burn. Low delta-v.",
+      "tags": {
+        "category": "aggr_v",
+        "start_y_m": 90.0,
+        "intent": "aggressive_v"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        90.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 450.1,
+          "dv_m_s": [
+            0.04066,
+            -0.01973,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 450.1,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.04066,
+            -0.01973,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 450.1,
+            "dv_mag_m_s": 0.04519,
+            "pre_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              0.0407,
+              -0.0197,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 0.8198,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 450.1,
+        "total_dv_m_s": 0.04519,
+        "max_dv_m_s": 0.04519,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "aggr_v_y90_040",
+      "prompt": "From ~90 m, ease onto the chief over the next pass with a small burn. Low delta-v.",
+      "tags": {
+        "category": "aggr_v",
+        "start_y_m": 90.0,
+        "intent": "aggressive_v"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        90.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 350.4,
+          "dv_m_s": [
+            0.05312,
+            -0.04614,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 350.4,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.05312,
+            -0.04614,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 350.4,
+            "dv_mag_m_s": 0.07036,
+            "pre_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              0.0531,
+              -0.0461,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 0.8537,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 350.4,
+        "total_dv_m_s": 0.07036,
+        "max_dv_m_s": 0.07036,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "aggr_v_dv_y90_041",
+      "prompt": "From ~90 m, get on the target fast - short time-to-go.",
+      "tags": {
+        "category": "aggr_v_dv",
+        "start_y_m": 90.0,
+        "intent": "aggressive_v_dv"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        90.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 576.6,
+          "dv_m_s": [
+            0.23239,
+            -0.6603,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 576.6,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.23239,
+            -0.6603,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 576.6,
+            "dv_mag_m_s": 0.7,
+            "pre_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              0.2324,
+              -0.6603,
+              0.0
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_post": 0.7431,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 576.6,
+        "total_dv_m_s": 0.7,
+        "max_dv_m_s": 0.7,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap"
+        ],
+        "binding_constraint": "dv_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "aggr_v_dv_y90_042",
+      "prompt": "From ~90 m, get on the target fast - short time-to-go.",
+      "tags": {
+        "category": "aggr_v_dv",
+        "start_y_m": 90.0,
+        "intent": "aggressive_v_dv"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        90.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 473.8,
+          "dv_m_s": [
+            0.25557,
+            -0.65168,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 473.8,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.25557,
+            -0.65168,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 473.8,
+            "dv_mag_m_s": 0.7,
+            "pre_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              0.2556,
+              -0.6517,
+              0.0
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_post": 0.7887,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 473.8,
+        "total_dv_m_s": 0.7,
+        "max_dv_m_s": 0.7,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap"
+        ],
+        "binding_constraint": "dv_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "aggr_v_dv_y90_043",
+      "prompt": "From ~90 m, get on the target fast - short time-to-go.",
+      "tags": {
+        "category": "aggr_v_dv",
+        "start_y_m": 90.0,
+        "intent": "aggressive_v_dv"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        90.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 560.0,
+          "dv_m_s": [
+            0.30458,
+            -0.63026,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 560.0,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.30458,
+            -0.63026,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 560.0,
+            "dv_mag_m_s": 0.7,
+            "pre_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              0.3046,
+              -0.6303,
+              0.0
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_post": 0.7479,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 560.0,
+        "total_dv_m_s": 0.7,
+        "max_dv_m_s": 0.7,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap"
+        ],
+        "binding_constraint": "dv_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "aggr_v_dv_y90_044",
+      "prompt": "From ~90 m, get on the target fast - short time-to-go.",
+      "tags": {
+        "category": "aggr_v_dv",
+        "start_y_m": 90.0,
+        "intent": "aggressive_v_dv"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        90.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 364.2,
+          "dv_m_s": [
+            0.23724,
+            -0.65857,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 364.2,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.23724,
+            -0.65857,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 364.2,
+            "dv_mag_m_s": 0.7,
+            "pre_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              0.2372,
+              -0.6586,
+              0.0
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_post": 0.8508,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 364.2,
+        "total_dv_m_s": 0.7,
+        "max_dv_m_s": 0.7,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap"
+        ],
+        "binding_constraint": "dv_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "passive_twoburn_y90_045",
+      "prompt": "From ~90 m, commit toward the chief then hold; small burns only.",
+      "tags": {
+        "category": "passive_twoburn",
+        "start_y_m": 90.0,
+        "intent": "aggressive_passive"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        90.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 393.0,
+          "dv_m_s": [
+            0.04351,
+            -0.02064,
+            0.0
+          ]
+        },
+        {
+          "t_s": 641.3,
+          "dv_m_s": [
+            0.0,
+            -0.00206,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 393.0,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.04351,
+            -0.02064,
+            0.0
+          ]
+        },
+        {
+          "coast_s": 248.3,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.0,
+            -0.00206,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 393.0,
+            "dv_mag_m_s": 0.04816,
+            "pre_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              0.0435,
+              -0.0206,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 0.8413,
+            "passive_post_unsafe": 1
+          },
+          {
+            "t_s": 641.3,
+            "dv_mag_m_s": 0.00206,
+            "pre_burn_state": [
+              9.2318,
+              82.1286,
+              0.0,
+              0.0304,
+              -0.0415,
+              0.0
+            ],
+            "post_burn_state": [
+              9.2318,
+              82.1286,
+              0.0,
+              0.0304,
+              -0.0436,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 1,
+            "requires_intervention": 1,
+            "V_post": 0.6333,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 2,
+        "first_burn_t_s": 393.0,
+        "total_dv_m_s": 0.05022,
+        "max_dv_m_s": 0.04816,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "passive"
+        ],
+        "binding_constraint": "v_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "passive_twoburn_y90_046",
+      "prompt": "From ~90 m, commit toward the chief then hold; small burns only.",
+      "tags": {
+        "category": "passive_twoburn",
+        "start_y_m": 90.0,
+        "intent": "aggressive_passive"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        90.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 397.7,
+          "dv_m_s": [
+            0.05187,
+            -0.03502,
+            0.0
+          ]
+        },
+        {
+          "t_s": 649.6,
+          "dv_m_s": [
+            0.0,
+            -0.01779,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 397.7,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.05187,
+            -0.03502,
+            0.0
+          ]
+        },
+        {
+          "coast_s": 251.9,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.0,
+            -0.01779,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 397.7,
+            "dv_mag_m_s": 0.06259,
+            "pre_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              0.0519,
+              -0.035,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 0.8469,
+            "passive_post_unsafe": 1
+          },
+          {
+            "t_s": 649.6,
+            "dv_mag_m_s": 0.01779,
+            "pre_burn_state": [
+              10.3928,
+              77.9556,
+              0.0,
+              0.0301,
+              -0.0585,
+              0.0
+            ],
+            "post_burn_state": [
+              10.3928,
+              77.9556,
+              0.0,
+              0.0301,
+              -0.0763,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 1,
+            "requires_intervention": 1,
+            "V_post": 0.5548,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 2,
+        "first_burn_t_s": 397.7,
+        "total_dv_m_s": 0.08038,
+        "max_dv_m_s": 0.06259,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "passive"
+        ],
+        "binding_constraint": "v_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "passive_twoburn_y90_047",
+      "prompt": "From ~90 m, commit toward the chief then hold; small burns only.",
+      "tags": {
+        "category": "passive_twoburn",
+        "start_y_m": 90.0,
+        "intent": "aggressive_passive"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        90.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 372.2,
+          "dv_m_s": [
+            0.04513,
+            -0.02295,
+            0.0
+          ]
+        },
+        {
+          "t_s": 493.9,
+          "dv_m_s": [
+            0.0,
+            -0.00272,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 372.2,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.04513,
+            -0.02295,
+            0.0
+          ]
+        },
+        {
+          "coast_s": 121.7,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.0,
+            -0.00272,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 372.2,
+            "dv_mag_m_s": 0.05063,
+            "pre_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              90.0,
+              0.0,
+              0.0451,
+              -0.023,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 0.8539,
+            "passive_post_unsafe": 1
+          },
+          {
+            "t_s": 493.9,
+            "dv_mag_m_s": 0.00272,
+            "pre_burn_state": [
+              5.091,
+              86.4872,
+              0.0,
+              0.0384,
+              -0.0345,
+              0.0
+            ],
+            "post_burn_state": [
+              5.091,
+              86.4872,
+              0.0,
+              0.0384,
+              -0.0372,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 1,
+            "requires_intervention": 1,
+            "V_post": 0.6958,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 2,
+        "first_burn_t_s": 372.2,
+        "total_dv_m_s": 0.05335,
+        "max_dv_m_s": 0.05063,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "passive"
+        ],
+        "binding_constraint": "v_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "safe_near_y110_048",
+      "prompt": "Close-range hold near the chief at ~110 m: a tiny trim burn after a coast, stay outside the keep-out zone.",
+      "tags": {
+        "category": "safe_near",
+        "start_y_m": 110.0,
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        110.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 346.3,
+          "dv_m_s": [
+            -0.00581,
+            0.00632,
+            0.00457
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 346.3,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00581,
+            0.00632,
+            0.00457
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 346.3,
+            "dv_mag_m_s": 0.00973,
+            "pre_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              -0.0058,
+              0.0063,
+              0.0046
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 1.2994,
+            "passive_post_unsafe": 0
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 346.3,
+        "total_dv_m_s": 0.00973,
+        "max_dv_m_s": 0.00973,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "safe_near_y110_049",
+      "prompt": "Close-range hold near the chief at ~110 m: a tiny trim burn after a coast, stay outside the keep-out zone.",
+      "tags": {
+        "category": "safe_near",
+        "start_y_m": 110.0,
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        110.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 455.3,
+          "dv_m_s": [
+            0.00241,
+            0.02142,
+            -0.00784
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 455.3,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.00241,
+            0.02142,
+            -0.00784
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 455.3,
+            "dv_mag_m_s": 0.02294,
+            "pre_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.0024,
+              0.0214,
+              -0.0078
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 1.2527,
+            "passive_post_unsafe": 0
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 455.3,
+        "total_dv_m_s": 0.02294,
+        "max_dv_m_s": 0.02294,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "safe_near_y110_050",
+      "prompt": "Close-range hold near the chief at ~110 m: a tiny trim burn after a coast, stay outside the keep-out zone.",
+      "tags": {
+        "category": "safe_near",
+        "start_y_m": 110.0,
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        110.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 309.4,
+          "dv_m_s": [
+            0.01857,
+            0.02331,
+            0.01577
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 309.4,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.01857,
+            0.02331,
+            0.01577
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 309.4,
+            "dv_mag_m_s": 0.03372,
+            "pre_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.0186,
+              0.0233,
+              0.0158
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 1.3213,
+            "passive_post_unsafe": 0
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 309.4,
+        "total_dv_m_s": 0.03372,
+        "max_dv_m_s": 0.03372,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "safe_near_y110_051",
+      "prompt": "Close-range hold near the chief at ~110 m: a tiny trim burn after a coast, stay outside the keep-out zone.",
+      "tags": {
+        "category": "safe_near",
+        "start_y_m": 110.0,
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        110.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 412.0,
+          "dv_m_s": [
+            0.00284,
+            0.00435,
+            -0.00127
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 412.0,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.00284,
+            0.00435,
+            -0.00127
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 412.0,
+            "dv_mag_m_s": 0.00535,
+            "pre_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.0028,
+              0.0043,
+              -0.0013
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 1.3012,
+            "passive_post_unsafe": 0
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 412.0,
+        "total_dv_m_s": 0.00535,
+        "max_dv_m_s": 0.00535,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "safe_near_y110_052",
+      "prompt": "Close-range hold near the chief at ~110 m: a tiny trim burn after a coast, stay outside the keep-out zone.",
+      "tags": {
+        "category": "safe_near",
+        "start_y_m": 110.0,
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        110.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 592.5,
+          "dv_m_s": [
+            0.01177,
+            0.01182,
+            0.00777
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 592.5,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.01177,
+            0.01182,
+            0.00777
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 592.5,
+            "dv_mag_m_s": 0.0184,
+            "pre_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.0118,
+              0.0118,
+              0.0078
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 1.197,
+            "passive_post_unsafe": 0
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 592.5,
+        "total_dv_m_s": 0.0184,
+        "max_dv_m_s": 0.0184,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "safe_near_y110_053",
+      "prompt": "Close-range hold near the chief at ~110 m: a tiny trim burn after a coast, stay outside the keep-out zone.",
+      "tags": {
+        "category": "safe_near",
+        "start_y_m": 110.0,
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        110.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 324.8,
+          "dv_m_s": [
+            -0.00726,
+            0.02161,
+            -0.01048
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 324.8,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00726,
+            0.02161,
+            -0.01048
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 324.8,
+            "dv_mag_m_s": 0.02509,
+            "pre_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              -0.0073,
+              0.0216,
+              -0.0105
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 1.3131,
+            "passive_post_unsafe": 0
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 324.8,
+        "total_dv_m_s": 0.02509,
+        "max_dv_m_s": 0.02509,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "safe_near_y110_054",
+      "prompt": "Close-range hold near the chief at ~110 m: a tiny trim burn after a coast, stay outside the keep-out zone.",
+      "tags": {
+        "category": "safe_near",
+        "start_y_m": 110.0,
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        110.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 329.1,
+          "dv_m_s": [
+            0.00539,
+            0.02876,
+            0.01136
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 329.1,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.00539,
+            0.02876,
+            0.01136
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 329.1,
+            "dv_mag_m_s": 0.03139,
+            "pre_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.0054,
+              0.0288,
+              0.0114
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 1.3133,
+            "passive_post_unsafe": 0
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 329.1,
+        "total_dv_m_s": 0.03139,
+        "max_dv_m_s": 0.03139,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "safe_near_y110_055",
+      "prompt": "Close-range hold near the chief at ~110 m: a tiny trim burn after a coast, stay outside the keep-out zone.",
+      "tags": {
+        "category": "safe_near",
+        "start_y_m": 110.0,
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        110.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 333.1,
+          "dv_m_s": [
+            -0.00404,
+            0.01557,
+            -0.00367
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 333.1,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00404,
+            0.01557,
+            -0.00367
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 333.1,
+            "dv_mag_m_s": 0.0165,
+            "pre_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              -0.004,
+              0.0156,
+              -0.0037
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 1.3071,
+            "passive_post_unsafe": 0
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 333.1,
+        "total_dv_m_s": 0.0165,
+        "max_dv_m_s": 0.0165,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "aggr_v_y110_056",
+      "prompt": "From ~110 m, ease onto the chief over the next pass with a small burn. Low delta-v.",
+      "tags": {
+        "category": "aggr_v",
+        "start_y_m": 110.0,
+        "intent": "aggressive_v"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        110.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 520.9,
+          "dv_m_s": [
+            0.06923,
+            -0.0566,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 520.9,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.06923,
+            -0.0566,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 520.9,
+            "dv_mag_m_s": 0.08942,
+            "pre_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.0692,
+              -0.0566,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 1.194,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 520.9,
+        "total_dv_m_s": 0.08942,
+        "max_dv_m_s": 0.08942,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "aggr_v_y110_057",
+      "prompt": "From ~110 m, ease onto the chief over the next pass with a small burn. Low delta-v.",
+      "tags": {
+        "category": "aggr_v",
+        "start_y_m": 110.0,
+        "intent": "aggressive_v"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        110.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 332.7,
+          "dv_m_s": [
+            0.0493,
+            -0.01999,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 332.7,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.0493,
+            -0.01999,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 332.7,
+            "dv_mag_m_s": 0.0532,
+            "pre_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.0493,
+              -0.02,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 1.3078,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 332.7,
+        "total_dv_m_s": 0.0532,
+        "max_dv_m_s": 0.0532,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "aggr_v_y110_058",
+      "prompt": "From ~110 m, ease onto the chief over the next pass with a small burn. Low delta-v.",
+      "tags": {
+        "category": "aggr_v",
+        "start_y_m": 110.0,
+        "intent": "aggressive_v"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        110.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 466.0,
+          "dv_m_s": [
+            0.05958,
+            -0.03479,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 466.0,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.05958,
+            -0.03479,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 466.0,
+            "dv_mag_m_s": 0.06899,
+            "pre_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.0596,
+              -0.0348,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 1.2492,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 466.0,
+        "total_dv_m_s": 0.06899,
+        "max_dv_m_s": 0.06899,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "aggr_v_y110_059",
+      "prompt": "From ~110 m, ease onto the chief over the next pass with a small burn. Low delta-v.",
+      "tags": {
+        "category": "aggr_v",
+        "start_y_m": 110.0,
+        "intent": "aggressive_v"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        110.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 438.3,
+          "dv_m_s": [
+            0.06486,
+            -0.04536,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 438.3,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.06486,
+            -0.04536,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 438.3,
+            "dv_mag_m_s": 0.07915,
+            "pre_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.0649,
+              -0.0454,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 1.275,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 438.3,
+        "total_dv_m_s": 0.07915,
+        "max_dv_m_s": 0.07915,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "aggr_v_y110_060",
+      "prompt": "From ~110 m, ease onto the chief over the next pass with a small burn. Low delta-v.",
+      "tags": {
+        "category": "aggr_v",
+        "start_y_m": 110.0,
+        "intent": "aggressive_v"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        110.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 575.5,
+          "dv_m_s": [
+            0.05873,
+            -0.0333,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 575.5,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.05873,
+            -0.0333,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 575.5,
+            "dv_mag_m_s": 0.06751,
+            "pre_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.0587,
+              -0.0333,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 1.1917,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 575.5,
+        "total_dv_m_s": 0.06751,
+        "max_dv_m_s": 0.06751,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "aggr_v_y110_061",
+      "prompt": "From ~110 m, ease onto the chief over the next pass with a small burn. Low delta-v.",
+      "tags": {
+        "category": "aggr_v",
+        "start_y_m": 110.0,
+        "intent": "aggressive_v"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        110.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 444.7,
+          "dv_m_s": [
+            0.06692,
+            -0.05033,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 444.7,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.06692,
+            -0.05033,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 444.7,
+            "dv_mag_m_s": 0.08373,
+            "pre_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.0669,
+              -0.0503,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 1.2654,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 444.7,
+        "total_dv_m_s": 0.08373,
+        "max_dv_m_s": 0.08373,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "aggr_v_y110_062",
+      "prompt": "From ~110 m, ease onto the chief over the next pass with a small burn. Low delta-v.",
+      "tags": {
+        "category": "aggr_v",
+        "start_y_m": 110.0,
+        "intent": "aggressive_v"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        110.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 406.1,
+          "dv_m_s": [
+            0.07354,
+            -0.07119,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 406.1,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.07354,
+            -0.07119,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 406.1,
+            "dv_mag_m_s": 0.10235,
+            "pre_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.0735,
+              -0.0712,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 1.3003,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 406.1,
+        "total_dv_m_s": 0.10235,
+        "max_dv_m_s": 0.10235,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "aggr_v_y110_063",
+      "prompt": "From ~110 m, ease onto the chief over the next pass with a small burn. Low delta-v.",
+      "tags": {
+        "category": "aggr_v",
+        "start_y_m": 110.0,
+        "intent": "aggressive_v"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        110.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 363.2,
+          "dv_m_s": [
+            0.07614,
+            -0.08265,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 363.2,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.07614,
+            -0.08265,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 363.2,
+            "dv_mag_m_s": 0.11238,
+            "pre_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.0761,
+              -0.0827,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 1.2955,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 363.2,
+        "total_dv_m_s": 0.11238,
+        "max_dv_m_s": 0.11238,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "aggr_v_y110_064",
+      "prompt": "From ~110 m, ease onto the chief over the next pass with a small burn. Low delta-v.",
+      "tags": {
+        "category": "aggr_v",
+        "start_y_m": 110.0,
+        "intent": "aggressive_v"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        110.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 445.4,
+          "dv_m_s": [
+            0.06542,
+            -0.04666,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 445.4,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.06542,
+            -0.04666,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 445.4,
+            "dv_mag_m_s": 0.08036,
+            "pre_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.0654,
+              -0.0467,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 1.2652,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 445.4,
+        "total_dv_m_s": 0.08036,
+        "max_dv_m_s": 0.08036,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "aggr_v_dv_y110_065",
+      "prompt": "From ~110 m, get on the target fast - short time-to-go.",
+      "tags": {
+        "category": "aggr_v_dv",
+        "start_y_m": 110.0,
+        "intent": "aggressive_v_dv"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        110.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 342.5,
+          "dv_m_s": [
+            0.25867,
+            -0.65045,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 342.5,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.25867,
+            -0.65045,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 342.5,
+            "dv_mag_m_s": 0.7,
+            "pre_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.2587,
+              -0.6504,
+              0.0
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_post": 1.3044,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 342.5,
+        "total_dv_m_s": 0.7,
+        "max_dv_m_s": 0.7,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap"
+        ],
+        "binding_constraint": "dv_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "aggr_v_dv_y110_066",
+      "prompt": "From ~110 m, get on the target fast - short time-to-go.",
+      "tags": {
+        "category": "aggr_v_dv",
+        "start_y_m": 110.0,
+        "intent": "aggressive_v_dv"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        110.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 405.6,
+          "dv_m_s": [
+            0.2046,
+            -0.66943,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 405.6,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.2046,
+            -0.66943,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 405.6,
+            "dv_mag_m_s": 0.7,
+            "pre_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.2046,
+              -0.6694,
+              0.0
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_post": 1.2977,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 405.6,
+        "total_dv_m_s": 0.7,
+        "max_dv_m_s": 0.7,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap"
+        ],
+        "binding_constraint": "dv_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "aggr_v_dv_y110_067",
+      "prompt": "From ~110 m, get on the target fast - short time-to-go.",
+      "tags": {
+        "category": "aggr_v_dv",
+        "start_y_m": 110.0,
+        "intent": "aggressive_v_dv"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        110.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 350.4,
+          "dv_m_s": [
+            0.21456,
+            -0.66631,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 350.4,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.21456,
+            -0.66631,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 350.4,
+            "dv_mag_m_s": 0.7,
+            "pre_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.2146,
+              -0.6663,
+              0.0
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_post": 1.2991,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 350.4,
+        "total_dv_m_s": 0.7,
+        "max_dv_m_s": 0.7,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap"
+        ],
+        "binding_constraint": "dv_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "aggr_v_dv_y110_068",
+      "prompt": "From ~110 m, get on the target fast - short time-to-go.",
+      "tags": {
+        "category": "aggr_v_dv",
+        "start_y_m": 110.0,
+        "intent": "aggressive_v_dv"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        110.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 503.7,
+          "dv_m_s": [
+            0.28131,
+            -0.64099,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 503.7,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.28131,
+            -0.64099,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 503.7,
+            "dv_mag_m_s": 0.7,
+            "pre_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.2813,
+              -0.641,
+              0.0
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_post": 1.2008,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 503.7,
+        "total_dv_m_s": 0.7,
+        "max_dv_m_s": 0.7,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap"
+        ],
+        "binding_constraint": "dv_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "passive_twoburn_y110_069",
+      "prompt": "From ~110 m, commit toward the chief then hold; small burns only.",
+      "tags": {
+        "category": "passive_twoburn",
+        "start_y_m": 110.0,
+        "intent": "aggressive_passive"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        110.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 427.4,
+          "dv_m_s": [
+            0.07175,
+            -0.05514,
+            0.0
+          ]
+        },
+        {
+          "t_s": 579.1,
+          "dv_m_s": [
+            0.0,
+            -0.01172,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 427.4,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.07175,
+            -0.05514,
+            0.0
+          ]
+        },
+        {
+          "coast_s": 151.7,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.0,
+            -0.01172,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 427.4,
+            "dv_mag_m_s": 0.09049,
+            "pre_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.0717,
+              -0.0551,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 1.2842,
+            "passive_post_unsafe": 1
+          },
+          {
+            "t_s": 579.1,
+            "dv_mag_m_s": 0.01172,
+            "pre_burn_state": [
+              9.399,
+              99.9358,
+              0.0,
+              0.0519,
+              -0.0764,
+              0.0
+            ],
+            "post_burn_state": [
+              9.399,
+              99.9358,
+              0.0,
+              0.0519,
+              -0.0881,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 1,
+            "requires_intervention": 1,
+            "V_post": 0.9914,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 2,
+        "first_burn_t_s": 427.4,
+        "total_dv_m_s": 0.10221,
+        "max_dv_m_s": 0.09049,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "passive"
+        ],
+        "binding_constraint": "v_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "passive_twoburn_y110_070",
+      "prompt": "From ~110 m, commit toward the chief then hold; small burns only.",
+      "tags": {
+        "category": "passive_twoburn",
+        "start_y_m": 110.0,
+        "intent": "aggressive_passive"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        110.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 371.5,
+          "dv_m_s": [
+            0.07423,
+            -0.06216,
+            0.0
+          ]
+        },
+        {
+          "t_s": 580.1,
+          "dv_m_s": [
+            0.0,
+            -0.00906,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 371.5,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.07423,
+            -0.06216,
+            0.0
+          ]
+        },
+        {
+          "coast_s": 208.6,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.0,
+            -0.00906,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 371.5,
+            "dv_mag_m_s": 0.09682,
+            "pre_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.0742,
+              -0.0622,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 1.2978,
+            "passive_post_unsafe": 1
+          },
+          {
+            "t_s": 580.1,
+            "dv_mag_m_s": 0.00906,
+            "pre_burn_state": [
+              12.2951,
+              93.8761,
+              0.0,
+              0.0431,
+              -0.09,
+              0.0
+            ],
+            "post_burn_state": [
+              12.2951,
+              93.8761,
+              0.0,
+              0.0431,
+              -0.099,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 1,
+            "requires_intervention": 1,
+            "V_post": 0.8793,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 2,
+        "first_burn_t_s": 371.5,
+        "total_dv_m_s": 0.10588,
+        "max_dv_m_s": 0.09682,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "passive"
+        ],
+        "binding_constraint": "v_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "passive_twoburn_y110_071",
+      "prompt": "From ~110 m, commit toward the chief then hold; small burns only.",
+      "tags": {
+        "category": "passive_twoburn",
+        "start_y_m": 110.0,
+        "intent": "aggressive_passive"
+      },
+      "scenario_ref": "scenario_boundary_70_120_v1",
+      "start_state_m_m_s": [
+        0.0,
+        110.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 361.1,
+          "dv_m_s": [
+            0.05403,
+            -0.02323,
+            0.0
+          ]
+        },
+        {
+          "t_s": 495.9,
+          "dv_m_s": [
+            0.0,
+            -0.01512,
+            0.0
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 361.1,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.05403,
+            -0.02323,
+            0.0
+          ]
+        },
+        {
+          "coast_s": 134.8,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.0,
+            -0.01512,
+            0.0
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 361.1,
+            "dv_mag_m_s": 0.05881,
+            "pre_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              110.0,
+              0.0,
+              0.054,
+              -0.0232,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_post": 1.2958,
+            "passive_post_unsafe": 1
+          },
+          {
+            "t_s": 495.9,
+            "dv_mag_m_s": 0.01512,
+            "pre_burn_state": [
+              6.7784,
+              105.8085,
+              0.0,
+              0.0463,
+              -0.0386,
+              0.0
+            ],
+            "post_burn_state": [
+              6.7784,
+              105.8085,
+              0.0,
+              0.0463,
+              -0.0537,
+              0.0
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 1,
+            "requires_intervention": 1,
+            "V_post": 1.1283,
+            "passive_post_unsafe": 1
+          }
+        ],
+        "n_burns": 2,
+        "first_burn_t_s": 361.1,
+        "total_dv_m_s": 0.07393,
+        "max_dv_m_s": 0.05881,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "passive"
+        ],
+        "binding_constraint": "v_bound",
+        "label_mode": "hybrid_brt"
+      }
+    }
+  ]
+}

@@ -164,6 +164,10 @@ def default_check_passive_post() -> bool:
     return os.environ.get("FILTER_CHECK_PASSIVE_POST", "1").lower() in ("1", "true", "yes")
 
 
+def default_check_passive_pre() -> bool:
+    return os.environ.get("FILTER_CHECK_PASSIVE_PRE", "1").lower() in ("1", "true", "yes")
+
+
 def filter_impulsive_burn_linesearch(
     plant: CWDynamics,
     x_lvlh_m: np.ndarray,

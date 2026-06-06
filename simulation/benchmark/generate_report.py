@@ -282,7 +282,7 @@ def render_scenario_orbit_png(
     from simulation.cw_dynamics import R_EARTH_KM
     from simulation.eci_kinematics import circular_orbit_radius_km
 
-    x0 = scenario.start_state_lvlh_m
+    x0 = plan.x0(scenario)
     _, states_llm = simulate_impulsive_segments_dense(plant, x0, plan.segments, substeps=8)
     xy_llm = np.asarray(states_llm[:, :2], dtype=np.float64)
     _, _, burns = _rollout_xy(plant, x0, plan.segments)
@@ -596,6 +596,7 @@ def write_corpus_tables(
                 m = max(m, float(np.linalg.norm(dv)))
         max_dv.append(m)
 
+    ys = scenario.start_y_values_m
     summary_rows = [
         {"metric": "scenario_id", "value": scenario.id},
         {"metric": "n_plans", "value": len(plans)},
@@ -610,6 +611,8 @@ def write_corpus_tables(
         {"metric": "max_dv_nom_max_m_s", "value": round(max(max_dv), 4)},
         {"metric": "max_dv_nom_mean_m_s", "value": round(float(np.mean(max_dv)), 4)},
     ]
+    if ys:
+        summary_rows.insert(3, {"metric": "start_y_values_m", "value": str(tuple(int(y) for y in ys))})
     for cat, n in sorted(by_cat.items()):
         summary_rows.append({"metric": f"category_{cat}", "value": n})
     for ang, n in sorted(by_ang.items()):
@@ -625,6 +628,7 @@ def write_corpus_tables(
             {
                 "plan_id": p.plan_id,
                 "category": p.tags.get("category", ""),
+                "start_y_m": p.tags.get("start_y_m", ""),
                 "approach_angle": p.tags.get("approach_angle", ""),
                 "n_burns": p.n_burns,
                 "max_dv_nom_m_s": round(md, 4),
@@ -645,10 +649,15 @@ def write_corpus_tables(
         w.writerows(detail_rows)
 
     md_path = out_dir / "corpus_summary.md"
+    start_desc = (
+        f"deputy starts at y ∈ {{{', '.join(f'{int(y):.0f}' for y in ys)} m}}"
+        if ys
+        else f"deputy starts {scenario.start_state_lvlh_m[1]:.0f} m downrange"
+    )
     lines = [
         "# LLM maneuver corpus",
         "",
-        f"**{scenario.id}** — deputy starts {scenario.start_state_lvlh_m[1]:.0f} m downrange, "
+        f"**{scenario.id}** — {start_desc}, "
         f"{scenario.brt_horizon_s:.0f} s horizon, {scenario.dv_cap_m_s or 0.5} m/s burn cap.",
         "",
         "## Plan types",
@@ -757,6 +766,40 @@ def write_results_tables(
     return csv_path, md_path
 
 
+def write_reference_trajectories_table(
+    summary: dict[str, Any],
+    out_dir: Path,
+) -> Path | None:
+    """Per-plan outcomes for hand-tuned reference schedules (not aggregated rates)."""
+    refs = summary.get("reference_trajectories", [])
+    if not refs:
+        return None
+    path = out_dir / "reference_trajectories.csv"
+    fields = list(refs[0].keys())
+    with path.open("w", newline="", encoding="utf-8") as f:
+        w = csv.DictWriter(f, fieldnames=fields)
+        w.writeheader()
+        w.writerows(refs)
+
+    md = [
+        "# Reference trajectories",
+        "",
+        "Hand-tuned radial braking schedules (not LLM plans). Listed individually — not pooled into rates.",
+        "",
+        "| Plan | Burns | Max |Δv| (m/s) | Entered KOZ | Approach progress | Range closed (m) | Final range (m) |",
+        "|------|------:|-------------:|:-----------:|:-----------------:|-----------------:|----------------:|",
+    ]
+    for r in refs:
+        md.append(
+            f"| `{r['plan_id']}` | {r['n_burns']} | {r['max_dv_nom_m_s']:.3f} | "
+            f"{'yes' if r['intercepted'] else 'no'} | "
+            f"{'yes' if r['mission_success_tier_b'] else 'no'} | "
+            f"{r['range_closed_m']:.1f} | {r['final_range_m']:.1f} |"
+        )
+    (out_dir / "reference_trajectories.md").write_text("\n".join(md) + "\n", encoding="utf-8")
+    return path
+
+
 def main() -> None:
     root = Path(__file__).resolve().parents[2]
     p = argparse.ArgumentParser(description="Generate report figures and tables.")
@@ -807,10 +850,10 @@ def main() -> None:
     scenario, plans = load_llm_plans(args.llm_dir)
     plant = CWDynamics(scenario.mean_motion_rad_s)
     inner = EllipsoidKeepOut(np.array(scenario.semi_axes_m, dtype=np.float64))
-    x0 = scenario.start_state_lvlh_m
     passive_h = float(os.environ.get("PASSIVE_CHECK_HORIZON_S", str(BRT_HORIZON_S)))
 
     rep = next((pl for pl in plans if pl.plan_id == args.representative_plan), plans[0])
+    x0 = rep.x0(scenario)
     print("Rendering KOZ schematic…")
     render_koz_schematic_png(inner, x0, scenario, fig_dir / "koz_schematic_xy.png")
     print(f"Rendering scenario orbit ({rep.plan_id})…")
@@ -874,6 +917,9 @@ def main() -> None:
     write_corpus_tables(scenario, plans, tab_dir)
     print("Writing experiment results tables…")
     write_results_tables(eval_results, summary, tab_dir)
+    ref_path = write_reference_trajectories_table(summary, tab_dir)
+    if ref_path:
+        print(f"Writing reference trajectories table… ({ref_path.name})")
     if summary.get("by_condition"):
         print("Rendering benchmark bar chart…")
         render_benchmark_barchart_png(summary, fig_dir / "benchmark_results_barchart.png")
@@ -912,6 +958,7 @@ def main() -> None:
                 "## Tables",
                 "- `corpus_summary.md` — what's in the plan bundle",
                 "- `experiment_results.md` — benchmark numbers (no filter vs filtered)",
+                "- `reference_trajectories.md` — hand-tuned radial schedules (per-plan, not rates)",
                 "",
                 "Regenerate:",
                 "```",

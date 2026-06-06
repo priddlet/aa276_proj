@@ -21,7 +21,7 @@ from pathlib import Path
 
 import numpy as np
 
-from simulation.baseline.rule_based_radial import build_rule_based_radial_plan
+from simulation.baseline.rule_based_radial import build_rule_based_radial_variants
 from simulation.brt.config import BRT_HORIZON_S
 from simulation.brt.deepreach_mpc_brt import (
     DEEPREACH_MPC_AVAILABLE,
@@ -39,7 +39,12 @@ from simulation.benchmark.evaluate import (
 from simulation.cw_dynamics import CWDynamics, leo_circular_orbit
 from simulation.keepout import EllipsoidKeepOut
 from simulation.llm_plans import default_llm_dir, load_llm_plans
-from simulation.sampling.safety_filter import default_brt_margin, default_check_passive_post, default_filter_mode
+from simulation.sampling.safety_filter import (
+    default_brt_margin,
+    default_check_passive_post,
+    default_check_passive_pre,
+    default_filter_mode,
+)
 
 
 def _parse_conditions(s: str) -> tuple[EvalCondition, ...]:
@@ -121,6 +126,12 @@ def main() -> None:
         default=default_check_passive_post(),
         help="Also reject burns whose post-burn passive coast enters the KOZ (default: on).",
     )
+    p.add_argument(
+        "--filter-check-passive-pre",
+        action=argparse.BooleanOptionalAction,
+        default=default_check_passive_pre(),
+        help="Reject burns whose pre-burn passive coast enters the KOZ (default: on).",
+    )
     p.add_argument("--plan-id", type=str, default="")
     args = p.parse_args()
 
@@ -150,13 +161,17 @@ def main() -> None:
         passive_h = float(os.environ.get("PASSIVE_CHECK_HORIZON_S", str(BRT_HORIZON_S)))
 
     conditions = _parse_conditions(args.conditions)
-    rule_plan = build_rule_based_radial_plan(scenario) if EvalCondition.RULE_BASED in conditions else None
+    ref_plans = build_rule_based_radial_variants(scenario) if EvalCondition.RULE_BASED in conditions else None
 
     print(f"Loading BRT from {ck_dir} …")
     brt = KozDeepReachBRT.load(ck_dir, device=args.device)
+    n_ref = len(ref_plans) if ref_plans else 0
     print(
-        f"Evaluating {len(plans)} LLM plan(s), conditions={[c.value for c in conditions]}, "
-        f"filter_mode={args.filter_mode}, passive_post={args.filter_check_passive_post}, "
+        f"Evaluating {len(plans)} LLM plan(s)"
+        + (f" + {n_ref} reference trajectory(ies)" if n_ref else "")
+        + f", conditions={[c.value for c in conditions]}, "
+        f"filter_mode={args.filter_mode}, passive_pre={args.filter_check_passive_pre}, "
+        f"passive_post={args.filter_check_passive_post}, "
         f"capture_radius={args.capture_radius_m:.0f} m"
     )
 
@@ -167,7 +182,7 @@ def main() -> None:
         plant,
         inner_koz=inner,
         conditions=conditions,
-        rule_based_plan=rule_plan,
+        rule_based_plans=ref_plans,
         passive_horizon_s=passive_h,
         filter_mode=args.filter_mode,  # type: ignore[arg-type]
         max_perturb_m_s=args.filter_max_perturb,
@@ -177,6 +192,7 @@ def main() -> None:
         capture_radius_m=args.capture_radius_m,
         progress_min_m=args.progress_min_m,
         check_passive_from_post=args.filter_check_passive_post,
+        check_passive_from_pre=args.filter_check_passive_pre,
     )
 
     out = write_results_csv(args.output, results)
@@ -193,7 +209,7 @@ def main() -> None:
                 f"{stats['post_filter_unsafe_rate']:.0%} still unsafe after filtering"
             )
         elif cond == EvalCondition.RULE_BASED.value:
-            print(f"  Rule-based baseline ({stats['n_plans']:.0f} plan)")
+            continue  # reference trajectories printed separately
         else:
             print(
                 f"  No filter ({stats['n_plans']:.0f} plans): "
@@ -208,6 +224,16 @@ def main() -> None:
             f"{stats['mission_success_tier_b_rate']:.0%} progress, "
             f"{stats['interception_rate']:.0%} keep-out entry"
         )
+    refs = summary.get("reference_trajectories", [])
+    if refs:
+        print(f"\nReference trajectories ({len(refs)} hand-tuned radial schedules, no aggregate rates):")
+        for r in refs:
+            hit = "entered KOZ" if r["intercepted"] else "missed KOZ"
+            prog = "progress ok" if r["mission_success_tier_b"] else "no progress"
+            print(
+                f"  {r['plan_id']}: {hit}, {prog}, "
+                f"closed {r['range_closed_m']:.0f} m, final range {r['final_range_m']:.0f} m"
+            )
 
 
 if __name__ == "__main__":

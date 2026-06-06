@@ -27,6 +27,7 @@ from simulation.sampling.safety_filter import (
     FilterResult,
     default_brt_margin,
     default_check_passive_post,
+    default_check_passive_pre,
     filter_maneuver_plan,
 )
 
@@ -161,6 +162,7 @@ def evaluate_plan(
     target_pos_m: np.ndarray | None = None,
     outer_corridor: EllipsoidMaxSeparation | None = None,
     check_passive_from_post: bool | None = None,
+    check_passive_from_pre: bool | None = None,
 ) -> PlanEvalResult:
     """Roll out one plan under ``condition``; compute paper-style metrics."""
     nominal = plan.segments
@@ -191,6 +193,9 @@ def evaluate_plan(
     passive_post = (
         default_check_passive_post() if check_passive_from_post is None else bool(check_passive_from_post)
     )
+    passive_pre = (
+        default_check_passive_pre() if check_passive_from_pre is None else bool(check_passive_from_pre)
+    )
 
     if condition == EvalCondition.BRT_FILTER:
         if brt is None:
@@ -208,6 +213,7 @@ def evaluate_plan(
             inner_koz=inner_koz,
             passive_horizon_s=passive_horizon_s,
             check_passive_from_post=passive_post,
+            check_passive_from_pre=passive_pre,
             dv_cap_m_s=dv_cap_m_s,
             omit_zero_burns=omit_zero_burns,
         )
@@ -307,7 +313,7 @@ def run_llm_benchmark(
         EvalCondition.NO_FILTER,
         EvalCondition.BRT_FILTER,
     ),
-    rule_based_plan: LLMPlan | None = None,
+    rule_based_plans: list[LLMPlan] | None = None,
     passive_horizon_s: float | None = None,
     filter_mode: FilterMode | None = None,
     max_perturb_m_s: float = 0.08,
@@ -319,13 +325,14 @@ def run_llm_benchmark(
     progress_min_m: float = 50.0,
     use_outer_corridor: bool = True,
     check_passive_from_post: bool | None = None,
+    check_passive_from_pre: bool | None = None,
 ) -> list[PlanEvalResult]:
-    x0 = scenario.start_state_lvlh_m
     tgt = np.zeros(3, dtype=np.float64)
     outer = default_outer_corridor() if use_outer_corridor else None
     cap = scenario.dv_cap_m_s if dv_cap_m_s is None else dv_cap_m_s
     results: list[PlanEvalResult] = []
     for plan in plans:
+        x0 = plan.x0(scenario)
         if EvalCondition.NO_FILTER in conditions:
             results.append(
                 evaluate_plan(
@@ -336,6 +343,7 @@ def run_llm_benchmark(
                     progress_min_m=progress_min_m,
                     outer_corridor=outer, dv_cap_m_s=cap, omit_zero_burns=omit_zero_burns,
                     check_passive_from_post=check_passive_from_post,
+                    check_passive_from_pre=check_passive_from_pre,
                 )
             )
         if EvalCondition.BRT_FILTER in conditions:
@@ -348,25 +356,28 @@ def run_llm_benchmark(
                     progress_min_m=progress_min_m,
                     outer_corridor=outer, dv_cap_m_s=cap, omit_zero_burns=omit_zero_burns,
                     check_passive_from_post=check_passive_from_post,
+                    check_passive_from_pre=check_passive_from_pre,
                 )
             )
 
-    if EvalCondition.RULE_BASED in conditions and rule_based_plan is not None:
-        results.append(
-            evaluate_plan(
-                plant,
-                rule_based_plan,
-                x0,
-                brt,
-                EvalCondition.RULE_BASED,
-                inner_koz,
-                passive_horizon_s=passive_horizon_s,
-                capture_radius_m=capture_radius_m,
-                target_pos_m=tgt,
-                progress_min_m=progress_min_m,
-                outer_corridor=outer,
+    if EvalCondition.RULE_BASED in conditions and rule_based_plans:
+        for ref_plan in rule_based_plans:
+            ref_x0 = ref_plan.x0(scenario)
+            results.append(
+                evaluate_plan(
+                    plant,
+                    ref_plan,
+                    ref_x0,
+                    brt,
+                    EvalCondition.RULE_BASED,
+                    inner_koz,
+                    passive_horizon_s=passive_horizon_s,
+                    capture_radius_m=capture_radius_m,
+                    target_pos_m=tgt,
+                    progress_min_m=progress_min_m,
+                    outer_corridor=outer,
+                )
             )
-        )
     return results
 
 
@@ -387,7 +398,24 @@ def write_results_csv(path: str | Path, results: list[PlanEvalResult]) -> Path:
 
 def summarize_results(results: list[PlanEvalResult]) -> dict[str, Any]:
     """Aggregate rates by condition and by category (Tier-B success)."""
-    out: dict[str, Any] = {"by_condition": {}, "by_category": {}, "n_rows": len(results)}
+    out: dict[str, Any] = {"by_condition": {}, "by_category": {}, "reference_trajectories": [], "n_rows": len(results)}
+
+    ref_rows = [r for r in results if r.condition == EvalCondition.RULE_BASED.value]
+    core_rows = [r for r in results if r.condition != EvalCondition.RULE_BASED.value]
+
+    out["reference_trajectories"] = [
+        {
+            "plan_id": r.plan_id,
+            "intercepted": bool(r.intercepted),
+            "mission_success_tier_b": bool(r.mission_success_tier_b),
+            "range_closed_m": float(r.range_closed_m),
+            "final_range_m": float(r.final_range_m),
+            "requires_intervention": bool(r.requires_intervention_rollout),
+            "n_burns": int(r.n_burns),
+            "max_dv_nom_m_s": float(r.max_dv_nom_m_s),
+        }
+        for r in ref_rows
+    ]
 
     def _cond_stats(rows: list[PlanEvalResult]) -> dict[str, Any]:
         n = len(rows)
@@ -423,14 +451,14 @@ def summarize_results(results: list[PlanEvalResult]) -> dict[str, Any]:
             stats["mean_burns_scaled_per_plan"] = float(np.mean([r.n_burns_scaled for r in brt_rows]))
         return stats
 
-    for cond in sorted({r.condition for r in results}):
-        rows = [r for r in results if r.condition == cond]
+    for cond in sorted({r.condition for r in core_rows}):
+        rows = [r for r in core_rows if r.condition == cond]
         if rows:
             out["by_condition"][cond] = _cond_stats(rows)
 
-    for cat in sorted({r.category for r in results if r.category}):
-        base = [r for r in results if r.category == cat and r.condition == EvalCondition.NO_FILTER.value]
-        rows = base if base else [r for r in results if r.category == cat]
+    for cat in sorted({r.category for r in core_rows if r.category and r.category != "rule_based_radial"}):
+        base = [r for r in core_rows if r.category == cat and r.condition == EvalCondition.NO_FILTER.value]
+        rows = base if base else [r for r in core_rows if r.category == cat]
         if not rows:
             continue
         kinds = sorted({r.success_kind for r in rows})

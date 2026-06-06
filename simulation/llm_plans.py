@@ -43,7 +43,7 @@ def _bundle_path(llm_dir: Path) -> Path:
     return _resolve_data_file(
         llm_dir,
         "LLM_PLANS_BUNDLE",
-        ("llm_plans.json", "llm_plans_leo.json"),
+        ("llm_plans.json", "llm_plans_boundary.json", "llm_plans_leo.json"),
     )
 
 
@@ -51,7 +51,7 @@ def _segments_path(llm_dir: Path) -> Path:
     return _resolve_data_file(
         llm_dir,
         "LLM_PLANS_SEGMENTS",
-        ("llm_plans_segments.jsonl", "llm_plans_leo_segments.jsonl"),
+        ("llm_plans_segments.jsonl", "llm_plans_boundary_segments.jsonl", "llm_plans_leo_segments.jsonl"),
     )
 
 
@@ -100,9 +100,17 @@ class LLMScenario:
     @classmethod
     def from_dict(cls, d: dict[str, Any]) -> LLMScenario:
         axes = tuple(float(x) for x in d["inner_koz"]["semi_axes_m"])
+        if "start_state_m_m_s" in d:
+            x0 = np.asarray(d["start_state_m_m_s"], dtype=np.float64).reshape(6)
+        elif "start_states_y_m" in d:
+            ys = [float(y) for y in d["start_states_y_m"]]
+            y0 = float(np.median(ys))
+            x0 = np.array([0.0, y0, 0.0, 0.0, 0.0, 0.0], dtype=np.float64)
+        else:
+            raise KeyError("scenario needs start_state_m_m_s or start_states_y_m")
         return cls(
             id=str(d["id"]),
-            start_state_lvlh_m=np.asarray(d["start_state_m_m_s"], dtype=np.float64).reshape(6),
+            start_state_lvlh_m=x0,
             semi_axes_m=axes,
             brt_horizon_s=float(d["brt_horizon_s"]),
             mean_motion_rad_s=float(d["mean_motion_rad_s"]),
@@ -113,6 +121,28 @@ class LLMScenario:
     def dv_cap_m_s(self) -> float | None:
         raw = self.raw.get("dv_cap_m_s")
         return float(raw) if raw is not None else None
+
+    @property
+    def start_y_values_m(self) -> tuple[float, ...] | None:
+        raw = self.raw.get("start_states_y_m")
+        if raw is None:
+            return None
+        return tuple(float(y) for y in raw)
+
+    @property
+    def reference_start_y_m(self) -> float:
+        ys = self.start_y_values_m
+        if ys:
+            return float(np.median(ys))
+        return float(self.start_state_lvlh_m[1])
+
+
+def _parse_plan_start_state(rec: dict[str, Any], seg_rec: dict[str, Any]) -> np.ndarray | None:
+    for src in (rec, seg_rec):
+        raw = src.get("start_state_m_m_s")
+        if raw is not None:
+            return np.asarray(raw, dtype=np.float64).reshape(6)
+    return None
 
 
 @dataclass
@@ -126,6 +156,12 @@ class LLMPlan:
     expected_intervention: int | None
     label: dict[str, Any] | None
     maneuvers_absolute: list[dict[str, Any]] | None
+    start_state_lvlh_m: np.ndarray | None = None
+
+    def x0(self, scenario: LLMScenario) -> np.ndarray:
+        if self.start_state_lvlh_m is not None:
+            return np.asarray(self.start_state_lvlh_m, dtype=np.float64).reshape(6).copy()
+        return np.asarray(scenario.start_state_lvlh_m, dtype=np.float64).reshape(6).copy()
 
     @property
     def n_burns(self) -> int:
@@ -216,6 +252,7 @@ def load_llm_plans(llm_dir: str | Path | None = None) -> tuple[LLMScenario, list
         sim_segs = finalize_segments_for_rollout(
             raw_segs, rollout_horizon_s(scenario, prompt)
         )
+        x0_plan = _parse_plan_start_state(rec, seg_rec)
         plans.append(
             LLMPlan(
                 plan_id=pid,
@@ -225,6 +262,7 @@ def load_llm_plans(llm_dir: str | Path | None = None) -> tuple[LLMScenario, list
                 expected_intervention=expected,
                 label=label,
                 maneuvers_absolute=list(rec.get("maneuvers", [])),
+                start_state_lvlh_m=x0_plan,
             )
         )
     return scenario, plans
