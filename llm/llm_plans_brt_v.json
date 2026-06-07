@@ -1,0 +1,5413 @@
+{
+  "scenario": {
+    "id": "scenario_brt_v_48_65_v1",
+    "frame": "LVLH (x=radial, y=along-track, z=cross-track), chief at origin",
+    "dynamics": "Clohessy-Wiltshire, 400 km circular LEO",
+    "mean_motion_rad_s": 0.0011313666536110223,
+    "orbital_period_s": 5553.624271252229,
+    "start_states_y_m": [
+      48.0,
+      58.0,
+      65.0
+    ],
+    "inner_koz": {
+      "type": "ellipsoid",
+      "semi_axes_m": [
+        28.0,
+        45.0,
+        18.0
+      ],
+      "inside_rule": "(x/a)^2+(y/b)^2+(z/c)^2 <= 1"
+    },
+    "brt_horizon_s": 1800.0,
+    "dv_cap_m_s": 0.5,
+    "min_coast_before_first_burn_s": 300.0,
+    "label_mode": "hybrid_brt",
+    "label_checkpoint": "/Users/tanispriddle/Downloads/276proj/simulation_output/deepreach_mpc_koz_v3",
+    "purpose": "Corpus tuned to the LEARNED V surface: burns found by search with V(x+,t_burn)<=0 at y~48-65 m (under dv cap). Filter V-rejection should be active.",
+    "label_criteria": {
+      "requires_intervention": "OR of dv_cap, learned post_burn_V_le_0, passive_preburn",
+      "post_burn_V_le_0": "V(x+, t_burn) <= 0 (learned DeepReach-MPC)",
+      "passive_preburn_unsafe": "pre-burn free drift reaches KOZ within 1800s",
+      "binding_constraint": "v_bound | dv_bound | v_and_dv | none"
+    }
+  },
+  "plans": [
+    {
+      "plan_id": "brt_v_unsafe_y48_000",
+      "prompt": "From ~48 m, small closing burn (under cap) that the BRT flags unsafe (V<=0).",
+      "tags": {
+        "category": "brt_v_unsafe",
+        "start_y_m": 48.0,
+        "intent": "brt_v_unsafe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        48.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 996.6,
+          "dv_m_s": [
+            0.34425,
+            0.18947,
+            -0.07792
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 996.6,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.34425,
+            0.18947,
+            -0.07792
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 996.6,
+            "dv_mag_m_s": 0.4006,
+            "pre_burn_state": [
+              0.0,
+              48.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              48.0,
+              0.0,
+              0.3443,
+              0.1895,
+              -0.0779
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.3265,
+            "V_post": -0.3274
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 996.6,
+        "total_dv_m_s": 0.4006,
+        "max_dv_m_s": 0.4006,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "post_V"
+        ],
+        "binding_constraint": "v_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_unsafe_y48_001",
+      "prompt": "From ~48 m, small closing burn (under cap) that the BRT flags unsafe (V<=0).",
+      "tags": {
+        "category": "brt_v_unsafe",
+        "start_y_m": 48.0,
+        "intent": "brt_v_unsafe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        48.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 1178.1,
+          "dv_m_s": [
+            0.27462,
+            -0.35701,
+            -0.00953
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 1178.1,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.27462,
+            -0.35701,
+            -0.00953
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 1178.1,
+            "dv_mag_m_s": 0.45051,
+            "pre_burn_state": [
+              0.0,
+              48.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              48.0,
+              0.0,
+              0.2746,
+              -0.357,
+              -0.0095
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.4321,
+            "V_post": -0.4312
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 1178.1,
+        "total_dv_m_s": 0.45051,
+        "max_dv_m_s": 0.45051,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "post_V"
+        ],
+        "binding_constraint": "v_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_unsafe_y48_002",
+      "prompt": "From ~48 m, small closing burn (under cap) that the BRT flags unsafe (V<=0).",
+      "tags": {
+        "category": "brt_v_unsafe",
+        "start_y_m": 48.0,
+        "intent": "brt_v_unsafe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        48.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 633.7,
+          "dv_m_s": [
+            0.13811,
+            0.30985,
+            -0.01086
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 633.7,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.13811,
+            0.30985,
+            -0.01086
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 633.7,
+            "dv_mag_m_s": 0.33941,
+            "pre_burn_state": [
+              0.0,
+              48.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              48.0,
+              0.0,
+              0.1381,
+              0.3099,
+              -0.0109
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.1583,
+            "V_post": -0.1576
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 633.7,
+        "total_dv_m_s": 0.33941,
+        "max_dv_m_s": 0.33941,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "post_V"
+        ],
+        "binding_constraint": "v_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_unsafe_y48_003",
+      "prompt": "From ~48 m, small closing burn (under cap) that the BRT flags unsafe (V<=0).",
+      "tags": {
+        "category": "brt_v_unsafe",
+        "start_y_m": 48.0,
+        "intent": "brt_v_unsafe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        48.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 970.3,
+          "dv_m_s": [
+            -0.16721,
+            -0.12436,
+            -0.00585
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 970.3,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.16721,
+            -0.12436,
+            -0.00585
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 970.3,
+            "dv_mag_m_s": 0.20847,
+            "pre_burn_state": [
+              0.0,
+              48.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              48.0,
+              0.0,
+              -0.1672,
+              -0.1244,
+              -0.0059
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.2977,
+            "V_post": -0.2982
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 970.3,
+        "total_dv_m_s": 0.20847,
+        "max_dv_m_s": 0.20847,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "post_V"
+        ],
+        "binding_constraint": "v_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_unsafe_y48_004",
+      "prompt": "From ~48 m, small closing burn (under cap) that the BRT flags unsafe (V<=0).",
+      "tags": {
+        "category": "brt_v_unsafe",
+        "start_y_m": 48.0,
+        "intent": "brt_v_unsafe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        48.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 470.5,
+          "dv_m_s": [
+            -0.01237,
+            -0.22907,
+            0.00167
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 470.5,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.01237,
+            -0.22907,
+            0.00167
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 470.5,
+            "dv_mag_m_s": 0.22941,
+            "pre_burn_state": [
+              0.0,
+              48.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              48.0,
+              0.0,
+              -0.0124,
+              -0.2291,
+              0.0017
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.1404,
+            "V_post": -0.1406
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 470.5,
+        "total_dv_m_s": 0.22941,
+        "max_dv_m_s": 0.22941,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "post_V"
+        ],
+        "binding_constraint": "v_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_unsafe_y48_005",
+      "prompt": "From ~48 m, small closing burn (under cap) that the BRT flags unsafe (V<=0).",
+      "tags": {
+        "category": "brt_v_unsafe",
+        "start_y_m": 48.0,
+        "intent": "brt_v_unsafe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        48.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 1049.4,
+          "dv_m_s": [
+            -0.18013,
+            0.31897,
+            0.05851
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 1049.4,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.18013,
+            0.31897,
+            0.05851
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 1049.4,
+            "dv_mag_m_s": 0.37096,
+            "pre_burn_state": [
+              0.0,
+              48.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              48.0,
+              0.0,
+              -0.1801,
+              0.319,
+              0.0585
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.4083,
+            "V_post": -0.4077
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 1049.4,
+        "total_dv_m_s": 0.37096,
+        "max_dv_m_s": 0.37096,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "post_V"
+        ],
+        "binding_constraint": "v_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_unsafe_y48_006",
+      "prompt": "From ~48 m, small closing burn (under cap) that the BRT flags unsafe (V<=0).",
+      "tags": {
+        "category": "brt_v_unsafe",
+        "start_y_m": 48.0,
+        "intent": "brt_v_unsafe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        48.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 648.7,
+          "dv_m_s": [
+            0.00335,
+            -0.32376,
+            0.00015
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 648.7,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.00335,
+            -0.32376,
+            0.00015
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 648.7,
+            "dv_mag_m_s": 0.32378,
+            "pre_burn_state": [
+              0.0,
+              48.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              48.0,
+              0.0,
+              0.0034,
+              -0.3238,
+              0.0001
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.1505,
+            "V_post": -0.1509
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 648.7,
+        "total_dv_m_s": 0.32378,
+        "max_dv_m_s": 0.32378,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "post_V"
+        ],
+        "binding_constraint": "v_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_unsafe_y48_007",
+      "prompt": "From ~48 m, small closing burn (under cap) that the BRT flags unsafe (V<=0).",
+      "tags": {
+        "category": "brt_v_unsafe",
+        "start_y_m": 48.0,
+        "intent": "brt_v_unsafe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        48.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 1008.2,
+          "dv_m_s": [
+            0.19696,
+            0.2695,
+            -0.00789
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 1008.2,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.19696,
+            0.2695,
+            -0.00789
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 1008.2,
+            "dv_mag_m_s": 0.33389,
+            "pre_burn_state": [
+              0.0,
+              48.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              48.0,
+              0.0,
+              0.197,
+              0.2695,
+              -0.0079
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.3724,
+            "V_post": -0.3718
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 1008.2,
+        "total_dv_m_s": 0.33389,
+        "max_dv_m_s": 0.33389,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "post_V"
+        ],
+        "binding_constraint": "v_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_unsafe_y48_008",
+      "prompt": "From ~48 m, small closing burn (under cap) that the BRT flags unsafe (V<=0).",
+      "tags": {
+        "category": "brt_v_unsafe",
+        "start_y_m": 48.0,
+        "intent": "brt_v_unsafe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        48.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 811.9,
+          "dv_m_s": [
+            -0.01299,
+            -0.05816,
+            -0.00379
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 811.9,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.01299,
+            -0.05816,
+            -0.00379
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 811.9,
+            "dv_mag_m_s": 0.05971,
+            "pre_burn_state": [
+              0.0,
+              48.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              48.0,
+              0.0,
+              -0.013,
+              -0.0582,
+              -0.0038
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.3265,
+            "V_post": -0.3264
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 811.9,
+        "total_dv_m_s": 0.05971,
+        "max_dv_m_s": 0.05971,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "post_V"
+        ],
+        "binding_constraint": "v_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_unsafe_y48_009",
+      "prompt": "From ~48 m, small closing burn (under cap) that the BRT flags unsafe (V<=0).",
+      "tags": {
+        "category": "brt_v_unsafe",
+        "start_y_m": 48.0,
+        "intent": "brt_v_unsafe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        48.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 988.5,
+          "dv_m_s": [
+            0.05144,
+            0.05684,
+            -0.03764
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 988.5,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.05144,
+            0.05684,
+            -0.03764
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 988.5,
+            "dv_mag_m_s": 0.0854,
+            "pre_burn_state": [
+              0.0,
+              48.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              48.0,
+              0.0,
+              0.0514,
+              0.0568,
+              -0.0376
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.3047,
+            "V_post": -0.3042
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 988.5,
+        "total_dv_m_s": 0.0854,
+        "max_dv_m_s": 0.0854,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "post_V"
+        ],
+        "binding_constraint": "v_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_dv_y48_010",
+      "prompt": "From ~48 m, fast closing burn over the delta-v cap (dv-only failure mode).",
+      "tags": {
+        "category": "brt_v_dv",
+        "start_y_m": 48.0,
+        "intent": "brt_v_dv"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        48.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 327.7,
+          "dv_m_s": [
+            -0.5379625378208409,
+            -0.17241727385256903,
+            0.1332172507629753
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 327.7,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.5379625378208409,
+            -0.17241727385256903,
+            0.1332172507629753
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 327.7,
+            "dv_mag_m_s": 0.58041,
+            "pre_burn_state": [
+              0.0,
+              48.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              48.0,
+              0.0,
+              -0.538,
+              -0.1724,
+              0.1332
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.0649,
+            "V_post": -0.0657
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 327.7,
+        "total_dv_m_s": 0.58041,
+        "max_dv_m_s": 0.58041,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap",
+          "post_V"
+        ],
+        "binding_constraint": "v_and_dv",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_dv_y48_011",
+      "prompt": "From ~48 m, fast closing burn over the delta-v cap (dv-only failure mode).",
+      "tags": {
+        "category": "brt_v_dv",
+        "start_y_m": 48.0,
+        "intent": "brt_v_dv"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        48.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 352.5,
+          "dv_m_s": [
+            0.04571182275295441,
+            -0.6347148361981171,
+            0.0015884417172841304
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 352.5,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.04571182275295441,
+            -0.6347148361981171,
+            0.0015884417172841304
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 352.5,
+            "dv_mag_m_s": 0.63636,
+            "pre_burn_state": [
+              0.0,
+              48.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              48.0,
+              0.0,
+              0.0457,
+              -0.6347,
+              0.0016
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.0806,
+            "V_post": -0.0777
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 352.5,
+        "total_dv_m_s": 0.63636,
+        "max_dv_m_s": 0.63636,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap",
+          "post_V"
+        ],
+        "binding_constraint": "v_and_dv",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_dv_y48_012",
+      "prompt": "From ~48 m, fast closing burn over the delta-v cap (dv-only failure mode).",
+      "tags": {
+        "category": "brt_v_dv",
+        "start_y_m": 48.0,
+        "intent": "brt_v_dv"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        48.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 950.1,
+          "dv_m_s": [
+            -0.6274343723943664,
+            0.0019405414111237566,
+            -0.12880343616333934
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 950.1,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.6274343723943664,
+            0.0019405414111237566,
+            -0.12880343616333934
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 950.1,
+            "dv_mag_m_s": 0.64052,
+            "pre_burn_state": [
+              0.0,
+              48.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              48.0,
+              0.0,
+              -0.6274,
+              0.0019,
+              -0.1288
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.3069,
+            "V_post": -0.3067
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 950.1,
+        "total_dv_m_s": 0.64052,
+        "max_dv_m_s": 0.64052,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap",
+          "post_V"
+        ],
+        "binding_constraint": "v_and_dv",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_dv_y48_013",
+      "prompt": "From ~48 m, fast closing burn over the delta-v cap (dv-only failure mode).",
+      "tags": {
+        "category": "brt_v_dv",
+        "start_y_m": 48.0,
+        "intent": "brt_v_dv"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        48.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 701.5,
+          "dv_m_s": [
+            -0.46617354227279617,
+            0.3059919178692186,
+            -0.06492262731106777
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 701.5,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.46617354227279617,
+            0.3059919178692186,
+            -0.06492262731106777
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 701.5,
+            "dv_mag_m_s": 0.56139,
+            "pre_burn_state": [
+              0.0,
+              48.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              48.0,
+              0.0,
+              -0.4662,
+              0.306,
+              -0.0649
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.2413,
+            "V_post": -0.2409
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 701.5,
+        "total_dv_m_s": 0.56139,
+        "max_dv_m_s": 0.56139,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap",
+          "post_V"
+        ],
+        "binding_constraint": "v_and_dv",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_unsafe_y58_014",
+      "prompt": "From ~58 m, small closing burn (under cap) that the BRT flags unsafe (V<=0).",
+      "tags": {
+        "category": "brt_v_unsafe",
+        "start_y_m": 58.0,
+        "intent": "brt_v_unsafe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        58.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 1172.3,
+          "dv_m_s": [
+            0.20821,
+            -0.04861,
+            -0.04373
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 1172.3,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.20821,
+            -0.04861,
+            -0.04373
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 1172.3,
+            "dv_mag_m_s": 0.21824,
+            "pre_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              0.2082,
+              -0.0486,
+              -0.0437
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.2098,
+            "V_post": -0.2105
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 1172.3,
+        "total_dv_m_s": 0.21824,
+        "max_dv_m_s": 0.21824,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "post_V"
+        ],
+        "binding_constraint": "v_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_unsafe_y58_015",
+      "prompt": "From ~58 m, small closing burn (under cap) that the BRT flags unsafe (V<=0).",
+      "tags": {
+        "category": "brt_v_unsafe",
+        "start_y_m": 58.0,
+        "intent": "brt_v_unsafe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        58.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 821.3,
+          "dv_m_s": [
+            0.00108,
+            -0.42198,
+            0.00052
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 821.3,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.00108,
+            -0.42198,
+            0.00052
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 821.3,
+            "dv_mag_m_s": 0.42198,
+            "pre_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              0.0011,
+              -0.422,
+              0.0005
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.1119,
+            "V_post": -0.1105
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 821.3,
+        "total_dv_m_s": 0.42198,
+        "max_dv_m_s": 0.42198,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "post_V"
+        ],
+        "binding_constraint": "v_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_unsafe_y58_016",
+      "prompt": "From ~58 m, small closing burn (under cap) that the BRT flags unsafe (V<=0).",
+      "tags": {
+        "category": "brt_v_unsafe",
+        "start_y_m": 58.0,
+        "intent": "brt_v_unsafe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        58.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 864.6,
+          "dv_m_s": [
+            0.14385,
+            -0.39893,
+            -0.01616
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 864.6,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.14385,
+            -0.39893,
+            -0.01616
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 864.6,
+            "dv_mag_m_s": 0.42438,
+            "pre_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              0.1439,
+              -0.3989,
+              -0.0162
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.0978,
+            "V_post": -0.095
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 864.6,
+        "total_dv_m_s": 0.42438,
+        "max_dv_m_s": 0.42438,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "post_V"
+        ],
+        "binding_constraint": "v_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_unsafe_y58_017",
+      "prompt": "From ~58 m, small closing burn (under cap) that the BRT flags unsafe (V<=0).",
+      "tags": {
+        "category": "brt_v_unsafe",
+        "start_y_m": 58.0,
+        "intent": "brt_v_unsafe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        58.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 828.9,
+          "dv_m_s": [
+            -0.00585,
+            -0.46621,
+            0.00143
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 828.9,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00585,
+            -0.46621,
+            0.00143
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 828.9,
+            "dv_mag_m_s": 0.46625,
+            "pre_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              -0.0059,
+              -0.4662,
+              0.0014
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.1105,
+            "V_post": -0.1099
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 828.9,
+        "total_dv_m_s": 0.46625,
+        "max_dv_m_s": 0.46625,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "post_V"
+        ],
+        "binding_constraint": "v_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_unsafe_y58_018",
+      "prompt": "From ~58 m, small closing burn (under cap) that the BRT flags unsafe (V<=0).",
+      "tags": {
+        "category": "brt_v_unsafe",
+        "start_y_m": 58.0,
+        "intent": "brt_v_unsafe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        58.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 738.0,
+          "dv_m_s": [
+            0.42031,
+            0.06886,
+            -0.00509
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 738.0,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.42031,
+            0.06886,
+            -0.00509
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 738.0,
+            "dv_mag_m_s": 0.42594,
+            "pre_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              0.4203,
+              0.0689,
+              -0.0051
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.0216,
+            "V_post": -0.0214
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 738.0,
+        "total_dv_m_s": 0.42594,
+        "max_dv_m_s": 0.42594,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "post_V"
+        ],
+        "binding_constraint": "v_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_unsafe_y58_019",
+      "prompt": "From ~58 m, small closing burn (under cap) that the BRT flags unsafe (V<=0).",
+      "tags": {
+        "category": "brt_v_unsafe",
+        "start_y_m": 58.0,
+        "intent": "brt_v_unsafe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        58.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 1106.5,
+          "dv_m_s": [
+            -0.02512,
+            -0.28215,
+            -0.00012
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 1106.5,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.02512,
+            -0.28215,
+            -0.00012
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 1106.5,
+            "dv_mag_m_s": 0.28327,
+            "pre_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              -0.0251,
+              -0.2822,
+              -0.0001
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.1835,
+            "V_post": -0.186
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 1106.5,
+        "total_dv_m_s": 0.28327,
+        "max_dv_m_s": 0.28327,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "post_V"
+        ],
+        "binding_constraint": "v_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_unsafe_y58_020",
+      "prompt": "From ~58 m, small closing burn (under cap) that the BRT flags unsafe (V<=0).",
+      "tags": {
+        "category": "brt_v_unsafe",
+        "start_y_m": 58.0,
+        "intent": "brt_v_unsafe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        58.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 1142.4,
+          "dv_m_s": [
+            -0.01838,
+            -0.05983,
+            0.00039
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 1142.4,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.01838,
+            -0.05983,
+            0.00039
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 1142.4,
+            "dv_mag_m_s": 0.06259,
+            "pre_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              -0.0184,
+              -0.0598,
+              0.0004
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.1941,
+            "V_post": -0.1939
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 1142.4,
+        "total_dv_m_s": 0.06259,
+        "max_dv_m_s": 0.06259,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "post_V"
+        ],
+        "binding_constraint": "v_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_unsafe_y58_021",
+      "prompt": "From ~58 m, small closing burn (under cap) that the BRT flags unsafe (V<=0).",
+      "tags": {
+        "category": "brt_v_unsafe",
+        "start_y_m": 58.0,
+        "intent": "brt_v_unsafe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        58.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 973.7,
+          "dv_m_s": [
+            0.37771,
+            0.0181,
+            -0.03534
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 973.7,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.37771,
+            0.0181,
+            -0.03534
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 973.7,
+            "dv_mag_m_s": 0.37979,
+            "pre_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              0.3777,
+              0.0181,
+              -0.0353
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.0758,
+            "V_post": -0.0758
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 973.7,
+        "total_dv_m_s": 0.37979,
+        "max_dv_m_s": 0.37979,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "post_V"
+        ],
+        "binding_constraint": "v_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_unsafe_y58_022",
+      "prompt": "From ~58 m, small closing burn (under cap) that the BRT flags unsafe (V<=0).",
+      "tags": {
+        "category": "brt_v_unsafe",
+        "start_y_m": 58.0,
+        "intent": "brt_v_unsafe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        58.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 994.8,
+          "dv_m_s": [
+            -0.12129,
+            -0.38931,
+            0.04738
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 994.8,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.12129,
+            -0.38931,
+            0.04738
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 994.8,
+            "dv_mag_m_s": 0.41051,
+            "pre_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              -0.1213,
+              -0.3893,
+              0.0474
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.1008,
+            "V_post": -0.1012
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 994.8,
+        "total_dv_m_s": 0.41051,
+        "max_dv_m_s": 0.41051,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "post_V"
+        ],
+        "binding_constraint": "v_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_unsafe_y58_023",
+      "prompt": "From ~58 m, small closing burn (under cap) that the BRT flags unsafe (V<=0).",
+      "tags": {
+        "category": "brt_v_unsafe",
+        "start_y_m": 58.0,
+        "intent": "brt_v_unsafe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        58.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 823.0,
+          "dv_m_s": [
+            0.01374,
+            -0.40979,
+            7e-05
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 823.0,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.01374,
+            -0.40979,
+            7e-05
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 823.0,
+            "dv_mag_m_s": 0.41002,
+            "pre_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              0.0137,
+              -0.4098,
+              0.0001
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.1117,
+            "V_post": -0.1135
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 823.0,
+        "total_dv_m_s": 0.41002,
+        "max_dv_m_s": 0.41002,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "post_V"
+        ],
+        "binding_constraint": "v_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_dv_y58_024",
+      "prompt": "From ~58 m, fast closing burn over the delta-v cap (dv-only failure mode).",
+      "tags": {
+        "category": "brt_v_dv",
+        "start_y_m": 58.0,
+        "intent": "brt_v_dv"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        58.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 896.6,
+          "dv_m_s": [
+            -0.27403460250111544,
+            0.5451056778889461,
+            -0.12193233720741979
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 896.6,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.27403460250111544,
+            0.5451056778889461,
+            -0.12193233720741979
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 896.6,
+            "dv_mag_m_s": 0.62218,
+            "pre_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              -0.274,
+              0.5451,
+              -0.1219
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.1141,
+            "V_post": -0.1183
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 896.6,
+        "total_dv_m_s": 0.62218,
+        "max_dv_m_s": 0.62218,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap",
+          "post_V"
+        ],
+        "binding_constraint": "v_and_dv",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_dv_y58_025",
+      "prompt": "From ~58 m, fast closing burn over the delta-v cap (dv-only failure mode).",
+      "tags": {
+        "category": "brt_v_dv",
+        "start_y_m": 58.0,
+        "intent": "brt_v_dv"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        58.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 870.6,
+          "dv_m_s": [
+            0.05924309304551093,
+            -0.6646659298702499,
+            0.07310112650644916
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 870.6,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.05924309304551093,
+            -0.6646659298702499,
+            0.07310112650644916
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 870.6,
+            "dv_mag_m_s": 0.67129,
+            "pre_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              0.0592,
+              -0.6647,
+              0.0731
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.0969,
+            "V_post": -0.0907
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 870.6,
+        "total_dv_m_s": 0.67129,
+        "max_dv_m_s": 0.67129,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap",
+          "post_V"
+        ],
+        "binding_constraint": "v_and_dv",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_dv_y58_026",
+      "prompt": "From ~58 m, fast closing burn over the delta-v cap (dv-only failure mode).",
+      "tags": {
+        "category": "brt_v_dv",
+        "start_y_m": 58.0,
+        "intent": "brt_v_dv"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        58.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 1046.5,
+          "dv_m_s": [
+            -0.6564244951986924,
+            0.0755569204777193,
+            0.0520568183252681
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 1046.5,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.6564244951986924,
+            0.0755569204777193,
+            0.0520568183252681
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 1046.5,
+            "dv_mag_m_s": 0.66281,
+            "pre_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              -0.6564,
+              0.0756,
+              0.0521
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.183,
+            "V_post": -0.183
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 1046.5,
+        "total_dv_m_s": 0.66281,
+        "max_dv_m_s": 0.66281,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap",
+          "post_V"
+        ],
+        "binding_constraint": "v_and_dv",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_dv_y58_027",
+      "prompt": "From ~58 m, fast closing burn over the delta-v cap (dv-only failure mode).",
+      "tags": {
+        "category": "brt_v_dv",
+        "start_y_m": 58.0,
+        "intent": "brt_v_dv"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        58.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 842.8,
+          "dv_m_s": [
+            -0.5590848073083834,
+            -0.3293463913617177,
+            0.1349971074132836
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 842.8,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.5590848073083834,
+            -0.3293463913617177,
+            0.1349971074132836
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 842.8,
+            "dv_mag_m_s": 0.66277,
+            "pre_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              -0.5591,
+              -0.3293,
+              0.135
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.1135,
+            "V_post": -0.1119
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 842.8,
+        "total_dv_m_s": 0.66277,
+        "max_dv_m_s": 0.66277,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap",
+          "post_V"
+        ],
+        "binding_constraint": "v_and_dv",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_unsafe_y65_028",
+      "prompt": "From ~65 m, small closing burn (under cap) that the BRT flags unsafe (V<=0).",
+      "tags": {
+        "category": "brt_v_unsafe",
+        "start_y_m": 65.0,
+        "intent": "brt_v_unsafe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        65.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 1066.0,
+          "dv_m_s": [
+            0.04221,
+            -0.07209,
+            0.00354
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 1066.0,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.04221,
+            -0.07209,
+            0.00354
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 1066.0,
+            "dv_mag_m_s": 0.08361,
+            "pre_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              0.0422,
+              -0.0721,
+              0.0035
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.0357,
+            "V_post": -0.0355
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 1066.0,
+        "total_dv_m_s": 0.08361,
+        "max_dv_m_s": 0.08361,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "post_V"
+        ],
+        "binding_constraint": "v_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_unsafe_y65_029",
+      "prompt": "From ~65 m, small closing burn (under cap) that the BRT flags unsafe (V<=0).",
+      "tags": {
+        "category": "brt_v_unsafe",
+        "start_y_m": 65.0,
+        "intent": "brt_v_unsafe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        65.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 1181.6,
+          "dv_m_s": [
+            0.2683,
+            0.13678,
+            0.05357
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 1181.6,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.2683,
+            0.13678,
+            0.05357
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 1181.6,
+            "dv_mag_m_s": 0.30588,
+            "pre_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              0.2683,
+              0.1368,
+              0.0536
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.0534,
+            "V_post": -0.0527
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 1181.6,
+        "total_dv_m_s": 0.30588,
+        "max_dv_m_s": 0.30588,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "post_V"
+        ],
+        "binding_constraint": "v_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_unsafe_y65_030",
+      "prompt": "From ~65 m, small closing burn (under cap) that the BRT flags unsafe (V<=0).",
+      "tags": {
+        "category": "brt_v_unsafe",
+        "start_y_m": 65.0,
+        "intent": "brt_v_unsafe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        65.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 1163.0,
+          "dv_m_s": [
+            0.08993,
+            0.27132,
+            0.05666
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 1163.0,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.08993,
+            0.27132,
+            0.05666
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 1163.0,
+            "dv_mag_m_s": 0.2914,
+            "pre_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              0.0899,
+              0.2713,
+              0.0567
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.0544,
+            "V_post": -0.054
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 1163.0,
+        "total_dv_m_s": 0.2914,
+        "max_dv_m_s": 0.2914,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "post_V"
+        ],
+        "binding_constraint": "v_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_unsafe_y65_031",
+      "prompt": "From ~65 m, small closing burn (under cap) that the BRT flags unsafe (V<=0).",
+      "tags": {
+        "category": "brt_v_unsafe",
+        "start_y_m": 65.0,
+        "intent": "brt_v_unsafe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        65.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 1151.4,
+          "dv_m_s": [
+            -0.01007,
+            -0.28675,
+            0.0026
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 1151.4,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.01007,
+            -0.28675,
+            0.0026
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 1151.4,
+            "dv_mag_m_s": 0.28694,
+            "pre_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              -0.0101,
+              -0.2868,
+              0.0026
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.0568,
+            "V_post": -0.0555
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 1151.4,
+        "total_dv_m_s": 0.28694,
+        "max_dv_m_s": 0.28694,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "post_V"
+        ],
+        "binding_constraint": "v_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_unsafe_y65_032",
+      "prompt": "From ~65 m, small closing burn (under cap) that the BRT flags unsafe (V<=0).",
+      "tags": {
+        "category": "brt_v_unsafe",
+        "start_y_m": 65.0,
+        "intent": "brt_v_unsafe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        65.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 1065.5,
+          "dv_m_s": [
+            -0.36296,
+            0.08473,
+            0.03573
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 1065.5,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.36296,
+            0.08473,
+            0.03573
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 1065.5,
+            "dv_mag_m_s": 0.37443,
+            "pre_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              -0.363,
+              0.0847,
+              0.0357
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.0358,
+            "V_post": -0.0354
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 1065.5,
+        "total_dv_m_s": 0.37443,
+        "max_dv_m_s": 0.37443,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "post_V"
+        ],
+        "binding_constraint": "v_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_unsafe_y65_033",
+      "prompt": "From ~65 m, small closing burn (under cap) that the BRT flags unsafe (V<=0).",
+      "tags": {
+        "category": "brt_v_unsafe",
+        "start_y_m": 65.0,
+        "intent": "brt_v_unsafe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        65.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 1091.3,
+          "dv_m_s": [
+            0.01053,
+            -0.4029,
+            0.00171
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 1091.3,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.01053,
+            -0.4029,
+            0.00171
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 1091.3,
+            "dv_mag_m_s": 0.40304,
+            "pre_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              0.0105,
+              -0.4029,
+              0.0017
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.0225,
+            "V_post": -0.031
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 1091.3,
+        "total_dv_m_s": 0.40304,
+        "max_dv_m_s": 0.40304,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "post_V"
+        ],
+        "binding_constraint": "v_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_unsafe_y65_034",
+      "prompt": "From ~65 m, small closing burn (under cap) that the BRT flags unsafe (V<=0).",
+      "tags": {
+        "category": "brt_v_unsafe",
+        "start_y_m": 65.0,
+        "intent": "brt_v_unsafe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        65.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 1107.3,
+          "dv_m_s": [
+            -0.00269,
+            -0.12783,
+            0.00185
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 1107.3,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00269,
+            -0.12783,
+            0.00185
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 1107.3,
+            "dv_mag_m_s": 0.12787,
+            "pre_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              -0.0027,
+              -0.1278,
+              0.0019
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.0268,
+            "V_post": -0.0281
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 1107.3,
+        "total_dv_m_s": 0.12787,
+        "max_dv_m_s": 0.12787,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "post_V"
+        ],
+        "binding_constraint": "v_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_unsafe_y65_035",
+      "prompt": "From ~65 m, small closing burn (under cap) that the BRT flags unsafe (V<=0).",
+      "tags": {
+        "category": "brt_v_unsafe",
+        "start_y_m": 65.0,
+        "intent": "brt_v_unsafe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        65.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 1020.9,
+          "dv_m_s": [
+            0.26122,
+            0.1902,
+            0.06489
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 1020.9,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.26122,
+            0.1902,
+            0.06489
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 1020.9,
+            "dv_mag_m_s": 0.32958,
+            "pre_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              0.2612,
+              0.1902,
+              0.0649
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.0133,
+            "V_post": -0.0157
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 1020.9,
+        "total_dv_m_s": 0.32958,
+        "max_dv_m_s": 0.32958,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "post_V"
+        ],
+        "binding_constraint": "v_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_unsafe_y65_036",
+      "prompt": "From ~65 m, small closing burn (under cap) that the BRT flags unsafe (V<=0).",
+      "tags": {
+        "category": "brt_v_unsafe",
+        "start_y_m": 65.0,
+        "intent": "brt_v_unsafe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        65.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 1066.0,
+          "dv_m_s": [
+            -0.01332,
+            -0.3633,
+            0.00181
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 1066.0,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.01332,
+            -0.3633,
+            0.00181
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 1066.0,
+            "dv_mag_m_s": 0.36355,
+            "pre_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              -0.0133,
+              -0.3633,
+              0.0018
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.0357,
+            "V_post": -0.0351
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 1066.0,
+        "total_dv_m_s": 0.36355,
+        "max_dv_m_s": 0.36355,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "post_V"
+        ],
+        "binding_constraint": "v_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_unsafe_y65_037",
+      "prompt": "From ~65 m, small closing burn (under cap) that the BRT flags unsafe (V<=0).",
+      "tags": {
+        "category": "brt_v_unsafe",
+        "start_y_m": 65.0,
+        "intent": "brt_v_unsafe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        65.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 1182.2,
+          "dv_m_s": [
+            -0.42768,
+            0.11166,
+            -0.08787
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 1182.2,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.42768,
+            0.11166,
+            -0.08787
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 1182.2,
+            "dv_mag_m_s": 0.45067,
+            "pre_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              -0.4277,
+              0.1117,
+              -0.0879
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.0537,
+            "V_post": -0.0539
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 1182.2,
+        "total_dv_m_s": 0.45067,
+        "max_dv_m_s": 0.45067,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "post_V"
+        ],
+        "binding_constraint": "v_bound",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_dv_y65_038",
+      "prompt": "From ~65 m, fast closing burn over the delta-v cap (dv-only failure mode).",
+      "tags": {
+        "category": "brt_v_dv",
+        "start_y_m": 65.0,
+        "intent": "brt_v_dv"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        65.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 1182.0,
+          "dv_m_s": [
+            0.5122740341818572,
+            0.2459722534323312,
+            0.0261256966684541
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 1182.0,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.5122740341818572,
+            0.2459722534323312,
+            0.0261256966684541
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 1182.0,
+            "dv_mag_m_s": 0.56887,
+            "pre_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              0.5123,
+              0.246,
+              0.0261
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.0538,
+            "V_post": -0.052
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 1182.0,
+        "total_dv_m_s": 0.56887,
+        "max_dv_m_s": 0.56887,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap",
+          "post_V"
+        ],
+        "binding_constraint": "v_and_dv",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_dv_y65_039",
+      "prompt": "From ~65 m, fast closing burn over the delta-v cap (dv-only failure mode).",
+      "tags": {
+        "category": "brt_v_dv",
+        "start_y_m": 65.0,
+        "intent": "brt_v_dv"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        65.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 1151.4,
+          "dv_m_s": [
+            0.03550731621196552,
+            -0.5681614158139493,
+            0.005566731023862178
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 1151.4,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.03550731621196552,
+            -0.5681614158139493,
+            0.005566731023862178
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 1151.4,
+            "dv_mag_m_s": 0.5693,
+            "pre_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              0.0355,
+              -0.5682,
+              0.0056
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.0568,
+            "V_post": -0.054
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 1151.4,
+        "total_dv_m_s": 0.5693,
+        "max_dv_m_s": 0.5693,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap",
+          "post_V"
+        ],
+        "binding_constraint": "v_and_dv",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_dv_y65_040",
+      "prompt": "From ~65 m, fast closing burn over the delta-v cap (dv-only failure mode).",
+      "tags": {
+        "category": "brt_v_dv",
+        "start_y_m": 65.0,
+        "intent": "brt_v_dv"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        65.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 1070.9,
+          "dv_m_s": [
+            -0.5612829311916686,
+            0.1634061143803356,
+            -0.12326349556018705
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 1070.9,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.5612829311916686,
+            0.1634061143803356,
+            -0.12326349556018705
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 1070.9,
+            "dv_mag_m_s": 0.59744,
+            "pre_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              -0.5613,
+              0.1634,
+              -0.1233
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.0367,
+            "V_post": -0.0351
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 1070.9,
+        "total_dv_m_s": 0.59744,
+        "max_dv_m_s": 0.59744,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap",
+          "post_V"
+        ],
+        "binding_constraint": "v_and_dv",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_dv_y65_041",
+      "prompt": "From ~65 m, fast closing burn over the delta-v cap (dv-only failure mode).",
+      "tags": {
+        "category": "brt_v_dv",
+        "start_y_m": 65.0,
+        "intent": "brt_v_dv"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        65.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 1162.6,
+          "dv_m_s": [
+            0.5236599651902879,
+            -0.36379212439325287,
+            0.07223607079866028
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 1162.6,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.5236599651902879,
+            -0.36379212439325287,
+            0.07223607079866028
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 1162.6,
+            "dv_mag_m_s": 0.6417,
+            "pre_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              0.5237,
+              -0.3638,
+              0.0722
+            ],
+            "dv_excessive": 1,
+            "post_burn_V_le_0": 1,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 1,
+            "V_pre": -0.0549,
+            "V_post": -0.0538
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 1162.6,
+        "total_dv_m_s": 0.6417,
+        "max_dv_m_s": 0.6417,
+        "expected_intervention": 1,
+        "intervention_reasons": [
+          "dv_cap",
+          "post_V"
+        ],
+        "binding_constraint": "v_and_dv",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "safe_brt_y58_042",
+      "prompt": "Close-range hold at ~58 m: tiny trim after coast; learned V stays clearly positive.",
+      "tags": {
+        "category": "safe_brt",
+        "start_y_m": 58.0,
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        58.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 649.1,
+          "dv_m_s": [
+            0.0019,
+            0.02079,
+            0.00942
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 649.1,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.0019,
+            0.02079,
+            0.00942
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 649.1,
+            "dv_mag_m_s": 0.0229,
+            "pre_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              0.0019,
+              0.0208,
+              0.0094
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_pre": 0.0717,
+            "V_post": 0.0719
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 649.1,
+        "total_dv_m_s": 0.0229,
+        "max_dv_m_s": 0.0229,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "safe_brt_y58_043",
+      "prompt": "Close-range hold at ~58 m: tiny trim after coast; learned V stays clearly positive.",
+      "tags": {
+        "category": "safe_brt",
+        "start_y_m": 58.0,
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        58.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 447.4,
+          "dv_m_s": [
+            -0.00493,
+            0.02234,
+            0.00729
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 447.4,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00493,
+            0.02234,
+            0.00729
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 447.4,
+            "dv_mag_m_s": 0.02401,
+            "pre_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              -0.0049,
+              0.0223,
+              0.0073
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_pre": 0.1115,
+            "V_post": 0.1117
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 447.4,
+        "total_dv_m_s": 0.02401,
+        "max_dv_m_s": 0.02401,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "safe_brt_y58_044",
+      "prompt": "Close-range hold at ~58 m: tiny trim after coast; learned V stays clearly positive.",
+      "tags": {
+        "category": "safe_brt",
+        "start_y_m": 58.0,
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        58.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 427.4,
+          "dv_m_s": [
+            0.01689,
+            0.02383,
+            0.01094
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 427.4,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.01689,
+            0.02383,
+            0.01094
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 427.4,
+            "dv_mag_m_s": 0.03119,
+            "pre_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              0.0169,
+              0.0238,
+              0.0109
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_pre": 0.1286,
+            "V_post": 0.1286
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 427.4,
+        "total_dv_m_s": 0.03119,
+        "max_dv_m_s": 0.03119,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "safe_brt_y58_045",
+      "prompt": "Close-range hold at ~58 m: tiny trim after coast; learned V stays clearly positive.",
+      "tags": {
+        "category": "safe_brt",
+        "start_y_m": 58.0,
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        58.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 435.6,
+          "dv_m_s": [
+            -0.00524,
+            0.01111,
+            0.00157
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 435.6,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00524,
+            0.01111,
+            0.00157
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 435.6,
+            "dv_mag_m_s": 0.01238,
+            "pre_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              -0.0052,
+              0.0111,
+              0.0016
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_pre": 0.1238,
+            "V_post": 0.1239
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 435.6,
+        "total_dv_m_s": 0.01238,
+        "max_dv_m_s": 0.01238,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "safe_brt_y58_046",
+      "prompt": "Close-range hold at ~58 m: tiny trim after coast; learned V stays clearly positive.",
+      "tags": {
+        "category": "safe_brt",
+        "start_y_m": 58.0,
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        58.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 562.9,
+          "dv_m_s": [
+            -0.00093,
+            0.00647,
+            -0.00259
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 562.9,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00093,
+            0.00647,
+            -0.00259
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 562.9,
+            "dv_mag_m_s": 0.00703,
+            "pre_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              -0.0009,
+              0.0065,
+              -0.0026
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_pre": 0.0382,
+            "V_post": 0.0381
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 562.9,
+        "total_dv_m_s": 0.00703,
+        "max_dv_m_s": 0.00703,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "safe_brt_y58_047",
+      "prompt": "Close-range hold at ~58 m: tiny trim after coast; learned V stays clearly positive.",
+      "tags": {
+        "category": "safe_brt",
+        "start_y_m": 58.0,
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        58.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 519.3,
+          "dv_m_s": [
+            -0.01358,
+            0.02456,
+            -0.00184
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 519.3,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.01358,
+            0.02456,
+            -0.00184
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 519.3,
+            "dv_mag_m_s": 0.02812,
+            "pre_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              -0.0136,
+              0.0246,
+              -0.0018
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_pre": 0.0398,
+            "V_post": 0.04
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 519.3,
+        "total_dv_m_s": 0.02812,
+        "max_dv_m_s": 0.02812,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "safe_brt_y58_048",
+      "prompt": "Close-range hold at ~58 m: tiny trim after coast; learned V stays clearly positive.",
+      "tags": {
+        "category": "safe_brt",
+        "start_y_m": 58.0,
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        58.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 352.3,
+          "dv_m_s": [
+            -0.01214,
+            0.0318,
+            0.00498
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 352.3,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.01214,
+            0.0318,
+            0.00498
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 352.3,
+            "dv_mag_m_s": 0.0344,
+            "pre_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              -0.0121,
+              0.0318,
+              0.005
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_pre": 0.1418,
+            "V_post": 0.1417
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 352.3,
+        "total_dv_m_s": 0.0344,
+        "max_dv_m_s": 0.0344,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "safe_brt_y58_049",
+      "prompt": "Close-range hold at ~58 m: tiny trim after coast; learned V stays clearly positive.",
+      "tags": {
+        "category": "safe_brt",
+        "start_y_m": 58.0,
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        58.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 606.5,
+          "dv_m_s": [
+            -0.01705,
+            0.02017,
+            0.00401
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 606.5,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.01705,
+            0.02017,
+            0.00401
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 606.5,
+            "dv_mag_m_s": 0.02671,
+            "pre_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              -0.017,
+              0.0202,
+              0.004
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_pre": 0.0462,
+            "V_post": 0.0463
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 606.5,
+        "total_dv_m_s": 0.02671,
+        "max_dv_m_s": 0.02671,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_borderline_y58_050",
+      "prompt": "From ~58 m, moderate burn near the V=0 surface (filter should scale it).",
+      "tags": {
+        "category": "brt_v_borderline",
+        "start_y_m": 58.0,
+        "intent": "brt_borderline"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        58.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 459.8,
+          "dv_m_s": [
+            -0.1128,
+            -0.21588,
+            -0.04989
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 459.8,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.1128,
+            -0.21588,
+            -0.04989
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 459.8,
+            "dv_mag_m_s": 0.24863,
+            "pre_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              -0.1128,
+              -0.2159,
+              -0.0499
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_pre": 0.0968,
+            "V_post": 0.0939
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 459.8,
+        "total_dv_m_s": 0.24863,
+        "max_dv_m_s": 0.24863,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_borderline_y58_051",
+      "prompt": "From ~58 m, moderate burn near the V=0 surface (filter should scale it).",
+      "tags": {
+        "category": "brt_v_borderline",
+        "start_y_m": 58.0,
+        "intent": "brt_borderline"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        58.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 559.4,
+          "dv_m_s": [
+            0.16363,
+            0.17499,
+            -0.01612
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 559.4,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.16363,
+            0.17499,
+            -0.01612
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 559.4,
+            "dv_mag_m_s": 0.24012,
+            "pre_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              0.1636,
+              0.175,
+              -0.0161
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_pre": 0.038,
+            "V_post": 0.0383
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 559.4,
+        "total_dv_m_s": 0.24012,
+        "max_dv_m_s": 0.24012,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_borderline_y58_052",
+      "prompt": "From ~58 m, moderate burn near the V=0 surface (filter should scale it).",
+      "tags": {
+        "category": "brt_v_borderline",
+        "start_y_m": 58.0,
+        "intent": "brt_borderline"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        58.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 343.8,
+          "dv_m_s": [
+            -0.2735,
+            0.12271,
+            0.02239
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 343.8,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.2735,
+            0.12271,
+            0.02239
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 343.8,
+            "dv_mag_m_s": 0.3006,
+            "pre_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              -0.2735,
+              0.1227,
+              0.0224
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_pre": 0.1455,
+            "V_post": 0.1454
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 343.8,
+        "total_dv_m_s": 0.3006,
+        "max_dv_m_s": 0.3006,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_borderline_y58_053",
+      "prompt": "From ~58 m, moderate burn near the V=0 surface (filter should scale it).",
+      "tags": {
+        "category": "brt_v_borderline",
+        "start_y_m": 58.0,
+        "intent": "brt_borderline"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        58.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 344.1,
+          "dv_m_s": [
+            -0.18583,
+            0.08533,
+            0.0376
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 344.1,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.18583,
+            0.08533,
+            0.0376
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 344.1,
+            "dv_mag_m_s": 0.20791,
+            "pre_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              58.0,
+              0.0,
+              -0.1858,
+              0.0853,
+              0.0376
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_pre": 0.1451,
+            "V_post": 0.145
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 344.1,
+        "total_dv_m_s": 0.20791,
+        "max_dv_m_s": 0.20791,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "safe_brt_y65_054",
+      "prompt": "Close-range hold at ~65 m: tiny trim after coast; learned V stays clearly positive.",
+      "tags": {
+        "category": "safe_brt",
+        "start_y_m": 65.0,
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        65.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 304.1,
+          "dv_m_s": [
+            0.00202,
+            0.0182,
+            0.00221
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 304.1,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.00202,
+            0.0182,
+            0.00221
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 304.1,
+            "dv_mag_m_s": 0.01844,
+            "pre_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              0.002,
+              0.0182,
+              0.0022
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_pre": 0.3229,
+            "V_post": 0.3229
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 304.1,
+        "total_dv_m_s": 0.01844,
+        "max_dv_m_s": 0.01844,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "safe_brt_y65_055",
+      "prompt": "Close-range hold at ~65 m: tiny trim after coast; learned V stays clearly positive.",
+      "tags": {
+        "category": "safe_brt",
+        "start_y_m": 65.0,
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        65.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 904.5,
+          "dv_m_s": [
+            -0.00512,
+            0.03398,
+            0.00495
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 904.5,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.00512,
+            0.03398,
+            0.00495
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 904.5,
+            "dv_mag_m_s": 0.03472,
+            "pre_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              -0.0051,
+              0.034,
+              0.005
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_pre": 0.0576,
+            "V_post": 0.0571
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 904.5,
+        "total_dv_m_s": 0.03472,
+        "max_dv_m_s": 0.03472,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "safe_brt_y65_056",
+      "prompt": "Close-range hold at ~65 m: tiny trim after coast; learned V stays clearly positive.",
+      "tags": {
+        "category": "safe_brt",
+        "start_y_m": 65.0,
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        65.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 569.0,
+          "dv_m_s": [
+            -0.02726,
+            0.02324,
+            -0.00252
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 569.0,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.02726,
+            0.02324,
+            -0.00252
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 569.0,
+            "dv_mag_m_s": 0.03591,
+            "pre_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              -0.0273,
+              0.0232,
+              -0.0025
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_pre": 0.1921,
+            "V_post": 0.1921
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 569.0,
+        "total_dv_m_s": 0.03591,
+        "max_dv_m_s": 0.03591,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "safe_brt_y65_057",
+      "prompt": "Close-range hold at ~65 m: tiny trim after coast; learned V stays clearly positive.",
+      "tags": {
+        "category": "safe_brt",
+        "start_y_m": 65.0,
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        65.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 468.8,
+          "dv_m_s": [
+            0.00783,
+            0.02954,
+            -0.01262
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 468.8,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.00783,
+            0.02954,
+            -0.01262
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 468.8,
+            "dv_mag_m_s": 0.03306,
+            "pre_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              0.0078,
+              0.0295,
+              -0.0126
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_pre": 0.2415,
+            "V_post": 0.2416
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 468.8,
+        "total_dv_m_s": 0.03306,
+        "max_dv_m_s": 0.03306,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "safe_brt_y65_058",
+      "prompt": "Close-range hold at ~65 m: tiny trim after coast; learned V stays clearly positive.",
+      "tags": {
+        "category": "safe_brt",
+        "start_y_m": 65.0,
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        65.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 566.7,
+          "dv_m_s": [
+            -0.01011,
+            0.03685,
+            0.01152
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 566.7,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.01011,
+            0.03685,
+            0.01152
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 566.7,
+            "dv_mag_m_s": 0.03991,
+            "pre_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              -0.0101,
+              0.0369,
+              0.0115
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_pre": 0.1921,
+            "V_post": 0.1921
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 566.7,
+        "total_dv_m_s": 0.03991,
+        "max_dv_m_s": 0.03991,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "safe_brt_y65_059",
+      "prompt": "Close-range hold at ~65 m: tiny trim after coast; learned V stays clearly positive.",
+      "tags": {
+        "category": "safe_brt",
+        "start_y_m": 65.0,
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        65.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 930.8,
+          "dv_m_s": [
+            -0.01746,
+            0.01297,
+            -0.00246
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 930.8,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.01746,
+            0.01297,
+            -0.00246
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 930.8,
+            "dv_mag_m_s": 0.02189,
+            "pre_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              -0.0175,
+              0.013,
+              -0.0025
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_pre": 0.0791,
+            "V_post": 0.0793
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 930.8,
+        "total_dv_m_s": 0.02189,
+        "max_dv_m_s": 0.02189,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "safe_brt_y65_060",
+      "prompt": "Close-range hold at ~65 m: tiny trim after coast; learned V stays clearly positive.",
+      "tags": {
+        "category": "safe_brt",
+        "start_y_m": 65.0,
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        65.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 420.9,
+          "dv_m_s": [
+            0.00193,
+            0.0042,
+            0.00042
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 420.9,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.00193,
+            0.0042,
+            0.00042
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 420.9,
+            "dv_mag_m_s": 0.00464,
+            "pre_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              0.0019,
+              0.0042,
+              0.0004
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_pre": 0.294,
+            "V_post": 0.2941
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 420.9,
+        "total_dv_m_s": 0.00464,
+        "max_dv_m_s": 0.00464,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "safe_brt_y65_061",
+      "prompt": "Close-range hold at ~65 m: tiny trim after coast; learned V stays clearly positive.",
+      "tags": {
+        "category": "safe_brt",
+        "start_y_m": 65.0,
+        "intent": "safe"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        65.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 708.0,
+          "dv_m_s": [
+            0.00175,
+            0.03844,
+            -0.00199
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 708.0,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.00175,
+            0.03844,
+            -0.00199
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 708.0,
+            "dv_mag_m_s": 0.03853,
+            "pre_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              0.0018,
+              0.0384,
+              -0.002
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_pre": 0.136,
+            "V_post": 0.1356
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 708.0,
+        "total_dv_m_s": 0.03853,
+        "max_dv_m_s": 0.03853,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_borderline_y65_062",
+      "prompt": "From ~65 m, moderate burn near the V=0 surface (filter should scale it).",
+      "tags": {
+        "category": "brt_v_borderline",
+        "start_y_m": 65.0,
+        "intent": "brt_borderline"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        65.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 976.8,
+          "dv_m_s": [
+            0.0286,
+            -0.15082,
+            0.04168
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 976.8,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.0286,
+            -0.15082,
+            0.04168
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 976.8,
+            "dv_mag_m_s": 0.15907,
+            "pre_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              0.0286,
+              -0.1508,
+              0.0417
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_pre": 0.0758,
+            "V_post": 0.0753
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 976.8,
+        "total_dv_m_s": 0.15907,
+        "max_dv_m_s": 0.15907,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_borderline_y65_063",
+      "prompt": "From ~65 m, moderate burn near the V=0 surface (filter should scale it).",
+      "tags": {
+        "category": "brt_v_borderline",
+        "start_y_m": 65.0,
+        "intent": "brt_borderline"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        65.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 968.1,
+          "dv_m_s": [
+            0.06352,
+            0.10741,
+            -0.02106
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 968.1,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            0.06352,
+            0.10741,
+            -0.02106
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 968.1,
+            "dv_mag_m_s": 0.12655,
+            "pre_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              0.0635,
+              0.1074,
+              -0.0211
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_pre": 0.0771,
+            "V_post": 0.0771
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 968.1,
+        "total_dv_m_s": 0.12655,
+        "max_dv_m_s": 0.12655,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_borderline_y65_064",
+      "prompt": "From ~65 m, moderate burn near the V=0 surface (filter should scale it).",
+      "tags": {
+        "category": "brt_v_borderline",
+        "start_y_m": 65.0,
+        "intent": "brt_borderline"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        65.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 694.5,
+          "dv_m_s": [
+            -0.01662,
+            0.34629,
+            0.01833
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 694.5,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.01662,
+            0.34629,
+            0.01833
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 694.5,
+            "dv_mag_m_s": 0.34717,
+            "pre_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              -0.0166,
+              0.3463,
+              0.0183
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_pre": 0.1494,
+            "V_post": 0.1487
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 694.5,
+        "total_dv_m_s": 0.34717,
+        "max_dv_m_s": 0.34717,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    },
+    {
+      "plan_id": "brt_v_borderline_y65_065",
+      "prompt": "From ~65 m, moderate burn near the V=0 surface (filter should scale it).",
+      "tags": {
+        "category": "brt_v_borderline",
+        "start_y_m": 65.0,
+        "intent": "brt_borderline"
+      },
+      "scenario_ref": "scenario_brt_v_48_65_v1",
+      "start_state_m_m_s": [
+        0.0,
+        65.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "maneuvers": [
+        {
+          "t_s": 806.0,
+          "dv_m_s": [
+            -0.27867,
+            0.10705,
+            0.04781
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "coast_s": 806.0,
+          "dv_m_s": null
+        },
+        {
+          "coast_s": 0.0,
+          "dv_m_s": [
+            -0.27867,
+            0.10705,
+            0.04781
+          ]
+        }
+      ],
+      "label": {
+        "steps": [
+          {
+            "t_s": 806.0,
+            "dv_mag_m_s": 0.30233,
+            "pre_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "post_burn_state": [
+              0.0,
+              65.0,
+              0.0,
+              -0.2787,
+              0.1071,
+              0.0478
+            ],
+            "dv_excessive": 0,
+            "post_burn_V_le_0": 0,
+            "passive_preburn_unsafe": 0,
+            "requires_intervention": 0,
+            "V_pre": 0.0624,
+            "V_post": 0.0627
+          }
+        ],
+        "n_burns": 1,
+        "first_burn_t_s": 806.0,
+        "total_dv_m_s": 0.30233,
+        "max_dv_m_s": 0.30233,
+        "expected_intervention": 0,
+        "intervention_reasons": [],
+        "binding_constraint": "none",
+        "label_mode": "hybrid_brt"
+      }
+    }
+  ]
+}

@@ -43,7 +43,7 @@ def _bundle_path(llm_dir: Path) -> Path:
     return _resolve_data_file(
         llm_dir,
         "LLM_PLANS_BUNDLE",
-        ("llm_plans.json", "llm_plans_boundary.json", "llm_plans_leo.json"),
+        ("llm_plans.json", "llm_plans_brt_v.json", "llm_plans_boundary.json", "llm_plans_leo.json"),
     )
 
 
@@ -51,7 +51,7 @@ def _segments_path(llm_dir: Path) -> Path:
     return _resolve_data_file(
         llm_dir,
         "LLM_PLANS_SEGMENTS",
-        ("llm_plans_segments.jsonl", "llm_plans_boundary_segments.jsonl", "llm_plans_leo_segments.jsonl"),
+        ("llm_plans_segments.jsonl", "llm_plans_brt_v_segments.jsonl", "llm_plans_boundary_segments.jsonl", "llm_plans_leo_segments.jsonl"),
     )
 
 

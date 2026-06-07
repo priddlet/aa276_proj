@@ -11,7 +11,7 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 
-from simulation.cw_dynamics import R_EARTH_KM, propagate_coast_samples
+from simulation.cw_dynamics import R_EARTH_KM, propagate_coast_samples, state_at_maneuver_elapsed_time
 
 if TYPE_CHECKING:
     from simulation.cw_dynamics import CWDynamics
@@ -107,6 +107,60 @@ def build_eci_ephemeris(
     a_km = float(a_km)
     times = np.asarray(sample_times_s, dtype=np.float64).reshape(-1)
     states_lvlh = propagate_coast_samples(plant, x0_lvlh_m, times)
+
+    n_frames = times.shape[0]
+    r_c = np.zeros((n_frames, 3), dtype=np.float64)
+    r_d = np.zeros((n_frames, 3), dtype=np.float64)
+    v_c = np.zeros((n_frames, 3), dtype=np.float64)
+    v_d = np.zeros((n_frames, 3), dtype=np.float64)
+    R_chief = np.zeros((n_frames, 3, 3), dtype=np.float64)
+    R_dep = np.zeros((n_frames, 3, 3), dtype=np.float64)
+
+    for k, t in enumerate(times):
+        r_ckm, v_ckm, Rk = chief_circular_eci(float(t), a_km, n_rad_s, theta0_rad)
+        r_dkm, v_dkm = deputy_eci_from_cw(float(t), states_lvlh[k], a_km, n_rad_s, theta0_rad)
+        r_c[k] = r_ckm
+        r_d[k] = r_dkm
+        v_c[k] = v_ckm
+        v_d[k] = v_dkm
+        R_chief[k] = Rk
+        R_dep[k] = body_triad_velocity_normal(v_dkm)
+
+    return {
+        "times_s": times,
+        "states_lvlh_m": states_lvlh,
+        "r_chief_km": r_c,
+        "r_deputy_km": r_d,
+        "v_chief_km_s": v_c,
+        "v_deputy_km_s": v_d,
+        "R_chief_body_to_eci": R_chief,
+        "R_deputy_body_to_eci": R_dep,
+        "a_km": np.array([a_km]),
+        "n_rad_s": np.array([n_rad_s]),
+    }
+
+
+def build_eci_ephemeris_from_segments(
+    plant: CWDynamics,
+    x0_lvlh_m: np.ndarray,
+    segments: list[tuple[float, np.ndarray | None]],
+    sample_times_s: np.ndarray,
+    *,
+    altitude_km: float = 400.0,
+    theta0_rad: float = 0.0,
+    a_km: float | None = None,
+) -> dict[str, np.ndarray]:
+    """ECI ephemeris along an impulsive maneuver plan (not free drift only)."""
+    n_rad_s = float(plant.n)
+    if a_km is None:
+        a_km = circular_orbit_radius_km(altitude_km)
+    a_km = float(a_km)
+    times = np.asarray(sample_times_s, dtype=np.float64).reshape(-1)
+    x0 = np.asarray(x0_lvlh_m, dtype=np.float64).reshape(6)
+    states_lvlh = np.stack(
+        [state_at_maneuver_elapsed_time(plant, x0, segments, float(t)) for t in times],
+        axis=0,
+    )
 
     n_frames = times.shape[0]
     r_c = np.zeros((n_frames, 3), dtype=np.float64)

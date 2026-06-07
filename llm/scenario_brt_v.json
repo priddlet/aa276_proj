@@ -1,0 +1,33 @@
+{
+  "id": "scenario_brt_v_48_65_v1",
+  "frame": "LVLH (x=radial, y=along-track, z=cross-track), chief at origin",
+  "dynamics": "Clohessy-Wiltshire, 400 km circular LEO",
+  "mean_motion_rad_s": 0.0011313666536110223,
+  "orbital_period_s": 5553.624271252229,
+  "start_states_y_m": [
+    48.0,
+    58.0,
+    65.0
+  ],
+  "inner_koz": {
+    "type": "ellipsoid",
+    "semi_axes_m": [
+      28.0,
+      45.0,
+      18.0
+    ],
+    "inside_rule": "(x/a)^2+(y/b)^2+(z/c)^2 <= 1"
+  },
+  "brt_horizon_s": 1800.0,
+  "dv_cap_m_s": 0.5,
+  "min_coast_before_first_burn_s": 300.0,
+  "label_mode": "hybrid_brt",
+  "label_checkpoint": "/Users/tanispriddle/Downloads/276proj/simulation_output/deepreach_mpc_koz_v3",
+  "purpose": "Corpus tuned to the LEARNED V surface: burns found by search with V(x+,t_burn)<=0 at y~48-65 m (under dv cap). Filter V-rejection should be active.",
+  "label_criteria": {
+    "requires_intervention": "OR of dv_cap, learned post_burn_V_le_0, passive_preburn",
+    "post_burn_V_le_0": "V(x+, t_burn) <= 0 (learned DeepReach-MPC)",
+    "passive_preburn_unsafe": "pre-burn free drift reaches KOZ within 1800s",
+    "binding_constraint": "v_bound | dv_bound | v_and_dv | none"
+  }
+}
