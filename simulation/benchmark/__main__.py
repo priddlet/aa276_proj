@@ -38,7 +38,7 @@ from simulation.benchmark.evaluate import (
 )
 from simulation.cw_dynamics import CWDynamics, leo_circular_orbit
 from simulation.keepout import EllipsoidKeepOut
-from simulation.llm_plans import default_llm_dir, load_llm_plans
+from simulation.llm_plans import default_llm_dir, load_llm_plans, resolve_capture_radius_m
 from simulation.sampling.safety_filter import (
     default_brt_margin,
     default_check_passive_post,
@@ -104,7 +104,12 @@ def main() -> None:
         default=os.environ.get("LLM_BENCHMARK_CONDITIONS", "no_filter,brt_filter,rule_based"),
     )
     p.add_argument("--passive-horizon-s", type=float, default=None)
-    p.add_argument("--capture-radius-m", type=float, default=float(os.environ.get("CAPTURE_RADIUS_M", "100")))
+    p.add_argument(
+        "--capture-radius-m",
+        type=float,
+        default=None,
+        help="Rendezvous capture radius (m). Default: scenario capture_radius_m, else CAPTURE_RADIUS_M env, else 100.",
+    )
     p.add_argument(
         "--progress-min-m",
         type=float,
@@ -146,6 +151,7 @@ def main() -> None:
     print(f"Using checkpoint {ckpt.name} ({reason})")
 
     scenario, plans = load_llm_plans(args.llm_dir)
+    capture_radius_m = resolve_capture_radius_m(scenario, args.capture_radius_m)
     if args.plan_id.strip():
         plans = [pl for pl in plans if pl.plan_id == args.plan_id.strip()]
         if not plans:
@@ -172,7 +178,7 @@ def main() -> None:
         + f", conditions={[c.value for c in conditions]}, "
         f"filter_mode={args.filter_mode}, passive_pre={args.filter_check_passive_pre}, "
         f"passive_post={args.filter_check_passive_post}, "
-        f"capture_radius={args.capture_radius_m:.0f} m"
+        f"capture_radius={capture_radius_m:.0f} m"
     )
 
     results = run_llm_benchmark(
@@ -189,7 +195,7 @@ def main() -> None:
         n_sphere_samples=args.filter_n_sphere,
         brt_margin=args.brt_margin,
         dv_cap_m_s=scenario.dv_cap_m_s,
-        capture_radius_m=args.capture_radius_m,
+        capture_radius_m=capture_radius_m,
         progress_min_m=args.progress_min_m,
         check_passive_from_post=args.filter_check_passive_post,
         check_passive_from_pre=args.filter_check_passive_pre,

@@ -19,6 +19,25 @@ def _vec3(obj: Any) -> np.ndarray:
     return a.copy()
 
 
+DEFAULT_CAPTURE_RADIUS_M = 100.0
+
+
+def resolve_capture_radius_m(
+    scenario: LLMScenario,
+    override: float | None = None,
+) -> float:
+    """Capture radius for mission_success: CLI override > scenario JSON > env > default."""
+    if override is not None:
+        return float(override)
+    from_scenario = scenario.capture_radius_m
+    if from_scenario is not None:
+        return from_scenario
+    env = os.environ.get("CAPTURE_RADIUS_M", "").strip()
+    if env:
+        return float(env)
+    return DEFAULT_CAPTURE_RADIUS_M
+
+
 def default_llm_dir(project_root: str | Path | None = None) -> Path:
     root = Path(project_root).resolve() if project_root else Path(__file__).resolve().parents[1]
     env = os.environ.get("LLM_PLANS_DIR", "").strip()
@@ -135,6 +154,18 @@ class LLMScenario:
         if ys:
             return float(np.median(ys))
         return float(self.start_state_lvlh_m[1])
+
+    @property
+    def capture_radius_m(self) -> float | None:
+        raw = self.raw.get("capture_radius_m")
+        return float(raw) if raw is not None else None
+
+    @property
+    def min_start_y_m(self) -> float | None:
+        ys = self.start_y_values_m
+        if not ys:
+            return None
+        return float(min(ys))
 
 
 def _parse_plan_start_state(rec: dict[str, Any], seg_rec: dict[str, Any]) -> np.ndarray | None:

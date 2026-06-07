@@ -39,6 +39,9 @@ TAU = float(BRT_HORIZON_S)
 DV_CAP = 0.50
 MIN_COAST = 300.0
 STARTS_Y = [48.0, 58.0, 65.0]
+# Below min start (48 m) would be ideal; 50 m aligns with Tier-B progress threshold.
+# Starts at y=48 m are inside this ball; y=58/65 require closing range.
+CAPTURE_RADIUS_M = 50.0
 
 
 def x0_of(y: float) -> np.ndarray:
@@ -371,6 +374,7 @@ def scenario(starts_y: list[float], checkpoint: str) -> dict:
         "mean_motion_rad_s": N,
         "orbital_period_s": T_ORBIT,
         "start_states_y_m": starts_y,
+        "capture_radius_m": CAPTURE_RADIUS_M,
         "inner_koz": {
             "type": "ellipsoid",
             "semi_axes_m": KOZ.tolist(),

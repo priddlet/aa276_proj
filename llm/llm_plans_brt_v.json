@@ -10,6 +10,7 @@
       58.0,
       65.0
     ],
+    "capture_radius_m": 50.0,
     "inner_koz": {
       "type": "ellipsoid",
       "semi_axes_m": [

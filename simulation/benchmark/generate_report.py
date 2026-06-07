@@ -613,6 +613,9 @@ def write_corpus_tables(
     ]
     if ys:
         summary_rows.insert(3, {"metric": "start_y_values_m", "value": str(tuple(int(y) for y in ys))})
+    cap = scenario.capture_radius_m
+    if cap is not None:
+        summary_rows.append({"metric": "capture_radius_m", "value": float(cap)})
     for cat, n in sorted(by_cat.items()):
         summary_rows.append({"metric": f"category_{cat}", "value": n})
     for ang, n in sorted(by_ang.items()):
@@ -654,11 +657,16 @@ def write_corpus_tables(
         if ys
         else f"deputy starts {scenario.start_state_lvlh_m[1]:.0f} m downrange"
     )
+    header = (
+        f"**{scenario.id}** — {start_desc}, "
+        f"{scenario.brt_horizon_s:.0f} s horizon, {scenario.dv_cap_m_s or 0.5} m/s burn cap."
+    )
+    if cap is not None:
+        header += f" Capture radius: {cap:.0f} m."
     lines = [
         "# LLM maneuver corpus",
         "",
-        f"**{scenario.id}** — {start_desc}, "
-        f"{scenario.brt_horizon_s:.0f} s horizon, {scenario.dv_cap_m_s or 0.5} m/s burn cap.",
+        header,
         "",
         "## Plan types",
         "",
