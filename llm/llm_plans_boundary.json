@@ -32,7 +32,7 @@
     },
     "ablation": "On this corpus, run the filter with passive checks OFF (FILTER_CHECK_PASSIVE_POST=0 FILTER_CHECK_PASSIVE_PRE=0) to isolate pure V-based filtering; the 'v_bound' plans are the ones that should still be intercepted.",
     "label_mode": "hybrid_brt",
-    "label_checkpoint": "/Users/tanispriddle/Downloads/276proj/simulation_output/deepreach_mpc_koz_v3"
+    "label_checkpoint": "simulation_output/deepreach_mpc_koz_v3"
   },
   "plans": [
     {

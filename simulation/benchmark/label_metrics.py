@@ -1,4 +1,4 @@
-"""Label-aligned intervention metrics (matches ``llm_plans.json`` ``label_criteria``)."""
+"""Label-aligned intervention metrics (matches bundle ``label_criteria``)."""
 
 from __future__ import annotations
 
@@ -11,7 +11,7 @@ from simulation.cw_dynamics import CWDynamics, simulate_impulsive_segments_dense
 from simulation.keepout import EllipsoidKeepOut, EllipsoidMaxSeparation
 from simulation.sampling.passive import natural_coast_hits_inner_koz
 
-# From llm/llm_plans.json scenario.label_criteria
+# From llm plan bundle scenario.label_criteria
 DV_CAP_M_S = 0.5
 R_OUTER_M = 6000.0
 DEFAULT_OUTER_SEMI_AXES_M = (4800.0, 14000.0, 4000.0)

@@ -19,13 +19,13 @@ DEFAULT_SCENARIOS: tuple[tuple[str, str, str, str], ...] = (
     (
         "boundary",
         "simulation_output/llm_benchmark_summary_margin0.json",
-        "Boundary corpus — y=70–110 m, brt_margin=0, capture=100 m (72 plans)",
+        "Boundary corpus - y=70-110 m, brt_margin=0, capture=100 m (72 plans)",
         "simulation_output/report/figures/benchmark_results_barchart_boundary.png",
     ),
     (
         "brt_v",
         "simulation_output/ablation_brt_v_passive_off.json",
-        "BRT-V corpus — y=48–65 m, brt_margin=0, capture=50 m (66 plans)",
+        "BRT-V corpus - y=48-65 m, brt_margin=0, capture=50 m (66 plans)",
         "simulation_output/report/figures/benchmark_results_barchart_brt_v.png",
     ),
 )

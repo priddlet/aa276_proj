@@ -1,10 +1,10 @@
-"""Clohessy–Wiltshire (Hill) linearized relative motion for circular chief orbit.
+"""Clohessy-Wiltshire (Hill) linearized relative motion for circular chief orbit.
 
 State in LVLH frame fixed to the target (chief), x = [x, y, z, vx, vy, vz]^T:
   x: radial (positive away from Earth, along -R from chief in typical convention;
      here we use the usual Hills form with x radial outward from Earth)
   y: along-track (positive in the direction of chief velocity)
-  z: cross-track (positive along chief angular momentum h = r × v)
+  z: cross-track (positive along chief angular momentum h = r x v)
 
 Impulsive delta-v is applied to velocity components only.
 """
@@ -138,7 +138,7 @@ def simulate_impulsive_segments_dense(
 ) -> tuple[np.ndarray, np.ndarray]:
     """Same maneuver plan as 'simulate_impulsive_segments' with uniform CW substeps.
 
-    Impulsive Δv is applied at the start of each segment, then the segment duration
+    Impulsive delta-v is applied at the start of each segment, then the segment duration
     is split into 'substeps' propagations for smooth visualization.
 
     Returns (times, states) with length '1 + len(segments) * substeps'.

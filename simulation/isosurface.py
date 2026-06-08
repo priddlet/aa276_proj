@@ -210,7 +210,7 @@ def _matplotlib_xy_contours(
     level: float,
     z_fix: float,
 ) -> list[np.ndarray]:
-    """``V=level`` polylines on the x–y plane (works without scikit-image)."""
+    """``V=level`` polylines on the x-y plane (works without scikit-image)."""
     import matplotlib.pyplot as plt
 
     U, V = np.meshgrid(x_coords, y_coords, indexing="ij")
@@ -284,7 +284,7 @@ def extract_brt_from_hj_native(
         if mc is not None:
             mesh_verts, mesh_faces = mc
 
-    # x–y slice works with matplotlib alone; 3D shell needs marching cubes (scikit-image).
+    # x-y slice works with matplotlib alone; 3D shell needs marching cubes (scikit-image).
     # Without it, stack BRT contours on every native z grid plane so the 3D view still shows structure.
     xy_slice = pos_vol[:, :, iz]
     level_use, level_tag = choose_contour_level(xy_slice, 0.0)
@@ -307,7 +307,7 @@ def extract_brt_from_hj_native(
     if np.any(np.isfinite(xy_slice)):
         contour_lines = _matplotlib_xy_contours(axes[0], axes[1], xy_slice, level_use, z_fix)
 
-    # Filled x–y patches read as a flat “cutting plane” in 3D when a shell is already drawn.
+    # Filled x-y patches read as a flat "cutting plane" in 3D when a shell is already drawn.
     footprint_polys: list[np.ndarray] = []
     envelope_polys: list[np.ndarray] = []
     if mesh_verts is None:
@@ -440,7 +440,7 @@ def xy_unsafe_footprint_at_z(
     half_xy_m: tuple[float, float] | None = None,
     unsafe_level: float = 0.0,
 ) -> list[np.ndarray]:
-    """Closed polygons (N,3) in LVLH for the x–y slice of '{V <= unsafe_level}' at 'z=z_m'."""
+    """Closed polygons (N,3) in LVLH for the x-y slice of '{V <= unsafe_level}' at 'z=z_m'."""
     lo6 = np.asarray(domain_lo, dtype=np.float64).reshape(6)
     hi6 = np.asarray(domain_hi, dtype=np.float64).reshape(6)
     if center_m is not None and half_xy_m is not None:
@@ -532,7 +532,7 @@ def filter_mesh_in_lvhl_box(
     center_m: np.ndarray,
     half_xyz: tuple[float, float, float],
 ) -> tuple[np.ndarray, np.ndarray]:
-    """Keep triangles whose centroid lies inside 'center ± half_xyz' (LVLH m)."""
+    """Keep triangles whose centroid lies inside 'center +/- half_xyz' (LVLH m)."""
     c = np.asarray(center_m, dtype=np.float64).reshape(3)
     hx, hy, hz = (float(x) for x in half_xyz)
     verts = np.asarray(verts, dtype=np.float64)
@@ -574,7 +574,7 @@ def _polylines_from_contour_set(
     normal_axis: int,
     fixed_coord: float,
 ) -> list[np.ndarray]:
-    """Extract 3D LVLH polylines from a matplotlib 'ContourSet' (mpl 3.7–3.9+)."""
+    """Extract 3D LVLH polylines from a matplotlib 'ContourSet' (mpl 3.7-3.9+)."""
     segs: list[np.ndarray] = []
     # Matplotlib 3.8+: QuadContourSet exposes allsegs instead of collections.
     if hasattr(cs, "allsegs"):
@@ -832,7 +832,7 @@ def extract_brt_v0_near_center(
     contour_half_m: float,
     contour_n2d: int = 80,
 ) -> dict[str, Any]:
-    """Physical BRT near ``center_m``: 3D shell of ``{V <= 0}`` plus x–y footprint at chief ``z``.
+    """Physical BRT near ``center_m``: 3D shell of ``{V <= 0}`` plus x-y footprint at chief ``z``.
 
     The inner KOZ is only the **terminal** set; the BRT is the backward reachable unsafe set and is
     generally much larger. This routine marches the **unsafe-set boundary** (not only ``V=0`` when

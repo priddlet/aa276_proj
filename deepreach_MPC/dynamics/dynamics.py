@@ -1278,7 +1278,7 @@ def _default_torch_device() -> torch.device:
 
 
 class Cw6DKoz(Dynamics):
-    """6D CW deputy KOZ avoid-BRT in SI (m, m/s, s) — same coord pattern as Quadrotor."""
+    """6D CW deputy KOZ avoid-BRT in SI (m, m/s, s) - same coord pattern as Quadrotor."""
 
     # Training / sampling box (LVLH, chief-centered).
     _DOMAIN_LO = (-800.0, -200.0, -400.0, -2.0, -2.0, -2.0)

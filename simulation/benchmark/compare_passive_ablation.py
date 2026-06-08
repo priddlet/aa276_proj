@@ -23,19 +23,19 @@ def _load_csv_rows(path: Path) -> list[dict[str, str]]:
 
 def _pct(v: float | None) -> str:
     if v is None:
-        return "—"
+        return "-"
     return f"{100.0 * float(v):.1f}%"
 
 
 def _num(v: float | None, digits: int = 4) -> str:
     if v is None:
-        return "—"
+        return "-"
     return f"{float(v):.{digits}f}"
 
 
 def _delta_pct(on: float | None, off: float | None) -> str:
     if on is None or off is None:
-        return "—"
+        return "-"
     d = 100.0 * (float(off) - float(on))
     sign = "+" if d >= 0 else ""
     return f"{sign}{d:.1f} pp"
@@ -46,14 +46,14 @@ METRICS: list[tuple[str, str, str]] = [
     ("mean_burns_intervened_per_plan", "Burns modified per plan (mean)", "num"),
     ("mean_burns_scaled_per_plan", "Burns scaled per plan (mean)", "num"),
     ("mean_burns_suppressed_per_plan", "Burns dropped per plan (mean)", "num"),
-    ("mean_dv_overhead_m_s", "Extra Δv from filtering (m/s, mean)", "num"),
+    ("mean_dv_overhead_m_s", "Extra delta-v from filtering (m/s, mean)", "num"),
     ("filter_safety_success_rate", "Passes all safety checks (post-filter)", "rate"),
     ("post_filter_unsafe_rate", "Still fails safety checks (post-filter)", "rate"),
     ("interception_rate", "Entered keep-out zone (post-filter)", "rate"),
-    ("brt_unsafe_rate", "Any post-burn V ≤ 0 on rollout", "rate"),
-    ("brt_unsafe_nominal_rate", "V ≤ 0 after burn (nominal plan)", "rate"),
+    ("brt_unsafe_rate", "Any post-burn V <= 0 on rollout", "rate"),
+    ("brt_unsafe_nominal_rate", "V <= 0 after burn (nominal plan)", "rate"),
     ("passive_unsafe_nominal_rate", "Passive-unsafe before burn (nominal)", "rate"),
-    ("mission_success_tier_b_rate", "Made approach progress ≥50 m", "rate"),
+    ("mission_success_tier_b_rate", "Made approach progress >=50 m", "rate"),
     ("mean_range_closed_m", "Range closed (m, mean)", "num"),
     ("label_match_rate", "Matches corpus label", "rate"),
 ]
@@ -61,7 +61,7 @@ METRICS: list[tuple[str, str, str]] = [
 
 def _fmt_metric(key: str, val: Any, kind: str) -> str:
     if val is None:
-        return "—"
+        return "-"
     if kind == "rate":
         return _pct(val)
     return _num(val)
@@ -260,11 +260,11 @@ def write_tables(
         "| **Passive ON** | yes | yes |",
         "| **Passive OFF** | no | no |",
         "",
-        "Both configurations still query the **learned BRT** (`V(x⁺, t) > margin`) and apply Δv cap + line-search scaling.",
+        "Both configurations still query the **learned BRT** (`V(x+, t) > margin`) and apply delta-v cap + line-search scaling.",
         "",
         "## Filter comparison (brt_filter condition)",
         "",
-        "| Metric | No filter | Filter + passive | Filter, passive off | Δ (off − on) |",
+        "| Metric | No filter | Filter + passive | Filter, passive off | Delta (off - on) |",
         "|--------|-----------|------------------|---------------------|--------------|",
     ]
     for row in main_rows:
@@ -296,9 +296,9 @@ def write_tables(
             "",
             "## Interpretation",
             "",
-            "- **Learned V (`post_V`, rollout `brt_unsafe`)**: 0% in both arms — the network never flags "
-            "V ≤ 0 on this corpus at eval margin 0; filtering work is **not** from V rejection.",
-            "- **Intervention rate (67%)**: identical with passive on/off — almost all filter action is "
+            "- **Learned V (`post_V`, rollout `brt_unsafe`)**: 0% in both arms - the network never flags "
+            "V <= 0 on this corpus at eval margin 0; filtering work is **not** from V rejection.",
+            "- **Intervention rate (67%)**: identical with passive on/off - almost all filter action is "
             "**BRT line-search scaling** (mean ~0.69 burns scaled/plan), not passive gating.",
             f"- **Passive adds marginal rollout safety**: post-filter unsafe **{_pct(bf_on.get('post_filter_unsafe_rate'))}** "
             f"(on) vs **{_pct(bf_off.get('post_filter_unsafe_rate'))}** (off); "
@@ -363,9 +363,9 @@ def main() -> None:
     ck = Path(args.checkpoint_dir)
 
     if args.run:
-        print("Running benchmark: passive ON …")
+        print("Running benchmark: passive ON ...")
         _run_benchmark(on_dir, passive_pre=True, passive_post=True, brt_margin=args.brt_margin, checkpoint_dir=ck)
-        print("Running benchmark: passive OFF …")
+        print("Running benchmark: passive OFF ...")
         _run_benchmark(
             off_dir, passive_pre=False, passive_post=False, brt_margin=args.brt_margin, checkpoint_dir=ck
         )

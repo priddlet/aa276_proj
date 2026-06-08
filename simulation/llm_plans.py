@@ -1,4 +1,4 @@
-"""Load frozen LLM maneuver benchmarks from ``llm/`` (see ``llm/llm_plans.json``)."""
+"""Load frozen LLM maneuver benchmarks from ``llm/`` (``llm_plans_brt_v.json`` or ``llm_plans_boundary.json``)."""
 
 from __future__ import annotations
 
@@ -62,7 +62,7 @@ def _bundle_path(llm_dir: Path) -> Path:
     return _resolve_data_file(
         llm_dir,
         "LLM_PLANS_BUNDLE",
-        ("llm_plans.json", "llm_plans_brt_v.json", "llm_plans_boundary.json", "llm_plans_leo.json"),
+        ("llm_plans_brt_v.json", "llm_plans_boundary.json"),
     )
 
 
@@ -70,7 +70,7 @@ def _segments_path(llm_dir: Path) -> Path:
     return _resolve_data_file(
         llm_dir,
         "LLM_PLANS_SEGMENTS",
-        ("llm_plans_segments.jsonl", "llm_plans_brt_v_segments.jsonl", "llm_plans_boundary_segments.jsonl", "llm_plans_leo_segments.jsonl"),
+        ("llm_plans_brt_v_segments.jsonl", "llm_plans_boundary_segments.jsonl"),
     )
 
 
@@ -99,10 +99,6 @@ def finalize_segments_for_rollout(
     if pad > 1e-9:
         segs.append((pad, None))
     return segs
-
-
-def _summary_path(llm_dir: Path) -> Path:
-    return llm_dir / "plans_summary.csv"
 
 
 @dataclass(frozen=True)
@@ -237,7 +233,7 @@ def absolute_burns_to_segments(
 
 
 def load_llm_bundle(llm_dir: str | Path | None = None) -> tuple[LLMScenario, list[dict[str, Any]]]:
-    """Load 'llm_plans.json'; returns scenario dict and raw plan records."""
+    """Load the plan bundle JSON; returns scenario dict and raw plan records."""
     root = Path(llm_dir).resolve() if llm_dir else default_llm_dir()
     path = _bundle_path(root)
     if not path.is_file():

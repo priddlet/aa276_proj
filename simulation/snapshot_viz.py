@@ -1,4 +1,4 @@
-"""Static PNG / GIF of Option-1 BRT unsafe set (V≤0) in chief LVLH — zoomed on the target (chief)."""
+"""Static PNG / GIF of Option-1 BRT unsafe set (V<=0) in chief LVLH - zoomed on the target (chief)."""
 
 from __future__ import annotations
 
@@ -19,7 +19,7 @@ def _log(msg: str) -> None:
 
 
 def _axis_cube_3d(ax, center: np.ndarray, half: float) -> None:
-    """Equal square axis limits: 'center ± half' on each axis."""
+    """Equal square axis limits: 'center +/- half' on each axis."""
     c = np.asarray(center, dtype=np.float64).reshape(3)
     h = float(max(half, 1.0))
     ax.set_xlim(c[0] - h, c[0] + h)
@@ -82,8 +82,8 @@ def _extract_snapshot_surface(brt: Any, o0: np.ndarray, x6: np.ndarray) -> dict[
         }
     else:
         _log(
-            f"  Extracting BRT shell (iso {parts[0]}×{parts[1]}×{parts[2]}, "
-            f"box half up to {max_search:.0f} m)…"
+            f"  Extracting BRT shell (iso {parts[0]}x{parts[1]}x{parts[2]}, "
+            f"box half up to {max_search:.0f} m)..."
         )
         surf = extract_brt_v0_near_center(
             brt.value_batch,
@@ -191,7 +191,7 @@ def render_brt_lvlh_snapshot(
                     )
                     ax.add_collection3d(coll_fp)
                     if not brt_label_added:
-                        coll_fp.set_label("Unsafe region (V ≤ 0)")
+                        coll_fp.set_label("Unsafe region (V <= 0)")
                         brt_label_added = True
         if surf.get("mesh_verts") is not None and surf.get("mesh_faces") is not None:
             verts_m = np.asarray(surf["mesh_verts"], dtype=np.float64)
@@ -205,7 +205,7 @@ def render_brt_lvlh_snapshot(
                     linewidths=0.22,
                 )
                 if not brt_label_added:
-                    coll.set_label("Unsafe shell (V ≤ 0)")
+                    coll.set_label("Unsafe shell (V <= 0)")
                     brt_label_added = True
                 try:
                     coll.set_zsort("average")
@@ -281,7 +281,7 @@ def render_brt_lvlh_snapshot(
     fig.tight_layout()
     outp = os.path.abspath(output_path_png)
     os.makedirs(os.path.dirname(outp) or ".", exist_ok=True)
-    _log("  Writing PNG…")
+    _log("  Writing PNG...")
     t_png = time_mod.perf_counter()
     fig.savefig(outp, dpi=int(dpi))
     _log(f"  PNG done in {time_mod.perf_counter() - t_png:.1f} s.")
@@ -292,7 +292,7 @@ def render_brt_lvlh_snapshot(
         outg = os.path.abspath(output_path_gif)
         os.makedirs(os.path.dirname(outg) or ".", exist_ok=True)
         _draw_frame(ax, "")
-        _log(f"  Writing GIF ({int(gif_frames)} frames @ {gif_fps} fps)…")
+        _log(f"  Writing GIF ({int(gif_frames)} frames @ {gif_fps} fps)...")
         t_gif = time_mod.perf_counter()
 
         def step(i: int) -> tuple:

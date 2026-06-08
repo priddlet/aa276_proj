@@ -104,7 +104,7 @@ class EllipsoidMaxSeparation:
     '(s > 1)': interpreted as drifting too far from the chief to still be in a
     controlled proximity / orbit-maintenance context for this demo.
 
-    This is a coarse LVLH proxy—not a full altitude-keeping or ROE budget model.
+    This is a coarse LVLH proxy-not a full altitude-keeping or ROE budget model.
     """
 
     def __init__(

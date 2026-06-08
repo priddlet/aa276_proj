@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Train DeepReach-MPC KOZ BRT on an NVIDIA GPU node → simulation_output/deepreach_mpc_koz_v3
+# Train DeepReach-MPC KOZ BRT on an NVIDIA GPU node -> simulation_output/deepreach_mpc_koz_v3
 #
 # Interactive (on a GPU worker, not a login node):
 #   cd ~/aa276_proj
@@ -37,7 +37,7 @@ if [[ -n "${CONDA_ENV:-}" ]] && command -v conda &>/dev/null; then
   source "$(conda info --base)/etc/profile.d/conda.sh"
   conda activate "$CONDA_ENV"
 elif [[ -n "${CONDA_ENV:-}" ]]; then
-  echo "Note: CONDA_ENV=$CONDA_ENV but 'conda' not found — using current shell (venv/virtualenv OK)."
+  echo "Note: CONDA_ENV=$CONDA_ENV but 'conda' not found - using current shell (venv/virtualenv OK)."
 elif [[ -z "${VIRTUAL_ENV:-}" ]] && [[ -f "$ROOT/.venv/bin/activate" ]]; then
   # shellcheck source=/dev/null
   source "$ROOT/.venv/bin/activate"
@@ -103,10 +103,10 @@ _run_train() {
 }
 
 if [[ "$BACKGROUND" -eq 1 ]]; then
-  echo "Starting in background (nohup)…"
+  echo "Starting in background (nohup)..."
   nohup "$PYTHON" -m simulation.brt.train --force "${EXTRA_TRAIN_ARGS[@]}" >>"$LOG" 2>&1 &
   echo $! >"$DEEPREACH_CHECKPOINT_DIR/train.pid"
-  echo "PID $(cat "$DEEPREACH_CHECKPOINT_DIR/train.pid") — tail -f $LOG"
+  echo "PID $(cat "$DEEPREACH_CHECKPOINT_DIR/train.pid") - tail -f $LOG"
 else
   _run_train 2>&1 | tee -a "$LOG"
 fi

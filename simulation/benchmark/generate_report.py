@@ -172,7 +172,7 @@ def _plot_koz_xy(
     alpha: float = 0.35,
     annotate_axes: bool = False,
 ) -> None:
-    """LVLH x–y cross-section (z=0): semi-axis a along radial x, b along along-track y."""
+    """LVLH x-y cross-section (z=0): semi-axis a along radial x, b along along-track y."""
     th = np.linspace(0, 2 * np.pi, 200)
     a, b = float(inner.semi_axes[0]), float(inner.semi_axes[1])
     cx, cy = float(inner.center[0]), float(inner.center[1])
@@ -353,7 +353,7 @@ def render_koz_schematic_png(
     scenario: LLMScenario,
     output_path: Path,
 ) -> Path:
-    """Standalone KOZ ellipsoid (LVLH x–y slice) with deputy start and axis labels."""
+    """Standalone KOZ ellipsoid (LVLH x-y slice) with deputy start and axis labels."""
     import matplotlib.pyplot as plt
 
     fig, ax = plt.subplots(figsize=(7.5, 6.0))
@@ -381,7 +381,7 @@ def render_koz_schematic_png(
     ax.set_ylabel("Along-track offset (m)")
     ax.set_title(
         f"Keep-out zone around the chief\n"
-        f"Ellipsoid semi-axes: {int(inner.semi_axes[0])} × {int(inner.semi_axes[1])} × {int(inner.semi_axes[2])} m"
+        f"Ellipsoid semi-axes: {int(inner.semi_axes[0])} x {int(inner.semi_axes[1])} x {int(inner.semi_axes[2])} m"
     )
     pad = max(40.0, float(p0[1]) * 0.08)
     ax.set_xlim(-inner.semi_axes[0] - pad, inner.semi_axes[0] + pad)
@@ -543,7 +543,7 @@ def render_case_study_png(
     ax.set_xticks(burn_idx)
     ax.set_xticklabels([f"{t:.0f}s" for t in times_b], fontsize=8)
     ax.set_xlabel("Burn time (s)")
-    ax.set_ylabel("Burn size |Δv| (m/s)")
+    ax.set_ylabel("Burn size |delta-v| (m/s)")
     ax.set_title("What the filter did to each burn")
     ax.legend(fontsize=7)
     ax.grid(True, axis="y", alpha=0.25)
@@ -566,7 +566,7 @@ def render_case_study_png(
     idx = np.arange(len(v_nom))
     ax.bar(idx - 0.2, v_nom, width=0.4, label="Before filter", color="tab:red", alpha=0.75)
     ax.bar(idx + 0.2, v_filt, width=0.4, label="After filter", color="tab:green", alpha=0.75)
-    ax.axhline(0.0, color="k", linewidth=1.2, label="Unsafe (V ≤ 0)")
+    ax.axhline(0.0, color="k", linewidth=1.2, label="Unsafe (V <= 0)")
     ax.set_xticks(idx)
     ax.set_xticklabels(labels, fontsize=8)
     ax.set_xlabel("Burn time (s)")
@@ -576,7 +576,7 @@ def render_case_study_png(
     ax.grid(True, axis="y", alpha=0.25)
 
     cat = _category_label(str(plan.tags.get("category", "")))
-    fig.suptitle(f"{cat.title()} — {plan.plan_id.replace('_', ' ')}", fontsize=11, y=1.02)
+    fig.suptitle(f"{cat.title()} - {plan.plan_id.replace('_', ' ')}", fontsize=11, y=1.02)
     fig.tight_layout()
     output_path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(output_path, dpi=160, bbox_inches="tight")
@@ -659,12 +659,12 @@ def write_corpus_tables(
 
     md_path = out_dir / "corpus_summary.md"
     start_desc = (
-        f"deputy starts at y ∈ {{{', '.join(f'{int(y):.0f}' for y in ys)} m}}"
+        f"deputy starts at y  in  {{{', '.join(f'{int(y):.0f}' for y in ys)} m}}"
         if ys
         else f"deputy starts {scenario.start_state_lvlh_m[1]:.0f} m downrange"
     )
     header = (
-        f"**{scenario.id}** — {start_desc}, "
+        f"**{scenario.id}** - {start_desc}, "
         f"{scenario.brt_horizon_s:.0f} s horizon, {scenario.dv_cap_m_s or 0.5} m/s burn cap."
     )
     if cap is not None:
@@ -689,8 +689,8 @@ def write_corpus_tables(
             "",
             "## Summary stats",
             "",
-            f"- Burns per plan: {min(n_burns)}–{max(n_burns)} (avg {np.mean(n_burns):.1f})",
-            f"- Largest burn: {min(max_dv):.3f}–{max(max_dv):.3f} m/s (avg {np.mean(max_dv):.3f})",
+            f"- Burns per plan: {min(n_burns)}-{max(n_burns)} (avg {np.mean(n_burns):.1f})",
+            f"- Largest burn: {min(max_dv):.3f}-{max(max_dv):.3f} m/s (avg {np.mean(max_dv):.3f})",
             "",
             f"Full listing: `{detail_csv.name}`",
         ]
@@ -713,17 +713,17 @@ def write_results_tables(
         "mean_burns_intervened_per_plan": "Burns modified per plan (mean)",
         "mean_burns_suppressed_per_plan": "Burns dropped per plan (mean)",
         "mean_burns_scaled_per_plan": "Burns scaled per plan (mean)",
-        "mean_dv_overhead_m_s": "Extra Δv from filtering (m/s, mean)",
+        "mean_dv_overhead_m_s": "Extra delta-v from filtering (m/s, mean)",
         "post_filter_unsafe_rate": "Still fails safety checks",
         "filter_safety_success_rate": "Passes all safety checks",
         "passive_unsafe_nominal_rate": "Passive-unsafe before burn (nominal)",
-        "brt_unsafe_nominal_rate": "V ≤ 0 after burn (nominal)",
-        "brt_unsafe_rate": "Any post-burn V ≤ 0",
+        "brt_unsafe_nominal_rate": "V <= 0 after burn (nominal)",
+        "brt_unsafe_rate": "Any post-burn V <= 0",
         "requires_intervention_rate": "Needs intervention (rollout)",
         "mission_success_safe_rate": "Safe by intervention criteria",
         "label_match_rate": "Matches corpus label",
         "interception_rate": "Entered keep-out zone",
-        "mission_success_tier_b_rate": "Made approach progress (≥50 m)",
+        "mission_success_tier_b_rate": "Made approach progress (>=50 m)",
         "mean_range_closed_m": "Range closed (m, mean)",
     }
     cond_names = {"no_filter": "No filter", "brt_filter": "With filter"}
@@ -759,8 +759,8 @@ def write_results_tables(
     for label in labels.values():
         if label not in pivot:
             continue
-        nf = pivot[label].get("No filter", "—")
-        bf = pivot[label].get("With filter", "—")
+        nf = pivot[label].get("No filter", "-")
+        bf = pivot[label].get("With filter", "-")
         md_lines.append(f"| {label} | {nf} | {bf} |")
 
     cat_lines = [
@@ -798,9 +798,9 @@ def write_reference_trajectories_table(
     md = [
         "# Reference trajectories",
         "",
-        "Hand-tuned radial braking schedules (not LLM plans). Listed individually — not pooled into rates.",
+        "Hand-tuned radial braking schedules (not LLM plans). Listed individually - not pooled into rates.",
         "",
-        "| Plan | Burns | Max |Δv| (m/s) | Entered KOZ | Approach progress | Range closed (m) | Final range (m) |",
+        "| Plan | Burns | Max |delta-v| (m/s) | Entered KOZ | Approach progress | Range closed (m) | Final range (m) |",
         "|------|------:|-------------:|:-----------:|:-----------------:|-----------------:|----------------:|",
     ]
     for r in refs:
@@ -868,13 +868,13 @@ def main() -> None:
 
     rep = next((pl for pl in plans if pl.plan_id == args.representative_plan), plans[0])
     x0 = rep.x0(scenario)
-    print("Rendering KOZ schematic…")
+    print("Rendering KOZ schematic...")
     render_koz_schematic_png(inner, x0, scenario, fig_dir / "koz_schematic_xy.png")
-    print(f"Rendering scenario orbit ({rep.plan_id})…")
+    print(f"Rendering scenario orbit ({rep.plan_id})...")
     render_scenario_orbit_png(plant, scenario, inner, rep, fig_dir / "scenario_orbit_lvlh.png")
 
     ck_dir = Path(args.checkpoint_dir).resolve()
-    print(f"Loading BRT from {ck_dir}…")
+    print(f"Loading BRT from {ck_dir}...")
     brt = KozDeepReachBRT.load(ck_dir, device=args.device)
 
     from simulation.brt.slice_viz import parse_time_slices_s, render_brt_koz_centered_png
@@ -885,7 +885,7 @@ def main() -> None:
     axes_sa = tuple(float(x) for x in scenario.semi_axes_m)
     rx, ry = default_report_koz_xy_limits(axes_sa)
     os.environ.setdefault("BRT_KOZ_VIZ_COLOR", "shared")
-    print(f"Rendering BRT training slices ({len(times)} panels)…")
+    print(f"Rendering BRT training slices ({len(times)} panels)...")
     render_brt_koz_centered_png(
         brt,
         str(fig_dir / "brt_training_slices_xy.png"),
@@ -905,7 +905,7 @@ def main() -> None:
         os.environ.setdefault("BRT_SNAPSHOT_MAX_HALF_M", "2200")
         os.environ.setdefault("BRT_SNAPSHOT_VIEW_HALF_M", "900")
         os.environ.setdefault("BRT_SNAPSHOT_MESH_RADIUS_M", "2100")
-        print("Rendering 3D BRT formation snapshot (may take ~1 min)…")
+        print("Rendering 3D BRT formation snapshot (may take ~1 min)...")
         render_brt_lvlh_snapshot(
             brt,
             inner,
@@ -927,23 +927,28 @@ def main() -> None:
     else:
         print(f"Warning: no results at {results_path}; tables will be partial.", file=sys.stderr)
 
-    print("Writing corpus tables…")
+    print("Writing corpus tables...")
     write_corpus_tables(scenario, plans, tab_dir)
-    print("Writing experiment results tables…")
+    print("Writing experiment results tables...")
     write_results_tables(eval_results, summary, tab_dir)
     ref_path = write_reference_trajectories_table(summary, tab_dir)
     if ref_path:
-        print(f"Writing reference trajectories table… ({ref_path.name})")
+        print(f"Writing reference trajectories table... ({ref_path.name})")
     if summary.get("by_condition"):
-        print("Rendering benchmark bar chart…")
-        render_benchmark_barchart_png(summary, fig_dir / "benchmark_results_barchart.png")
+        slug = "brt_v" if "brt_v" in scenario.id else "boundary" if "boundary" in scenario.id else "bundle"
+        chart_path = fig_dir / f"benchmark_results_barchart_{slug}.png"
+        cap = scenario.capture_radius_m
+        cap_s = f", capture={cap:.0f} m" if cap is not None else ""
+        title = f"{scenario.id} ({len(plans)} plans{cap_s})"
+        print(f"Rendering benchmark bar chart ({chart_path.name})...")
+        render_benchmark_barchart_png(summary, chart_path, title=title)
 
     for pid in [s.strip() for s in args.case_studies.split(",") if s.strip()]:
         plan = next((pl for pl in plans if pl.plan_id == pid), None)
         if plan is None:
             print(f"  Skip case study (not found): {pid}")
             continue
-        print(f"Rendering case study {pid}…")
+        print(f"Rendering case study {pid}...")
         render_case_study_png(
             plant,
             inner,
@@ -962,17 +967,17 @@ def main() -> None:
                 "# Report figures and tables",
                 "",
                 "## Figures",
-                "- `koz_schematic_xy.png` — keep-out zone and deputy starting position",
-                "- `scenario_orbit_lvlh.png` — relative motion + inertial orbit view",
-                "- `brt_training_slices_xy.png` — learned value function on x–y slices",
-                "- `brt_formation_lvlh.png` — 3D unsafe set near the chief",
-                "- `benchmark_results_barchart.png` — summary of filter and mission metrics",
-                "- `case_study_*.png` — side-by-side examples (safe vs aggressive)",
+                "- `koz_schematic_xy.png` - keep-out zone and deputy starting position",
+                "- `scenario_orbit_lvlh.png` - relative motion + inertial orbit view",
+                "- `brt_training_slices_xy.png` - learned value function on x-y slices",
+                "- `brt_formation_lvlh.png` - 3D unsafe set near the chief",
+                "- `benchmark_results_barchart_*.png` - per-corpus filter and mission metrics",
+                "- `case_study_*.png` - side-by-side examples (safe vs aggressive)",
                 "",
                 "## Tables",
-                "- `corpus_summary.md` — what's in the plan bundle",
-                "- `experiment_results.md` — benchmark numbers (no filter vs filtered)",
-                "- `reference_trajectories.md` — hand-tuned radial schedules (per-plan, not rates)",
+                "- `corpus_summary.md` - what's in the plan bundle",
+                "- `experiment_results.md` - benchmark numbers (no filter vs filtered)",
+                "- `reference_trajectories.md` - hand-tuned radial schedules (per-plan, not rates)",
                 "",
                 "Regenerate:",
                 "```",

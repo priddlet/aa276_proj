@@ -108,7 +108,7 @@ def _brt_unsafe_any_post_burn(
 def _summarize_filter_interventions(
     filt_results: list[FilterResult],
 ) -> tuple[int, int, int, bool]:
-    """Count burns where BRT changed or suppressed the LLM-commanded Δv."""
+    """Count burns where BRT changed or suppressed the LLM-commanded delta-v."""
     n_intervened = 0
     n_suppressed = 0
     n_scaled = 0

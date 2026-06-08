@@ -1,4 +1,4 @@
-"""Rollout metrics for paper-style evaluation (interception, success, Δv overhead)."""
+"""Rollout metrics for paper-style evaluation (interception, success, delta-v overhead)."""
 
 from __future__ import annotations
 

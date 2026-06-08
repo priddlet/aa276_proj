@@ -132,7 +132,7 @@ def log_control_authority(dynamics: Any) -> None:
     T = float(dynamics.horizon_s)
     reach = 0.5 * u * T * T
     print(f"  KOZ max semi-axis (m): {a_max:.1f}")
-    print(f"  u_max={u:.3f} m/s², T={T:.0f} s → 0.5*u_max*T²~{reach:.0f} m")
+    print(f"  u_max={u:.3f} m/s^2, T={T:.0f} s -> 0.5*u_max*T^2~{reach:.0f} m")
     if u > 1e-8:
         print(f"  Displacement/a_max~{reach / max(a_max, 1e-9):.1f}")
 
@@ -436,7 +436,7 @@ class KozDeepReachBRT:
         return np.linspace(0.0, -abs(self._horizon), int(n_nodes), dtype=np.float64)
 
     def koz_boundary_g(self, pos_lvlh_m: np.ndarray) -> np.ndarray:
-        """Ellipsoid boundary g(x)=sqrt((sum of (r_i/a_i)^2)−1); negative inside KOZ (matches Cw6DKoz)."""
+        """Ellipsoid boundary g(x)=sqrt((sum of (r_i/a_i)^2)-1); negative inside KOZ (matches Cw6DKoz)."""
         pos = np.asarray(pos_lvlh_m, dtype=np.float64).reshape(-1, 3)
         r = pos - self._koz_center.reshape(1, 3)
         ax = self._koz_axes.reshape(1, 3)

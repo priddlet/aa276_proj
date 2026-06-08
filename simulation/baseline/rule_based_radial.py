@@ -56,13 +56,13 @@ def build_rule_based_radial_variants(scenario: LLMScenario) -> list[LLMPlan]:
     """Several hand-tuned radial braking schedules (reference trajectories, not LLM plans).
 
     First burn is always after the scenario min-coast (300 s for the LEO bundle).
-    All Δv point radially inward (-x) and along-track toward the chief (-y).
+    All delta-v point radially inward (-x) and along-track toward the chief (-y).
     """
     t0 = _min_coast(scenario) + 20.0
     specs: list[tuple[str, str, list[dict]]] = [
         (
             "rule_ref_gentle_3burn",
-            "Three small radial trims after coast — cautious reference glide.",
+            "Three small radial trims after coast - cautious reference glide.",
             [
                 _burn(t0, (-0.04, -0.06, 0.0)),
                 _burn(t0 + 180, (-0.03, -0.05, 0.0)),

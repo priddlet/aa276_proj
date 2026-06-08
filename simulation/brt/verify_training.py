@@ -137,7 +137,7 @@ def _numeric_checks(brt, semi_axes: tuple[float, float, float], horizon_s: float
         for t_check in (0.0, T / 2.0, T):
             v_in = brt.value_at_tau(inside, t_check)
             ok = v_in <= 0.0
-            lines.append(f"  KOZ origin @ t={t_check:.0f}: V={v_in:.3f}  {'OK' if ok else 'FAIL'} (expect ≤0)")
+            lines.append(f"  KOZ origin @ t={t_check:.0f}: V={v_in:.3f}  {'OK' if ok else 'FAIL'} (expect <=0)")
         if os.environ.get("BRT_KOZ_PROJECT", "1").lower() in ("0", "false", "no"):
             lines.append("  (BRT_KOZ_PROJECT=0: raw network values, no inference projection)")
 

@@ -3,8 +3,8 @@
 The AA276 pitch evaluates a value function ``V(x)`` on the deputy CW state. This
 package provides:
 
-- :class:`KOZBRTPlaceholder` — fast geometry surrogate (inner KOZ + outer corridor).
-- :func:`simulate_plan_with_brt` — impulsive rollout with optional **passive** drift
+- :class:`KOZBRTPlaceholder` - fast geometry surrogate (inner KOZ + outer corridor).
+- :func:`simulate_plan_with_brt` - impulsive rollout with optional **passive** drift
   check via ``passive_inner_koz`` / ``passive_horizon_s``.
 
 Learned DeepReach-MPC BRT (``simulation.brt.deepreach_mpc_brt.KozDeepReachBRT``):

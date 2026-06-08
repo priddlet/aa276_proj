@@ -184,7 +184,7 @@ def filter_impulsive_burn_linesearch(
     check_passive_from_post: bool = False,
     dv_cap_m_s: float | None = None,
 ) -> FilterResult:
-    """Line-search ``α ∈ [0,1]``: largest ``α·Δv_nom`` with ``V(x⁺, t) > 0`` (and passive checks)."""
+    """Line-search ``alpha in [0,1]``: largest ``alpha*delta-v_nom`` with ``V(x+, t) > 0`` (and passive checks)."""
     x = np.asarray(x_lvlh_m, dtype=np.float64).reshape(6)
     dv_orig = np.asarray(dv_nominal, dtype=np.float64).reshape(3)
     dv_nom = _cap_nominal_dv(dv_orig, dv_cap_m_s)
@@ -302,7 +302,7 @@ def filter_impulsive_burn_sample(
     check_passive_from_post: bool = False,
     dv_cap_m_s: float | None = None,
 ) -> FilterResult:
-    """Legacy sampling search around nominal Δv."""
+    """Legacy sampling search around nominal delta-v."""
     x = np.asarray(x_lvlh_m, dtype=np.float64).reshape(6)
     dv_orig = np.asarray(dv_nominal, dtype=np.float64).reshape(3)
     dv_nom = _cap_nominal_dv(dv_orig, dv_cap_m_s)
@@ -532,7 +532,7 @@ def filter_maneuver_plan(
     dv_cap_m_s: float | None = None,
     omit_zero_burns: bool | None = None,
 ) -> tuple[list[tuple[float, np.ndarray | None]], list[FilterResult]]:
-    """Apply the safety filter at each impulsive burn; ``V(x⁺, t_k)`` uses elapsed plan time."""
+    """Apply the safety filter at each impulsive burn; ``V(x+, t_k)`` uses elapsed plan time."""
     x = np.asarray(x0_lvlh_m, dtype=np.float64).reshape(6).copy()
     t = 0.0
     out_segs: list[tuple[float, np.ndarray | None]] = []

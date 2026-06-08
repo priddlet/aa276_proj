@@ -1,6 +1,6 @@
 """Earth-centered inertial (ECI) kinematics for circular chief + CW deputy.
 
-Assumes a **prograde circular equatorial** chief orbit in the ECI x–y plane, with
+Assumes a **prograde circular equatorial** chief orbit in the ECI x-y plane, with
 angular rate 'n' and semi-major axis 'a_km'. LVLH columns match 'cw_dynamics'
 (x radial outward from Earth, y along-track, z cross-track = +ECI z).
 """

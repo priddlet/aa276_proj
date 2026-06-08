@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Render chief + deputy ECI orbit animation (GIF/MP4) and static snapshot.
 
-Default mode: **initial formation** — free drift from the scenario start state
+Default mode: **initial formation** - free drift from the scenario start state
 (no burns, no plan). Use ``--plan-id`` to visualize a maneuver plan instead.
 """
 
@@ -189,7 +189,7 @@ def main() -> None:
         duration_s = float(
             args.duration_s if args.duration_s is not None else float(args.orbits) * period_s
         )
-        title = f"Initial formation — deputy {x0[1]:.0f} m downrange (free drift, no burns)"
+        title = f"Initial formation - deputy {x0[1]:.0f} m downrange (free drift, no burns)"
         print(
             f"Initial orbit: y0={x0[1]:.0f} m, duration={duration_s:.0f} s "
             f"({duration_s/period_s:.2f} chief orbits), no maneuvers"

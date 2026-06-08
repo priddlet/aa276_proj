@@ -1,4 +1,4 @@
-"""x–y value-function slices for learned DeepReach-MPC BRT (full domain or KOZ-centered)."""
+"""x-y value-function slices for learned DeepReach-MPC BRT (full domain or KOZ-centered)."""
 
 from __future__ import annotations
 
@@ -24,7 +24,7 @@ def default_koz_xy_limits(
     y_neg_scale: float = 2.5,
     y_pos_scale: float = 12.0,
 ) -> tuple[tuple[float, float], tuple[float, float]]:
-    """x–y plot window: centered on KOZ, +y room for along-track BRT (m)."""
+    """x-y plot window: centered on KOZ, +y room for along-track BRT (m)."""
     a, b, _ = (float(x) for x in np.asarray(semi_axes_m, dtype=np.float64).reshape(3))
     x_half = max(x_scale * a, 120.0)
     y_lo = -max(y_neg_scale * b, 80.0)
@@ -275,7 +275,7 @@ def render_brt_koz_centered_png(
     ylim: tuple[float, float] | None = None,
     cmap: str = "RdBu_r",
 ) -> str:
-    """Static x–y panels at selected times, zoomed on the KOZ (chief at origin)."""
+    """Static x-y panels at selected times, zoomed on the KOZ (chief at origin)."""
     import matplotlib.pyplot as plt
 
     color_mode = _resolve_color_mode()
@@ -361,7 +361,7 @@ def render_brt_koz_centered_png(
     cbar_label = "unsafe region" if color_mode == "unsafe_only" else f"V  ({scale_note})"
     fig.colorbar(im, ax=axes_flat.tolist(), fraction=0.035, pad=0.04, label=cbar_label)
     fig.suptitle(
-        f"Learned value function — x–y slices (z = {z_m:.1f} m, coasting)",
+        f"Learned value function - x-y slices (z = {z_m:.1f} m, coasting)",
         fontsize=11,
         y=1.02,
     )
@@ -393,7 +393,7 @@ def render_brt_xy_value_evolution_gif(
     ylim: tuple[float, float] | None = None,
     koz_centered: bool | None = None,
 ) -> str:
-    """Animate x–y 'V' from tau=0 to tau=-T. Set 'koz_centered=True' (default) to zoom on KOZ."""
+    """Animate x-y 'V' from tau=0 to tau=-T. Set 'koz_centered=True' (default) to zoom on KOZ."""
     import matplotlib.pyplot as plt
     from matplotlib import animation
 
@@ -433,8 +433,8 @@ def render_brt_xy_value_evolution_gif(
 
     zoom_tag = "KOZ-centered" if koz_centered else "full training domain"
     print(
-        f"  Slice evolution ({zoom_tag}): τ∈[{tau_labels[0]:.0f},{tau_labels[-1]:.0f}] s, "
-        f"grid {grid_n}², x∈[{xlim[0]:.0f},{xlim[1]:.0f}], y∈[{ylim[0]:.0f},{ylim[1]:.0f}]…",
+        f"  Slice evolution ({zoom_tag}): tau in [{tau_labels[0]:.0f},{tau_labels[-1]:.0f}] s, "
+        f"grid {grid_n}^2, x in [{xlim[0]:.0f},{xlim[1]:.0f}], y in [{ylim[0]:.0f},{ylim[1]:.0f}]...",
         flush=True,
     )
     t0 = time_mod.perf_counter()
@@ -502,7 +502,7 @@ def render_brt_xy_value_evolution_gif(
     def _title(tau: float, tq: float) -> str:
         return (
             f"{zoom_tag} ({color_mode})  z={z_m:.1f} m\n"
-            f"τ = {tau:.0f} s; navy = low-V ({low_pct:.0f}%ile); brown = KOZ"
+            f"tau = {tau:.0f} s; navy = low-V ({low_pct:.0f}%ile); brown = KOZ"
         )
 
     ax.set_title(_title(float(tau_labels[0]), float(t_query[0])))
@@ -546,7 +546,7 @@ def main() -> None:
         print(DEEPREACH_MPC_IMPORT_ERROR or "torch required", file=sys.stderr)
         sys.exit(1)
 
-    p = argparse.ArgumentParser(description="KOZ-centered BRT x–y slice PNG / evolution GIF.")
+    p = argparse.ArgumentParser(description="KOZ-centered BRT x-y slice PNG / evolution GIF.")
     p.add_argument("--checkpoint-dir", type=str, default=str(default_checkpoint_dir()))
     p.add_argument("--out-dir", type=str, default="")
     p.add_argument("--png", action="store_true", help="Write static multi-panel KOZ-centered PNG.")

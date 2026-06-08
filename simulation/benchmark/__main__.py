@@ -2,14 +2,15 @@
 
 Example (after BRT training)::
 
-    # Original 3.2 km LLM bundle (labels; filter rarely changes plans):
+    # BRT-V corpus (default bundle):
     python -m simulation.benchmark \\
         --checkpoint-dir simulation_output/deepreach_mpc_koz_v3 \\
-        --conditions no_filter,brt_filter,rule_based
+        --conditions no_filter,brt_filter
 
-    # Filter demo bundle (generate first: python -m simulation.benchmark.generate_filter_demo_plans):
-    #   LLM_PLANS_DIR=llm/llm_plans_brt_demo python -m simulation.benchmark \\
-    #       --conditions no_filter,brt_filter
+    # Boundary corpus:
+    #   LLM_PLANS_BUNDLE=llm_plans_boundary.json \\
+    #   LLM_PLANS_SEGMENTS=llm_plans_boundary_segments.jsonl \\
+    #   python -m simulation.benchmark --brt-margin 0
 """
 
 from __future__ import annotations
@@ -169,7 +170,7 @@ def main() -> None:
     conditions = _parse_conditions(args.conditions)
     ref_plans = build_rule_based_radial_variants(scenario) if EvalCondition.RULE_BASED in conditions else None
 
-    print(f"Loading BRT from {ck_dir} …")
+    print(f"Loading BRT from {ck_dir} ...")
     brt = KozDeepReachBRT.load(ck_dir, device=args.device)
     n_ref = len(ref_plans) if ref_plans else 0
     print(

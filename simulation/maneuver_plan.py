@@ -11,10 +11,10 @@ Expected JSON shapes (flexible keys, see :func:`parse_llm_maneuver_json`):
       ]
     }
 
-or a bare list '[ {...}, ... ]'. Each entry is coast duration 't_s' then Δv at segment
+or a bare list '[ {...}, ... ]'. Each entry is coast duration 't_s' then delta-v at segment
 start (see :func:`simulation.cw_dynamics.simulate_impulsive_segments`).
 
-Frozen LLM benchmarks in 'llm/' use **absolute** burn times in 'llm_plans.json';
+Frozen LLM benchmarks in 'llm/' use **absolute** burn times in the plan bundle JSON;
 load 'llm/llm_plans_segments.jsonl' via :mod:`simulation.llm_plans` (or
 :func:`simulation.llm_plans.absolute_burns_to_segments`) for simulation.
 """

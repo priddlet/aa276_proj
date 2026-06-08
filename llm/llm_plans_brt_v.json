@@ -24,7 +24,7 @@
     "dv_cap_m_s": 0.5,
     "min_coast_before_first_burn_s": 300.0,
     "label_mode": "hybrid_brt",
-    "label_checkpoint": "/Users/tanispriddle/Downloads/276proj/simulation_output/deepreach_mpc_koz_v3",
+    "label_checkpoint": "simulation_output/deepreach_mpc_koz_v3",
     "purpose": "Corpus tuned to the LEARNED V surface: burns found by search with V(x+,t_burn)<=0 at y~48-65 m (under dv cap). Filter V-rejection should be active.",
     "label_criteria": {
       "requires_intervention": "OR of dv_cap, learned post_burn_V_le_0, passive_preburn",
