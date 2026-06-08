@@ -399,6 +399,8 @@ def render_koz_schematic_png(
 def render_benchmark_barchart_png(
     summary: dict[str, Any],
     output_path: Path,
+    *,
+    title: str | None = None,
 ) -> Path | None:
     """Grouped bar chart: key filter / mission metrics (no_filter vs brt_filter)."""
     import matplotlib.pyplot as plt
@@ -410,11 +412,12 @@ def render_benchmark_barchart_png(
 
     specs: list[tuple[str, str, bool]] = [
         ("llm_unsafe_rate", "Flagged\nunsafe", False),
+        ("brt_unsafe_nominal_rate", "Nominal\nV unsafe", False),
         ("post_filter_unsafe_rate", "Still unsafe\nafter filter", False),
         ("filter_safety_success_rate", "Passes\nsafety checks", False),
+        ("mission_success_rate", "Capture\nsuccess", False),
         ("mission_success_tier_b_rate", "Approach\nprogress", False),
         ("interception_rate", "Entered\nkeep-out", False),
-        ("label_match_rate", "Labels\nagree", False),
         ("brt_intervention_rate", "Filter\nchanged burns", True),
     ]
 
@@ -424,7 +427,7 @@ def render_benchmark_barchart_png(
     for key, label, brt_only in specs:
         if brt_only and key not in bf:
             continue
-        if key not in nf and key not in bf:
+        if not brt_only and key not in nf and key not in bf:
             continue
         labels.append(label)
         vals_nf.append(100.0 * float(nf.get(key, 0.0)) if not brt_only else 0.0)
@@ -435,15 +438,18 @@ def render_benchmark_barchart_png(
 
     x = np.arange(len(labels))
     w = 0.36
-    fig, ax = plt.subplots(figsize=(max(8.0, len(labels) * 1.15), 5.0))
+    fig, ax = plt.subplots(figsize=(max(9.0, len(labels) * 1.05), 5.0))
     ax.bar(x - w / 2, vals_nf, width=w, label="No filter", color="tab:gray", alpha=0.85)
     ax.bar(x + w / 2, vals_bf, width=w, label="With BRT filter", color="tab:blue", alpha=0.85)
     ax.set_xticks(x)
     ax.set_xticklabels(labels, fontsize=9)
     ax.set_ylabel("Share of plans (%)")
-    ax.set_ylim(0, min(105.0, max(max(vals_nf), max(vals_bf), 1.0) * 1.15))
+    ax.set_ylim(0, 105.0)
     n_plans = int(nf.get("n_plans", bf.get("n_plans", 0)))
-    ax.set_title(f"LLM maneuver benchmark ({n_plans} plans, 400 km LEO)")
+    if title:
+        ax.set_title(title)
+    else:
+        ax.set_title(f"LLM maneuver benchmark ({n_plans} plans, 400 km LEO)")
     ax.legend(loc="upper right")
     ax.grid(True, axis="y", alpha=0.3)
     fig.tight_layout()
